@@ -1,0 +1,2 @@
+class SudokuException(Exception):
+    pass
