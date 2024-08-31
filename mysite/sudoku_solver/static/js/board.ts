@@ -14,27 +14,23 @@ window.addEventListener("load", () => {
     if (!winPopup) {
         throw new Error("Victory is not possible...");
     }
-    window.addEventListener("click", (event) => {
+    window.addEventListener("click", event => {
         if (event.target === winPopup) {
             changeWinPopupVisibility(false);
         }
     });
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", event => {
         if (["Enter", "Escape"].includes(event.key)) {
             changeWinPopupVisibility(false);
         }
     });
-    document.querySelector("#win-popup-close")?.addEventListener("click", () => {
-        changeWinPopupVisibility(false);
-    });
+    document.querySelector("#win-popup-close")?.addEventListener("click", () => changeWinPopupVisibility(false));
     resize();
     const board = new Board();
     board.init();
     board.bind();
     board.draw();
-    document.querySelector("#game-controls-notes")?.addEventListener("click", () => {
-        togleNotesMode();
-    });
+    document.querySelector("#game-controls-notes")?.addEventListener("click", () => togleNotesMode());
     window.addEventListener("resize", () => {
         resize();
         board.draw();
@@ -120,6 +116,22 @@ class Cell {
         }
     }
 
+    static fromEncoded(value: string, row: number, col: number): Cell {
+        const val = Math.abs(parseInt(value));
+        if (isNaN(val) || val > 511) {
+            throw new Error("Unexpected encoding");
+        }
+        const isGiven = value[0] === "-";
+        const isSolved = value[0] === "+";
+        if (isGiven || isSolved) {
+            return new Cell(col, row, val, isGiven);
+        }
+        const candidates = val.toString(2).split("").reverse()
+            .map((current, i) => current === "1" ? i + 1 : null)
+            .filter(candidate => candidate !== null);
+        return new Cell(col, row, 0, isGiven, candidates);
+    }
+
     public get value(): number {
         return this.wrappedValue;
     }
@@ -142,7 +154,7 @@ class Cell {
         this.validateCellChange();
         this.validateCandChange();
         this.wrappedCandidates.clear();
-        values.forEach((value) => {
+        values.forEach(value => {
             this.validateValue(value, false);
             this.wrappedCandidates.add(Math.floor(value));
         });
@@ -169,6 +181,12 @@ class Cell {
         this.wrappedCandidates.clear();
     }
 
+    public encode(): string {
+        let val = this.value || this.candidates.reduce((acc, cand) => acc + Math.pow(2, cand - 1), 0);
+        const prefix = this.isGiven ? "-" : this.value ? "+" : "";
+        return `${prefix}${val}`;
+    }
+
     public draw(size: number): void {
         this.drawCursors(size);
         this.drawValue(size);
@@ -189,22 +207,12 @@ class Cell {
     }
 
     private getCursorColor(): string | null {
-        if (this.isSelected) {
-            return "#bbdefb";
-        }
-        if (this.isConflict) {
-            return "#f7cfd6";
-        }
-        if (this.isSameVal) {
-            return "#c3d7ea";
-        }
-        if (this.hasCandidate) {
-            return "#d4ebda";
-        }
-        if (this.isNeighbor) {
-            return "#e2ebf3";
-        }
-        return null;
+        return this.isSelected ? "#bbdefb" :
+            this.isConflict ? "#f7cfd6" :
+                this.isSameVal ? "#c3d7ea" :
+                    this.hasCandidate ? "#d4ebda" :
+                        this.isNeighbor ? "#e2ebf3" :
+                            null;
     }
 
     private drawValue(size: number): void {
@@ -234,7 +242,7 @@ class Cell {
         this.ctx.fillStyle = "#6e7c8c";
         const fontSize = Math.floor(getCanvasSize() / 25) - 5;
         this.ctx.font = `${fontSize}px sans-serif`;
-        this.candidates.forEach((candidate) => {
+        this.candidates.forEach(candidate => {
             const xIndex = (candidate - 1) % 3;
             const yIndex = Math.floor((candidate - 1) / 3);
             const x = (this.col * size) + ((xIndex + 1) * size / 4);
@@ -279,7 +287,7 @@ class Board {
     }
 
     public init(): void {
-        const cells = this.loadBoard();
+        const cells = this.loadCells();
         if (cells) {
             this.cells = cells;
             return;
@@ -293,48 +301,52 @@ class Board {
     }
 
     public bind(): void {
-        canvas.addEventListener("click", (e) => {
-            this.handleOnClick(e);
-        });
-        document.addEventListener("keydown", (e) => {
-            this.handleOnKeyPressed(e.key);
-        });
-        document.querySelectorAll(".numpad-item").forEach((item) => {
+        canvas.addEventListener("click", e => this.handleOnClick(e));
+        document.addEventListener("keydown", e => this.handleOnKeyPressed(e.key));
+        const actionsMap = [
+            { id: "#game-controls-import", action: () => this.import() },
+            { id: "#game-controls-reset", action: () => this.reset() },
+            { id: "#game-controls-undo", action: () => this.undo() },
+            { id: "#game-controls-redo", action: () => this.redo() },
+            { id: "#game-controls-create-notes", action: () => this.createNotes() },
+            { id: "#game-controls-solve", action: () => this.solve() },
+        ];
+        actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
+        document.querySelectorAll(".numpad-item").forEach(item => {
             if (item instanceof HTMLElement && item.dataset["value"]) {
-                item.addEventListener("click", () => {
-                    this.handleOnKeyPressed(item.dataset["value"]!);
-                });
+                item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
             }
-        });
-        document.querySelector("#game-controls-import")?.addEventListener("click", () => {
-            this.importSudoku();
-        });
-        document.querySelector("#game-controls-reset")?.addEventListener("click", () => {
-            this.reset();
-        });
-        document.querySelector("#game-controls-undo")?.addEventListener("click", () => {
-            this.undo();
-        });
-        document.querySelector("#game-controls-redo")?.addEventListener("click", () => {
-            this.redo();
-        });
-        document.querySelector("#game-controls-create-notes")?.addEventListener("click", () => {
-            this.createNotes();
-        });
-        document.querySelector("#game-controls-solve")?.addEventListener("click", () => {
-            this.solve();
         });
     }
 
     public draw(): void {
         this.ctx.reset();
         const cellSize = getCanvasSize() / 9;
-        this.cells.forEach((row) => row.forEach((cell) => {
-            cell.draw(cellSize);
-        }));
+        this.cells.flat().forEach(cell => cell.draw(cellSize));
         this.drawCells(cellSize);
         this.drawGrid(cellSize);
         this.drawBoxes(cellSize);
+    }
+
+    private loadCells(): Cell[][] | null {
+        const values = localStorage.getItem(this.boardKey)?.split(",");
+        if (values?.length !== 81) {
+            console.warn("Saved cells length missmatch");
+            return null;
+        }
+        const result: Cell[][] = [];
+        for (let i = 0; i < 9; i++) {
+            result[i] = [];
+            for (let j = 0; j < 9; j++) {
+                try {
+                    result[i][j] = Cell.fromEncoded(values[(i * 9) + j], i, j);
+                } catch (error) {
+                    console.warn("Saved cell creation error: ", error);
+                    return null;
+                }
+            }
+        }
+        return result;
     }
 
     private drawGrid(cellSize: number): void {
@@ -385,10 +397,7 @@ class Board {
     }
 
     private handleOnKeyPressed(value: string): void {
-        if (isWinPopupVisible()) {
-            return;
-        }
-        if (!this.selectedCell) {
+        if (isWinPopupVisible() || !this.selectedCell) {
             return;
         }
         if (!isNaN(parseInt(value))) {
@@ -411,12 +420,10 @@ class Board {
         if (!changed) {
             return;
         }
-        this.saveBoard();
+        this.save(this.encode());
         this.applyCursorFlags();
         this.draw();
-        if (this.isValidSolution()) {
-            changeWinPopupVisibility(true);
-        }
+        this.checkWin();
     }
 
     private handleOnNotesPressed(cell: Cell, value: number): boolean {
@@ -444,9 +451,7 @@ class Board {
         }
         cell.value = cell.value === value ? 0 : value;
         if (notesMode === NOTES_MODES.auto_notes && cell.value) {
-            this.getNeighborCells(cell, (c) => !c.value).forEach((c) => {
-                c.removeCandidate(cell.value);
-            });
+            this.getNeighborCells(cell, c => !c.value).forEach(c => c.removeCandidate(cell.value));
         }
         return true;
     }
@@ -479,6 +484,28 @@ class Board {
         this.draw();
     }
 
+    private checkWin(): void {
+        if (this.cells.flat().some(cell => !cell.value)) {
+            return;
+        }
+        const values = new Set();
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = this.cells[i][j];
+                const rowKey = `row-${i}-${cell.value}`;
+                const colKey = `col-${j}-${cell.value}`;
+                const boxKey = `box-${Math.floor(i / 3)}-${Math.floor(j / 3)}-${cell.value}`;
+                if (values.has(rowKey) || values.has(colKey) || values.has(boxKey)) {
+                    return;
+                }
+                values.add(rowKey);
+                values.add(colKey);
+                values.add(boxKey);
+            }
+        }
+        changeWinPopupVisibility(true);
+    }
+
     private getEventCell(event: MouseEvent): Cell {
         const cellSize = getCanvasSize() / 9;
         const col = Math.floor(event.offsetX / cellSize);
@@ -488,26 +515,27 @@ class Board {
 
     private applyCursorFlags(): void {
         const neighborCells = this.selectedCell ? this.getNeighborCells(this.selectedCell) : new Set<Cell>();
-        this.cells.forEach((row) => row.forEach((cell) => {
+        this.cells.flat().forEach(cell => {
             cell.isSelected = cell === this.selectedCell;
             cell.isNeighbor = neighborCells.has(cell);
             cell.hasCandidate = !cell.isSelected && !!this.selectedCell?.value && cell.candidates.includes(this.selectedCell.value);
             cell.isSameVal = !cell.isSelected && !!this.selectedCell?.value && cell.value === this.selectedCell.value;
             cell.isConflict = cell.isSameVal && cell.isNeighbor;
-        }));
+        });
     }
 
     private getNeighborCells(cell: Cell, filterFn: (c: Cell) => boolean = () => true): Set<Cell> {
-        const cells = new Set<Cell>([
-            ...this.cells[cell.row].filter(c => c !== cell && filterFn(c)),
-            ...this.cells.map(r => r[cell.col]).filter(c => c !== cell && filterFn(c)),
-        ]);
+        const cells = new Set<Cell>();
         const boxRowStart = Math.floor(cell.row / 3) * 3;
         const boxColStart = Math.floor(cell.col / 3) * 3;
-        for (let row = boxRowStart; row < boxRowStart + 3; row++) {
-            for (let col = boxColStart; col < boxColStart + 3; col++) {
+        for (let row = 0; row < this.cells.length; row++) {
+            for (let col = 0; col < this.cells[row].length; col++) {
                 const c = this.cells[row][col];
-                if (c !== cell && filterFn(c)) {
+                if (c !== cell && filterFn(c) && (
+                    row === cell.row ||
+                    col === cell.col ||
+                    (row >= boxRowStart && row < boxRowStart + 3 && col >= boxColStart && col < boxColStart + 3)
+                )) {
                     cells.add(c);
                 }
             }
@@ -515,9 +543,10 @@ class Board {
         return cells;
     }
 
-    private importSudoku(): void {
+    private import(): void {
         const field = window.prompt("Enter a string of 81 numbers (you can express blanks as 0 or '.')");
         if (field?.length !== 81) {
+            console.warn("Import board length missmatch");
             return;
         }
         const result: Cell[][] = [];
@@ -525,26 +554,35 @@ class Board {
             result[i] = [];
             for (let j = 0; j < 9; j++) {
                 const fieldValue = field[(i * 9) + j];
-                if (isNaN(parseInt(fieldValue)) && fieldValue !== ".") {
+                const value = fieldValue === "." ? 0 : parseInt(fieldValue);
+                try {
+                    result[i][j] = new Cell(j, i, value, value !== 0);
+                } catch (error) {
+                    console.warn("Import cell creation error: ", error);
                     return;
                 }
-                const value = fieldValue === "." ? 0 : parseInt(fieldValue);
-                result[i][j] = new Cell(j, i, value, value !== 0);
             }
         }
         this.cells = result;
-        this.saveBoard();
+        this.selectedCell = null;
+        this.save(this.encode());
         this.applyCursorFlags();
         this.draw();
     }
 
     private reset(): void {
-        this.cells.forEach((row) => row.forEach((cell) => {
-            cell.reset();
-        }));
-        this.saveBoard();
+        this.cells.flat().forEach(cell => cell.reset());
+        this.save(this.encode());
         this.applyCursorFlags();
         this.draw();
+    }
+
+    private encode(): string {
+        return this.cells.flatMap(row => row.map(cell => cell.encode())).toString();
+    }
+
+    private save(board: string): void {
+        localStorage.setItem(this.boardKey, board);
     }
 
     private undo(): void {
@@ -556,51 +594,45 @@ class Board {
     }
 
     private createNotes(): void {
-        this.cells.forEach((row) => row.filter(cell => !cell.value).forEach((cell) => {
+        this.cells.flat().filter(cell => !cell.value).forEach(cell => {
             const usedValues = Array.from(this.getNeighborCells(cell)).map(c => c.value);
             cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter(v => !usedValues.includes(v));
-        }));
-        this.saveBoard();
+        });
+        this.save(this.encode());
         this.applyCursorFlags();
         this.draw();
     }
 
     private solve(): void {
-        // TODO
-
-        function getCSRFToken(): string | null {
-            const name = "csrftoken";
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            return parts.pop()?.split(';').shift() || null;
-        }
-
-        async function postData(url: string, data: any) {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCSRFToken() || "",
-                },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) {
-                console.error(await response.json());
-                throw new Error("Response: " + response.status);
-            }
-            return await response.json();
-        }
-
         const url = "solve/";
-        const payload = { "board": localStorage.getItem(this.boardKey)?.split(",") };
+        const payload = { "board": this.encode() };
+        this.postData(url, payload)
+            .then(data => this.processSolveResponse(data))
+            .catch(error => console.error("Solve request:", error));
+    }
 
-        postData(url, payload)
-            .then((data) => {
-                this.processSolveResponse(data);
-            })
-            .catch((error) => {
-                console.error("Solve request:", error);
-            });
+    private getCSRFToken(): string | null {
+        const name = "csrftoken";
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        return parts.pop()?.split(";").shift() || null;
+    }
+
+    private async postData(url: string, data: any) {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": this.getCSRFToken() || "",
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            console.error(errorDetails);
+            throw new Error(`Response: ${response.status}`);
+        }
+        return await response.json();
     }
 
     private processSolveResponse(response: any): void {
@@ -608,87 +640,15 @@ class Board {
         if (response.reason) {
             return;
         }
-        // TODO
-        localStorage.setItem(this.boardKey, response.result);
-        const cells = this.loadBoard();
-        if (cells) {
-            this.cells = cells;
-            this.draw();
-            if (this.isValidSolution()) {
-                changeWinPopupVisibility(true);
-            }
+        this.save(response.result);
+        const cells = this.loadCells();
+        if (!cells) {
+            return;
         }
-    }
-
-    private saveBoard(): void {
-        const result: string[] = [];
-        this.cells.forEach((row) => row.forEach((cell) => {
-            let value = cell.value ? cell.value : 0;
-            if (!value) {
-                cell.candidates.forEach((cand) => {
-                    value += Math.pow(2, cand - 1);
-                });
-            }
-            const prefix = cell.isGiven ? "-" : cell.value ? "+" : "";
-            result.push(`${prefix}${value}`);
-        }));
-        localStorage.setItem(this.boardKey, result.toString());
-    }
-
-    private loadBoard(): Cell[][] | null {
-        const values = localStorage.getItem(this.boardKey)?.split(",");
-        if (values?.length !== 81) {
-            return null;
-        }
-        const result: Cell[][] = [];
-        for (let i = 0; i < 9; i++) {
-            result[i] = [];
-            for (let j = 0; j < 9; j++) {
-                const cell = this.createSavedCell(values[(i * 9) + j], j, i);
-                if (!cell) {
-                    return null;
-                }
-                result[i][j] = cell;
-            }
-        }
-        return result;
-    }
-
-    private createSavedCell(value: string, x: number, y: number): Cell | null {
-        const val = Math.abs(parseInt(value));
-        if (isNaN(val) || val > 511) {
-            return null;
-        }
-        const [isGiven, isSolved] = [value[0] === "-", value[0] === "+"];
-        if (isGiven || isSolved) {
-            return val > 0 && val < 10 ? new Cell(x, y, val, isGiven) : null;
-        }
-        const mask = val.toString(2).split("").reverse();
-        const candidates = mask.reduce((acc: number[], current, i) => {
-            return current === "1" ? [...acc, i + 1] : acc;
-        }, []);
-        return new Cell(x, y, 0, false, candidates);
-    }
-
-    private isValidSolution(): boolean {
-        if (this.cells.some(row => row.some(cell => !cell.value))) {
-            return false;
-        }
-        const values = new Set();
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                const cell = this.cells[i][j];
-                const rowKey = `row-${i}-${cell.value}`;
-                const colKey = `col-${j}-${cell.value}`;
-                const boxKey = `box-${Math.floor(i / 3)}-${Math.floor(j / 3)}-${cell.value}`;
-                if (values.has(rowKey) || values.has(colKey) || values.has(boxKey)) {
-                    return false;
-                }
-                values.add(rowKey);
-                values.add(colKey);
-                values.add(boxKey);
-            }
-        }
-        return true;
+        this.cells = cells;
+        this.selectedCell = null;
+        this.applyCursorFlags();
+        this.draw();
+        this.checkWin();
     }
 }

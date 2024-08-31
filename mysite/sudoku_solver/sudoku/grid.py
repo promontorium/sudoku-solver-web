@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Iterable, Self, Unpack
+from typing import Iterable, Unpack
 
 from .cell import Cell
 from .cells_holder import CellsFilter, CellsHolder
@@ -48,17 +48,6 @@ class Grid(CellsHolder):
                 result += str(value) if value else "."
         return result
 
-    @classmethod
-    def from_encoded(cls, field: Iterable[str]) -> Self:
-        givens = [c[1:] if c.startswith("-") else "." for c in field]
-        grid = cls(givens)
-        for c, cell in zip(field, grid.cells):
-            if c.startswith("+"):
-                cell.value = int(c[1:])
-            if c != "0" and all(char.isdigit() for char in c):
-                cell.candidates = [idx + 1 for idx, char in enumerate(bin(int(c))[2:][::-1]) if char == "1"]
-        return grid
-
     def get_row(self, cell: Cell) -> Container:
         try:
             return self._rows[cell.coordinates[1]]
@@ -82,15 +71,6 @@ class Grid(CellsHolder):
     def get_neighbors(self, cell: Cell, /, **kwargs: Unpack[CellsFilter]) -> set[Cell]:
         conts = (self.get_row(cell), self.get_column(cell), self.get_box(cell))
         return {cont_cell for cont in conts for cont_cell in cont.filter_cells(**kwargs)} - {cell}
-
-    def encode(self) -> str:
-        result = []
-        for cell in self.cells:
-            if cell.value:
-                result.append(f'{'-' if cell.is_given else '+'}{cell.value}')
-            else:
-                result.append(str(sum(2 ** (cand - 1) for cand in cell.candidates)))
-        return ','.join(result)
 
     def set_value(self, cell: Cell, value: int) -> None:
         self._logger.info("%s: Setting cell value: %s = %d", self, cell, value)
