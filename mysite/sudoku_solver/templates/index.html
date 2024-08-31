@@ -6,6 +6,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles/board.css' %}">
 {% endblock %}
 
+{% block js %}
+    <script src="{% static 'js/board.js' %}"></script>
+{% endblock %}
+
 {% block main %}
     {% include 'board.html' %}
 {% endblock %}

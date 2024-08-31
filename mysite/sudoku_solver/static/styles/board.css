@@ -1,16 +1,11 @@
 #sudoku-container {
-    width: 100%;
     text-align: center;
-    padding: 10px;
-    margin-top: 60px;
 }
 
 #sudoku-container h1 {
-    font-size: 40px;
-    padding-top: 20px;
     color: #344861;
+    padding: 10px;
     margin: 0;
-    padding: 0;
 }
 
 #canvas-grid {
@@ -20,7 +15,7 @@
 #game-controls {
     display: flex;
     justify-content: center;
-    padding: 10px 0 0;
+    padding: 10px 0 0 0;
 }
 
 .game-controls-item-wrap {

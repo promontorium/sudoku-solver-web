@@ -1,24 +1,17 @@
-{% load static %}
-
-<h1><a href="{% url 'sudoku-solver:index' %}" class="header-clickable">My Website</a></h1>
-{% if user.is_authenticated %}
-    <div id="username-dropdown">
-        <button id="username-dropdown-button" class="header-clickable">{{ user.username }}&triangledown;</b></button>
-        <div class="username-dropdown-content">
-            <form action="{% url 'sudoku-solver:logout' %}" method="post">
-                {% csrf_token %}
-                <button class="username-dropdown-item" type="submit">Logout</button>
-            </form>
-            <a class="username-dropdown-item" href="{% url 'sudoku-solver:index' %}">Test Link</a>
+<div class="header-container">
+    <h2><a href="{% url 'sudoku-solver:index' %}" class="header-item">My Website</a></h2>
+    {% if user.is_authenticated %}
+        <div class="header-dropdown-container">
+            <button class="header-item header-dropdown-titile">{{ user.username }}<b>&triangledown;</b></button>
+            <div class="dropdown-content">
+                <form action="{% url 'sudoku-solver:logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="header-dropdown-item" type="submit">Logout</button>
+                </form>
+                <a class="header-dropdown-item" href="{% url 'sudoku-solver:index' %}">Test Link</a>
+            </div>
         </div>
-    </div>
-{% else %}
-    <div id="login-button-form">
-        <form action="{% url 'sudoku-solver:login' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Login</button>
-        </form>
-    </div>
-{% endif %}
-
-<script src="{% static 'js/header.js' %}"></script>
+    {% else %}
+        <a class="header-item" href="{% url 'sudoku-solver:login' %}">Login</a>
+    {% endif %}
+</div>

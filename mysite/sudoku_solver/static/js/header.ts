@@ -5,9 +5,10 @@ window.addEventListener("load", () => {
     if (!header) {
         return;
     }
+    const headerHeight = getComputedStyle(document.documentElement).getPropertyValue("--header-height") || "100%";
     window.addEventListener("scroll", () => {
         const scrollTop = document.documentElement.scrollTop;
-        header.style.top = scrollTop > lastScrollTop ? "-60px" : "0";
+        header.style.top = scrollTop > lastScrollTop ? `-${headerHeight}` : "0";
         lastScrollTop = scrollTop < 0 ? 0 : scrollTop;
     });
 });

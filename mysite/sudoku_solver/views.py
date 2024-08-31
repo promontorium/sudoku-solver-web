@@ -1,28 +1,47 @@
 import json
 
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
-from django.http import HttpRequest, HttpResponseNotAllowed, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import FormView, TemplateView
 
-from . import solver, sudoku
+from . import forms, solver, sudoku
 from .utils import board_utils
-
-
-class LoginPageView(LoginView):
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect("sudoku-solver:index")
-        return super().dispatch(request, *args, **kwargs)
 
 
 class HomePageView(TemplateView):
     template_name = "index.html"
 
 
-def solve(request: HttpRequest):
+class LoginPageView(LoginView):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(self.next_page)
+        return super().dispatch(request, *args, **kwargs)
+
+
+class SignUpView(FormView):
+    form_class = forms.SignUpForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("sudoku-solver:index")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(self.success_url)
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form) -> HttpResponse:
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
+
+
+def solve_step(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
+    # TODO handle exception
     data = json.loads(request.body)
     request_board = data.get("board")
     try:

@@ -309,7 +309,7 @@ class Board {
             { id: "#game-controls-undo", action: () => this.undo() },
             { id: "#game-controls-redo", action: () => this.redo() },
             { id: "#game-controls-create-notes", action: () => this.createNotes() },
-            { id: "#game-controls-solve", action: () => this.solve() },
+            { id: "#game-controls-solve-step", action: () => this.solveStep() },
         ];
         actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
         document.querySelectorAll(".numpad-item").forEach(item => {
@@ -603,12 +603,12 @@ class Board {
         this.draw();
     }
 
-    private solve(): void {
-        const url = "solve/";
+    private solveStep(): void {
+        const url = "solve-step/";
         const payload = { "board": this.encode() };
         this.postData(url, payload)
             .then(data => this.processSolveResponse(data))
-            .catch(error => console.error("Solve request:", error));
+            .catch(error => console.error("Solve step request:", error));
     }
 
     private getCSRFToken(): string | null {

@@ -8,12 +8,12 @@
 
 {% block main %}
     <div class="login-container">
-        <h2 class="login-container-name">Login</h2>
+        <h2 class="login-container-name">Sign Up</h2>
         <form method="post" class="login-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <p class="other-login-option">Don't have an accoount? Create one <a href="{% url 'sudoku-solver:signup' %}">here</a></p>
-            <button type="submit" name="login-submit">Sign In</button>
+            <p class="other-login-option">Already have an accoount? Click <a href="{% url 'sudoku-solver:login' %}">here</a> to login</p>
+            <button type="submit" name="login">Sign Up</button>
         </form>
     </div>
 {% endblock %}
