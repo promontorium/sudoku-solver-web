@@ -275,8 +275,14 @@ class Cell {
 
 class Board {
     private readonly boardKey: string = "sudokuboard";
+    private readonly prevBoardKey: string = "prevboard";
+    private readonly prevBoardActionKey: string = "prevaction";
+    private readonly undoAction: string = "undoaction";
+    private readonly redoAction: string = "redoaction";
     private cells: Cell[][] = [];
     private selectedCell: Cell | null = null;
+    private prevBoard: string | null = null;
+    private prevBoardAction: string | null = null;
     private readonly ctx: CanvasRenderingContext2D;
 
     constructor() {
@@ -287,7 +293,9 @@ class Board {
     }
 
     public init(): void {
-        const cells = this.loadCells();
+        this.prevBoard = localStorage.getItem(this.prevBoardKey);
+        this.prevBoardAction = localStorage.getItem(this.prevBoardActionKey);
+        const cells = this.loadCells(localStorage.getItem(this.boardKey) || "");
         if (cells) {
             this.cells = cells;
             return;
@@ -328,8 +336,8 @@ class Board {
         this.drawBoxes(cellSize);
     }
 
-    private loadCells(): Cell[][] | null {
-        const values = localStorage.getItem(this.boardKey)?.split(",");
+    private loadCells(data: string): Cell[][] | null {
+        const values = data.split(",");
         if (values?.length !== 81) {
             console.warn("Saved cells length missmatch");
             return null;
@@ -582,15 +590,47 @@ class Board {
     }
 
     private save(board: string): void {
+        this.prevBoard = localStorage.getItem(this.boardKey);
+        localStorage.setItem(this.prevBoardKey, this.prevBoard || "");
+        this.prevBoardAction = this.undoAction;
+        localStorage.setItem(this.prevBoardActionKey, this.prevBoardAction);
         localStorage.setItem(this.boardKey, board);
     }
 
     private undo(): void {
-        // TODO
+        if (this.prevBoardAction !== this.undoAction || !this.prevBoard) {
+            return;
+        }
+        const cells = this.loadCells(this.prevBoard);
+        if (!cells) {
+            console.warn("Undo: unexpected undo board value");
+            return;
+        }
+        this.cells = cells;
+        this.selectedCell = null;
+        this.save(this.prevBoard);
+        this.prevBoardAction = this.redoAction;
+        localStorage.setItem(this.prevBoardActionKey, this.prevBoardAction);
+        this.applyCursorFlags();
+        this.draw();
+        this.checkWin();
     }
 
     private redo(): void {
-        // TODO
+        if (this.prevBoardAction !== this.redoAction || !this.prevBoard) {
+            return;
+        }
+        const cells = this.loadCells(this.prevBoard);
+        if (!cells) {
+            console.warn("Redo: unexpected undo board value");
+            return;
+        }
+        this.cells = cells;
+        this.selectedCell = null;
+        this.save(this.prevBoard);
+        this.applyCursorFlags();
+        this.draw();
+        this.checkWin();
     }
 
     private createNotes(): void {
@@ -640,11 +680,12 @@ class Board {
         if (response.reason) {
             return;
         }
-        this.save(response.result);
-        const cells = this.loadCells();
+        const cells = this.loadCells(response.result);
         if (!cells) {
+            console.error("Solve response: unexpected response");
             return;
         }
+        this.save(response.result);
         this.cells = cells;
         this.selectedCell = null;
         this.applyCursorFlags();

@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect
@@ -38,6 +39,7 @@ class SignUpView(FormView):
         return super().form_valid(form)
 
 
+@login_required
 def solve_step(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
