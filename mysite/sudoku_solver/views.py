@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -16,7 +16,7 @@ class HomePageView(TemplateView):
     template_name = "index.html"
 
 
-class LoginPageView(LoginView):
+class SignInView(LoginView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(self.next_page)
@@ -39,7 +39,14 @@ class SignUpView(FormView):
         return super().form_valid(form)
 
 
-@login_required
+class ChangePasswordView(PasswordChangeView):
+    # TODO login url
+    # registration/password_change_form.html
+    template_name = "registration/change-password.html"
+    success_url = reverse_lazy("sudoku-solver:index")
+
+
+@login_required(login_url=reverse_lazy("sudoku-solver:login"))
 def solve_step(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
