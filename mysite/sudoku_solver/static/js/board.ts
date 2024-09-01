@@ -1,363 +1,148 @@
 const enum NOTES_MODES { basic, pencil, auto_notes };
-
 let notesMode = NOTES_MODES.basic;
 
-let canvas: HTMLCanvasElement;
-let winPopup: HTMLDivElement;
-
 window.addEventListener("load", () => {
-    canvas = document.querySelector("#canvas-grid")!;
-    if (!canvas) {
-        throw new Error("Canvas not found");
+    const gameControls = document.querySelector("#game-controls");
+    if (gameControls) {
+        document.querySelector("#game-controls-notes")?.addEventListener("click", () => toggleNotesMode(gameControls));
     }
-    winPopup = document.querySelector("#win-popup")!;
-    if (!winPopup) {
-        throw new Error("Victory is not possible...");
-    }
-    window.addEventListener("click", event => {
-        if (event.target === winPopup) {
-            changeWinPopupVisibility(false);
-        }
-    });
-    document.addEventListener("keydown", event => {
-        if (["Enter", "Escape"].includes(event.key)) {
-            changeWinPopupVisibility(false);
-        }
-    });
-    document.querySelector("#win-popup-close")?.addEventListener("click", () => changeWinPopupVisibility(false));
-    resize();
-    const board = new Board();
-    board.init();
-    board.bind();
-    board.draw();
-    document.querySelector("#game-controls-notes")?.addEventListener("click", () => togleNotesMode());
-    window.addEventListener("resize", () => {
-        resize();
-        board.draw();
-    });
+    new Board(new CanvasRenderer(), new WinPopupNotification()).start();
 });
 
-function togleNotesMode(): void {
-    const contClassList = document.querySelector("#game-controls")?.classList;
-    switch (notesMode) {
-        case NOTES_MODES.basic:
-            contClassList?.add("pencil-mode");
-            notesMode = NOTES_MODES.pencil;
-            break;
-        case NOTES_MODES.pencil:
-            contClassList?.remove("pencil-mode");
-            contClassList?.add("auto-notes-mode");
-            notesMode = NOTES_MODES.auto_notes;
-            break;
-        case NOTES_MODES.auto_notes:
-            contClassList?.remove("auto-notes-mode");
-            notesMode = NOTES_MODES.basic;
-            break;
-        default:
-            throw new Error("Invalid notes mode");
+function toggleNotesMode(element: Element): void {
+    const MODE_CLASSES: Record<NOTES_MODES, string> = {
+        [NOTES_MODES.basic]: "",
+        [NOTES_MODES.pencil]: "pencil-mode",
+        [NOTES_MODES.auto_notes]: "auto-notes-mode"
+    }
+    const currentModeClass = MODE_CLASSES[notesMode];
+    if (currentModeClass) {
+        element.classList.remove(currentModeClass);
+    }
+    notesMode = (notesMode + 1) % Object.keys(MODE_CLASSES).length;
+    const newModeClass = MODE_CLASSES[notesMode];
+    if (newModeClass) {
+        element.classList.add(newModeClass);
     }
 }
 
-function resize(): void {
-    const container = document.querySelector("#sudoku-container");
-    if (!container) {
-        throw new Error("Resize error");
-    }
-    const contStyle = getComputedStyle(container);
-    let containerWidth = container.clientWidth;
-    let containerHeight = container.clientHeight
-    containerWidth -= parseFloat(contStyle.paddingLeft) + parseFloat(contStyle.paddingRight);
-    containerHeight -= parseFloat(contStyle.paddingTop) + parseFloat(contStyle.paddingBottom);
-    const containerSize = Math.min(containerWidth, containerHeight);
-    const canvasMaxSize = 500, canvasMinSize = 250;
-    canvas.width = canvas.height = Math.min(Math.max(containerSize, canvasMinSize), canvasMaxSize);
+interface IWinNotification {
+    state: boolean;
 }
 
-function getCanvasSize(): number {
-    return Math.min(canvas.offsetWidth, canvas.offsetHeight);
+interface ICanvasRenderer {
+    readonly canvas: HTMLCanvasElement;
+    draw(cells: Cell[][]): void;
+    resizeAndDraw(cells: Cell[][]): void;
+    getCellByOffset(offsetX: number, offsetY: number): { col: number, row: number };
 }
 
-function changeWinPopupVisibility(state: boolean): void {
-    winPopup.classList.toggle("is-visible", state);
-}
+class WinPopupNotification implements IWinNotification {
+    private readonly elementSelector = "#win-popup";
+    private readonly isVisibleClassName = "is-visible";
+    private readonly closeButtonSelector = "#win-popup-close";
+    private readonly element;
 
-function isWinPopupVisible(): boolean {
-    return winPopup.classList.contains("is-visible");
-}
-
-class Cell {
-    private wrappedValue = 0;
-    private wrappedCandidates = new Set<number>;
-    private readonly ctx: CanvasRenderingContext2D;
-    public readonly col: number;
-    public readonly row: number;
-    public readonly isGiven: boolean;
-    public hasCandidate = false;
-    public isSelected = false;
-    public isNeighbor = false;
-    public isSameVal = false;
-    public isConflict = false;
-
-    public constructor(col: number, row: number, value?: number, isGiven?: boolean, candidates?: number[]) {
-        this.col = Math.floor(col);
-        this.row = Math.floor(row);
-        if (this.col < 0 || this.row < 0 || this.col > 8 || this.row > 8) {
-            throw new Error(`Cell ${this.col} ${this.row}: invalid coordinates`);
+    public constructor() {
+        this.element = document.querySelector(this.elementSelector)!;
+        if (!this.element) {
+            throw new Error("Victory is not possible...");
         }
-        this.value = value ?? 0;
-        this.candidates = candidates ?? [];
-        this.isGiven = !!isGiven;
-        if (this.isGiven && !this.wrappedValue) {
-            throw new Error(`Cell ${this.col} ${this.row}: givens should have non zero value`);
-        }
-        this.ctx = canvas.getContext("2d")!;
-        if (!this.ctx) {
-            throw new Error(`Cell ${this.col} ${this.row}: canvas not found`);
-        }
+        this.bind();
     }
 
-    static fromEncoded(value: string, row: number, col: number): Cell {
-        const val = Math.abs(parseInt(value));
-        if (isNaN(val) || val > 511) {
-            throw new Error("Unexpected encoding");
-        }
-        const isGiven = value[0] === "-";
-        const isSolved = value[0] === "+";
-        if (isGiven || isSolved) {
-            return new Cell(col, row, val, isGiven);
-        }
-        const candidates = val.toString(2).split("").reverse()
-            .map((current, i) => current === "1" ? i + 1 : null)
-            .filter(candidate => candidate !== null);
-        return new Cell(col, row, 0, isGiven, candidates);
+    public get state(): boolean {
+        return this.element.classList.contains(this.isVisibleClassName);
     }
 
-    public get value(): number {
-        return this.wrappedValue;
+    public set state(state: boolean) {
+        this.element.classList.toggle(this.isVisibleClassName, state);
     }
 
-    public set value(value: number) {
-        this.validateCellChange();
-        this.validateValue(value, true);
-        this.wrappedValue = Math.floor(value);
-        this.wrappedCandidates.clear();
-    }
-
-    public get candidates(): number[] {
-        return Array.from(this.wrappedCandidates);
-    }
-
-    public set candidates(values: number[]) {
-        if (!values.length && !this.wrappedCandidates.size) {
-            return;
-        }
-        this.validateCellChange();
-        this.validateCandChange();
-        this.wrappedCandidates.clear();
-        values.forEach(value => {
-            this.validateValue(value, false);
-            this.wrappedCandidates.add(Math.floor(value));
-        });
-    }
-
-    public addCandidate(value: number): void {
-        this.validateCellChange();
-        this.validateCandChange();
-        this.validateValue(value, false);
-        this.wrappedCandidates.add(value);
-    }
-
-    public removeCandidate(value: number): boolean {
-        this.validateCellChange();
-        this.validateCandChange();
-        return this.wrappedCandidates.delete(value);
-    }
-
-    public reset(): void {
-        if (this.isGiven) {
-            return;
-        }
-        this.wrappedValue = 0;
-        this.wrappedCandidates.clear();
-    }
-
-    public encode(): string {
-        let val = this.value || this.candidates.reduce((acc, cand) => acc + Math.pow(2, cand - 1), 0);
-        const prefix = this.isGiven ? "-" : this.value ? "+" : "";
-        return `${prefix}${val}`;
-    }
-
-    public draw(size: number): void {
-        this.drawCursors(size);
-        this.drawValue(size);
-        this.drawCandidates(size);
-    }
-
-    private drawCursors(size: number): void {
-        const color = this.getCursorColor();
-        if (!color) {
-            return;
-        }
-        this.ctx.beginPath();
-        this.ctx.lineWidth = 0;
-        this.ctx.fillStyle = color;
-        this.ctx.rect(this.col * size, this.row * size, size, size);
-        this.ctx.closePath();
-        this.ctx.fill();
-    }
-
-    private getCursorColor(): string | null {
-        return this.isSelected ? "#bbdefb" :
-            this.isConflict ? "#f7cfd6" :
-                this.isSameVal ? "#c3d7ea" :
-                    this.hasCandidate ? "#d4ebda" :
-                        this.isNeighbor ? "#e2ebf3" :
-                            null;
-    }
-
-    private drawValue(size: number): void {
-        if (!this.wrappedValue) {
-            return;
-        }
-        this.ctx.beginPath();
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = this.isGiven ? "#344861" : "#325aaf";
-        const fontSize = Math.floor(getCanvasSize() / 12) - 5;
-        this.ctx.font = `${fontSize}px sans-serif`;
-        const x = (this.col * size) + (size / 2);
-        const y = (this.row * size) + (size / 2);
-        this.ctx.fillText(this.wrappedValue.toString(), x, y);
-        this.ctx.closePath();
-        this.ctx.fill();
-    }
-
-    private drawCandidates(size: number): void {
-        if (!this.wrappedCandidates.size) {
-            return;
-        }
-        this.ctx.beginPath();
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = "#6e7c8c";
-        const fontSize = Math.floor(getCanvasSize() / 25) - 5;
-        this.ctx.font = `${fontSize}px sans-serif`;
-        this.candidates.forEach(candidate => {
-            const xIndex = (candidate - 1) % 3;
-            const yIndex = Math.floor((candidate - 1) / 3);
-            const x = (this.col * size) + ((xIndex + 1) * size / 4);
-            const y = (this.row * size) + ((yIndex + 1) * size / 4);
-            this.ctx.fillText(candidate.toString(), x, y);
-        });
-        this.ctx.closePath();
-        this.ctx.fill();
-    }
-
-    private validateCellChange(): void {
-        if (this.isGiven) {
-            throw new Error(`Cell ${this.col} ${this.row}: can not change given cell`);
-        }
-    }
-
-    private validateCandChange(): void {
-        if (this.wrappedValue) {
-            throw new Error(`Cell ${this.col} ${this.row}: can not change solved cell candidates`);
-        }
-    }
-
-    private validateValue(value: number, allowZero: boolean = true): void {
-        const v = Math.floor(value);
-        if (isNaN(v) || v > 9 || (allowZero && value < 0) || (!allowZero && value < 1)) {
-            throw new Error(`$Cell ${this.col} ${this.row}: ${v} is not valid value`);
-        }
-    }
-}
-
-class Board {
-    private readonly boardKey: string = "sudokuboard";
-    private readonly prevBoardKey: string = "prevboard";
-    private readonly prevBoardActionKey: string = "prevaction";
-    private readonly undoAction: string = "undoaction";
-    private readonly redoAction: string = "redoaction";
-    private cells: Cell[][] = [];
-    private selectedCell: Cell | null = null;
-    private prevBoard: string | null = null;
-    private prevBoardAction: string | null = null;
-    private readonly ctx: CanvasRenderingContext2D;
-
-    constructor() {
-        this.ctx = canvas.getContext("2d")!;
-        if (!this.ctx) {
-            throw new Error("Board: canvas not found");
-        }
-    }
-
-    public init(): void {
-        this.prevBoard = localStorage.getItem(this.prevBoardKey);
-        this.prevBoardAction = localStorage.getItem(this.prevBoardActionKey);
-        const cells = this.loadCells(localStorage.getItem(this.boardKey) || "");
-        if (cells) {
-            this.cells = cells;
-            return;
-        }
-        for (let i = 0; i < 9; i++) {
-            this.cells[i] = [];
-            for (let j = 0; j < 9; j++) {
-                this.cells[i][j] = new Cell(j, i);
-            }
-        }
-    }
-
-    public bind(): void {
-        canvas.addEventListener("click", e => this.handleOnClick(e));
-        document.addEventListener("keydown", e => this.handleOnKeyPressed(e.key));
-        const actionsMap = [
-            { id: "#game-controls-import", action: () => this.import() },
-            { id: "#game-controls-reset", action: () => this.reset() },
-            { id: "#game-controls-undo", action: () => this.undo() },
-            { id: "#game-controls-redo", action: () => this.redo() },
-            { id: "#game-controls-create-notes", action: () => this.createNotes() },
-            { id: "#game-controls-solve-step", action: () => this.solveStep() },
-        ];
-        actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
-        document.querySelectorAll(".numpad-item").forEach(item => {
-            if (item instanceof HTMLElement && item.dataset["value"]) {
-                item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
+    private bind(): void {
+        window.addEventListener("click", event => {
+            if (event.target === this.element) {
+                this.state = false;
             }
         });
+        document.addEventListener("keydown", event => {
+            if (["Enter", "Escape"].includes(event.key)) {
+                this.state = false;
+            }
+        });
+        document.querySelector(this.closeButtonSelector)?.addEventListener("click", () => this.state = false);
+    }
+}
+
+class CanvasRenderer implements ICanvasRenderer {
+    public readonly canvas: HTMLCanvasElement;
+    private readonly containserSelector = "#sudoku-container";
+    private readonly canvasSelector = "#canvas-grid";
+    private readonly ctx;
+    private readonly container;
+    // TODO Colors/Fonts constants
+
+    public constructor() {
+        this.container = document.querySelector(this.containserSelector)!;
+        if (!this.container) {
+            throw new Error("Container context not found");
+        }
+        this.canvas = document.querySelector(this.canvasSelector)!;
+        if (!this.canvas || !(this.canvas instanceof HTMLCanvasElement)) {
+            throw new Error("Canvas not found");
+        }
+        this.ctx = this.canvas.getContext("2d")!;
+        if (!this.ctx) {
+            throw new Error("Canvas context not found");
+        }
     }
 
-    public draw(): void {
+    public draw(cells: Cell[][]): void {
         this.ctx.reset();
-        const cellSize = getCanvasSize() / 9;
-        this.cells.flat().forEach(cell => cell.draw(cellSize));
-        this.drawCells(cellSize);
-        this.drawGrid(cellSize);
-        this.drawBoxes(cellSize);
+        const cellSize = this.getCellSize();
+        cells.flat().forEach(cell => this.drawCell(cell, cellSize));
+        this.drawBorders(cellSize);
     }
 
-    private loadCells(data: string): Cell[][] | null {
-        const values = data.split(",");
-        if (values?.length !== 81) {
-            console.warn("Saved cells length missmatch");
-            return null;
-        }
-        const result: Cell[][] = [];
-        for (let i = 0; i < 9; i++) {
-            result[i] = [];
-            for (let j = 0; j < 9; j++) {
-                try {
-                    result[i][j] = Cell.fromEncoded(values[(i * 9) + j], i, j);
-                } catch (error) {
-                    console.warn("Saved cell creation error: ", error);
-                    return null;
-                }
-            }
-        }
-        return result;
+    public resizeAndDraw(cells: Cell[][]): void {
+        const { paddingLeft, paddingRight, paddingTop, paddingBottom } = getComputedStyle(this.container);
+        const paddingHorizontal = parseFloat(paddingLeft) + parseFloat(paddingRight);
+        const paddingVertical = parseFloat(paddingTop) + parseFloat(paddingBottom);
+        const containerWidth = this.container.clientWidth - paddingHorizontal;
+        const containerHeight = this.container.clientHeight - paddingVertical;
+        const containerSize = Math.min(containerWidth, containerHeight);
+        const canvasMaxSize = 500;
+        const canvasMinSize = 250;
+        const newSize = Math.min(Math.max(containerSize, canvasMinSize), canvasMaxSize);
+        this.canvas.width = newSize;
+        this.canvas.height = newSize;
+        this.draw(cells);
     }
 
-    private drawGrid(cellSize: number): void {
+    public getCellByOffset(offsetX: number, offsetY: number): { col: number, row: number } {
+        const cellSize = this.getCellSize();
+        const col = Math.floor(offsetX / cellSize);
+        const row = Math.floor(offsetY / cellSize);
+        return { col: col, row: row };
+    }
+
+    private getCellSize(): number {
+        return Math.min(this.canvas.offsetWidth, this.canvas.offsetHeight) / 9;
+    }
+
+    private drawCell(cell: Cell, size: number): void {
+        this.drawCellCursors(cell, size);
+        this.drawCellValue(cell, size);
+        this.drawCellCandidates(cell, size);
+    }
+
+    private drawBorders(cellSize: number) {
+        this.drawCellsBorders(cellSize);
+        this.drawGridBorders(cellSize);
+        this.drawBoxesBorders(cellSize);
+    }
+
+    private drawGridBorders(cellSize: number): void {
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#344861";
         this.ctx.lineWidth = 2;
@@ -366,7 +151,7 @@ class Board {
         this.ctx.stroke();
     }
 
-    private drawBoxes(cellSize: number): void {
+    private drawBoxesBorders(cellSize: number): void {
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#344861";
         this.ctx.lineWidth = 2;
@@ -380,7 +165,7 @@ class Board {
         this.ctx.stroke();
     }
 
-    private drawCells(cellSize: number): void {
+    private drawCellsBorders(cellSize: number) {
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#bfc6d4";
         this.ctx.lineWidth = 1;
@@ -397,15 +182,185 @@ class Board {
         this.ctx.stroke();
     }
 
+    private drawCellCursors(cell: Cell, size: number): void {
+        const color = this.getCellCursorColor(cell);
+        if (!color) {
+            return;
+        }
+        this.ctx.beginPath();
+        this.ctx.lineWidth = 0;
+        this.ctx.fillStyle = color;
+        this.ctx.rect(cell.col * size, cell.row * size, size, size);
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+
+    private getCellCursorColor(cell: Cell): string | null {
+        return cell.isSelected ? "#bbdefb" :
+            cell.isConflict ? "#f7cfd6" :
+                cell.isSameVal ? "#c3d7ea" :
+                    cell.hasCandidate ? "#d4ebda" :
+                        cell.isNeighbor ? "#e2ebf3" :
+                            null;
+    }
+
+    private drawCellValue(cell: Cell, size: number): void {
+        if (!cell.value) {
+            return;
+        }
+        this.ctx.beginPath();
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillStyle = cell.isGiven ? "#344861" : "#325aaf";
+        const fontSize = Math.floor(size * 0.75) - 5;
+        this.ctx.font = `${fontSize}px sans-serif`;
+        const x = (cell.col * size) + (size / 2);
+        const y = (cell.row * size) + (size / 2);
+        this.ctx.fillText(cell.value.toString(), x, y);
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+
+    private drawCellCandidates(cell: Cell, size: number): void {
+        if (!cell.candidates.length) {
+            return;
+        }
+        this.ctx.beginPath();
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillStyle = "#6e7c8c";
+        const fontSize = Math.floor(size * 0.375) - 5;
+        this.ctx.font = `${fontSize}px sans-serif`;
+        cell.candidates.forEach(candidate => {
+            const xIndex = (candidate - 1) % 3;
+            const yIndex = Math.floor((candidate - 1) / 3);
+            const x = (cell.col * size) + ((xIndex + 1) * size / 4);
+            const y = (cell.row * size) + ((yIndex + 1) * size / 4);
+            this.ctx.fillText(candidate.toString(), x, y);
+        });
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+}
+
+class Board {
+    private readonly boardKey = "sudokuboard";
+    private readonly prevBoardKey = "prevboard";
+    private readonly prevBoardActionKey = "prevaction";
+    private readonly undoAction = "undoaction";
+    private readonly redoAction = "redoaction";
+    private readonly canvasRenderer;
+    private readonly winNotification;
+    private wrappedCells: Cell[][] = [];
+    private selectedCell: Cell | null = null;
+    private prevBoard: string | null = null;
+    private prevBoardAction: string | null = null;
+    // TODO selectors constants for bind
+
+    constructor(canvasRenderer: ICanvasRenderer, winNotification: IWinNotification) {
+        this.prevBoard = localStorage.getItem(this.prevBoardKey);
+        this.prevBoardAction = localStorage.getItem(this.prevBoardActionKey);
+        const board = localStorage.getItem(this.boardKey);
+        const cells = board ? this.loadCells(board) : null;
+        this.cells = cells || Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
+        this.canvasRenderer = canvasRenderer;
+        this.winNotification = winNotification;
+    }
+
+    public start(): void {
+        this.canvasRenderer.resizeAndDraw(this.cells);
+        this.bind();
+    }
+
+    private get cells(): Cell[][] {
+        return this.wrappedCells;
+    }
+
+    private set cells(cells: Cell[][]) {
+        const prevSelectedCell = this.selectedCell;
+        this.wrappedCells = cells;
+        this.selectedCell = prevSelectedCell ? cells[prevSelectedCell.row][prevSelectedCell.col] : null;
+    }
+
+    private undo(): void {
+        this.performAction(this.undoAction);
+    }
+
+    private redo(): void {
+        this.performAction(this.redoAction);
+    }
+
+    private reset(): void {
+        this.cells.flat().forEach(cell => cell.reset());
+        this.saveAndRender();
+    }
+
+    private import(): void {
+        const field = window.prompt("Enter a string of 81 numbers (you can express blanks as 0 or '.')");
+        if (field?.length !== 81) {
+            console.warn("Import board length missmatch");
+            return;
+        }
+        try {
+            this.cells = Array.from({ length: 9 }, (_, i) =>
+                Array.from({ length: 9 }, (_, j) => {
+                    const fieldValue = field[i * 9 + j];
+                    const value = fieldValue === "." ? 0 : parseInt(fieldValue);
+                    return new Cell(j, i, value, value !== 0);
+                })
+            );
+        } catch (error) {
+            console.warn("Import cell creation error: ", error);
+            return;
+        }
+        this.saveAndRender();
+    }
+
+    private createNotes(): void {
+        this.cells.flat().filter(cell => !cell.value).forEach(cell => {
+            const usedValues = Array.from(this.getNeighborCells(cell)).map(c => c.value);
+            cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter(v => !usedValues.includes(v));
+        });
+        this.saveAndRender();
+    }
+
+    private solveStep(): void {
+        const url = "solve-step/";
+        const payload = { "board": this.encode() };
+        this.postData(url, payload)
+            .then(data => this.processSolveResponse(data))
+            .catch(error => console.error("Solve step request:", error));
+    }
+
+    private bind(): void {
+        document.addEventListener("keydown", event => this.handleOnKeyPressed(event.key));
+        document.querySelectorAll(".numpad-item").forEach(item => {
+            if (item instanceof HTMLElement && item.dataset["value"]) {
+                item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
+            }
+        });
+        const actionsMap = [
+            { id: "#game-controls-import", action: () => this.import() },
+            { id: "#game-controls-reset", action: () => this.reset() },
+            { id: "#game-controls-undo", action: () => this.undo() },
+            { id: "#game-controls-redo", action: () => this.redo() },
+            { id: "#game-controls-create-notes", action: () => this.createNotes() },
+            { id: "#game-controls-solve-step", action: () => this.solveStep() },
+        ];
+        actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
+        this.canvasRenderer.canvas.addEventListener("click", event => this.handleOnClick(event));
+        window.addEventListener("resize", debounce(() => this.canvasRenderer.resizeAndDraw(this.cells), 100));
+    }
+
     private handleOnClick(event: MouseEvent): void {
-        const eventCell = this.getEventCell(event);
+        const { col, row } = this.canvasRenderer.getCellByOffset(event.offsetX, event.offsetY);
+        const eventCell = this.cells[row][col];
         this.selectedCell = this.selectedCell === eventCell ? null : eventCell;
-        this.applyCursorFlags();
-        this.draw();
+        this.render();
     }
 
     private handleOnKeyPressed(value: string): void {
-        if (isWinPopupVisible() || !this.selectedCell) {
+        if (this.winNotification.state || !this.selectedCell) {
             return;
         }
         if (!isNaN(parseInt(value))) {
@@ -413,6 +368,21 @@ class Board {
         } else {
             this.handleOnNonDigitPressed(value);
         }
+    }
+
+    private loadCells(data: string): Cell[][] | null {
+        const values = data.split(",");
+        if (values?.length !== 81) {
+            console.warn("Saved cells length missmatch");
+            return null;
+        }
+        try {
+            const result = Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => Cell.fromEncoded(values[(i * 9) + j], i, j)));
+            return result;
+        } catch (error) {
+            console.warn("Saved cell creation error: ", error);
+        }
+        return null;
     }
 
     private handleOnDigitPressed(value: number): void {
@@ -428,9 +398,7 @@ class Board {
         if (!changed) {
             return;
         }
-        this.save(this.encode());
-        this.applyCursorFlags();
-        this.draw();
+        this.saveAndRender();
         this.checkWin();
     }
 
@@ -468,28 +436,28 @@ class Board {
         if (!this.selectedCell) {
             return;
         }
+        const maxIndex = 8;
         let col = this.selectedCell.col;
         let row = this.selectedCell.row;
         switch (value) {
             case "ArrowLeft":
-                col = col ? col - 1 : 8;
+                col = col ? col - 1 : maxIndex;
                 break;
             case "ArrowRight":
-                col = col < 8 ? col + 1 : 0;
+                col = col < maxIndex ? col + 1 : 0;
                 break;
             case "ArrowUp":
-                row = row ? row - 1 : 8;
+                row = row ? row - 1 : maxIndex;
                 break;
             case "ArrowDown":
-                row = row < 8 ? row + 1 : 0;
+                row = row < maxIndex ? row + 1 : 0;
                 break;
         }
         if (col === this.selectedCell.col && row === this.selectedCell.row) {
             return;
         }
         this.selectedCell = this.cells[row][col];
-        this.applyCursorFlags();
-        this.draw();
+        this.render();
     }
 
     private checkWin(): void {
@@ -511,14 +479,7 @@ class Board {
                 values.add(boxKey);
             }
         }
-        changeWinPopupVisibility(true);
-    }
-
-    private getEventCell(event: MouseEvent): Cell {
-        const cellSize = getCanvasSize() / 9;
-        const col = Math.floor(event.offsetX / cellSize);
-        const row = Math.floor(event.offsetY / cellSize);
-        return this.cells[row][col];
+        this.winNotification.state = true;
     }
 
     private applyCursorFlags(): void {
@@ -551,45 +512,12 @@ class Board {
         return cells;
     }
 
-    private import(): void {
-        const field = window.prompt("Enter a string of 81 numbers (you can express blanks as 0 or '.')");
-        if (field?.length !== 81) {
-            console.warn("Import board length missmatch");
-            return;
-        }
-        const result: Cell[][] = [];
-        for (let i = 0; i < 9; i++) {
-            result[i] = [];
-            for (let j = 0; j < 9; j++) {
-                const fieldValue = field[(i * 9) + j];
-                const value = fieldValue === "." ? 0 : parseInt(fieldValue);
-                try {
-                    result[i][j] = new Cell(j, i, value, value !== 0);
-                } catch (error) {
-                    console.warn("Import cell creation error: ", error);
-                    return;
-                }
-            }
-        }
-        this.cells = result;
-        this.selectedCell = null;
-        this.save(this.encode());
-        this.applyCursorFlags();
-        this.draw();
-    }
-
-    private reset(): void {
-        this.cells.flat().forEach(cell => cell.reset());
-        this.save(this.encode());
-        this.applyCursorFlags();
-        this.draw();
-    }
-
     private encode(): string {
         return this.cells.flatMap(row => row.map(cell => cell.encode())).toString();
     }
 
-    private save(board: string): void {
+    private save(): void {
+        const board = this.encode();
         this.prevBoard = localStorage.getItem(this.boardKey);
         localStorage.setItem(this.prevBoardKey, this.prevBoard || "");
         this.prevBoardAction = this.undoAction;
@@ -597,58 +525,34 @@ class Board {
         localStorage.setItem(this.boardKey, board);
     }
 
-    private undo(): void {
-        if (this.prevBoardAction !== this.undoAction || !this.prevBoard) {
+    // TODO rename
+    private render(): void {
+        this.applyCursorFlags();
+        this.canvasRenderer.draw(this.cells);
+    }
+
+    // TODO rename
+    private saveAndRender(): void {
+        this.save();
+        this.render();
+    }
+
+    private performAction(action: string): void {
+        if (this.prevBoardAction !== action || !this.prevBoard) {
             return;
         }
         const cells = this.loadCells(this.prevBoard);
         if (!cells) {
-            console.warn("Undo: unexpected undo board value");
+            console.warn(`Action ${action}: unexpected prev board`);
             return;
         }
         this.cells = cells;
-        this.selectedCell = null;
-        this.save(this.prevBoard);
-        this.prevBoardAction = this.redoAction;
-        localStorage.setItem(this.prevBoardActionKey, this.prevBoardAction);
-        this.applyCursorFlags();
-        this.draw();
-        this.checkWin();
-    }
-
-    private redo(): void {
-        if (this.prevBoardAction !== this.redoAction || !this.prevBoard) {
-            return;
+        this.saveAndRender();
+        if (action === this.undoAction) {
+            this.prevBoardAction = this.redoAction;
+            localStorage.setItem(this.prevBoardActionKey, this.prevBoardAction);
         }
-        const cells = this.loadCells(this.prevBoard);
-        if (!cells) {
-            console.warn("Redo: unexpected undo board value");
-            return;
-        }
-        this.cells = cells;
-        this.selectedCell = null;
-        this.save(this.prevBoard);
-        this.applyCursorFlags();
-        this.draw();
         this.checkWin();
-    }
-
-    private createNotes(): void {
-        this.cells.flat().filter(cell => !cell.value).forEach(cell => {
-            const usedValues = Array.from(this.getNeighborCells(cell)).map(c => c.value);
-            cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter(v => !usedValues.includes(v));
-        });
-        this.save(this.encode());
-        this.applyCursorFlags();
-        this.draw();
-    }
-
-    private solveStep(): void {
-        const url = "solve-step/";
-        const payload = { "board": this.encode() };
-        this.postData(url, payload)
-            .then(data => this.processSolveResponse(data))
-            .catch(error => console.error("Solve step request:", error));
     }
 
     private getCSRFToken(): string | null {
@@ -672,7 +576,7 @@ class Board {
             console.error(errorDetails);
             throw new Error(`Response: ${response.status}`);
         }
-        return await response.json();
+        return await response.json();  // TODO handle exceptions
     }
 
     private processSolveResponse(response: any): void {
@@ -685,11 +589,125 @@ class Board {
             console.error("Solve response: unexpected response");
             return;
         }
-        this.save(response.result);
         this.cells = cells;
-        this.selectedCell = null;
-        this.applyCursorFlags();
-        this.draw();
+        this.saveAndRender();
         this.checkWin();
+    }
+}
+
+class Cell {
+    public readonly col;
+    public readonly row;
+    public readonly isGiven;
+    public hasCandidate = false;
+    public isSelected = false;
+    public isNeighbor = false;
+    public isSameVal = false;
+    public isConflict = false;
+    private wrappedValue = 0;
+    private wrappedCandidates = new Set<number>;
+
+    public constructor(col: number, row: number, value: number = 0, isGiven: boolean = false, candidates: number[] = []) {
+        this.col = Math.floor(col);
+        this.row = Math.floor(row);
+        if (this.col < 0 || this.row < 0 || this.col > 8 || this.row > 8) {
+            throw new Error(`Cell ${this.col} ${this.row}: invalid coordinates`);
+        }
+        this.value = value;
+        this.candidates = candidates;
+        this.isGiven = isGiven;
+        if (this.isGiven && !this.value) {
+            throw new Error(`Cell ${this.col} ${this.row}: givens should have non zero value`);
+        }
+    }
+
+    static fromEncoded(value: string, row: number, col: number): Cell {
+        const val = Math.abs(parseInt(value));
+        if (isNaN(val) || val > 511) {
+            throw new Error("Unexpected encoding");
+        }
+        const isGiven = value[0] === "-";
+        const isSolved = value[0] === "+";
+        if (isGiven || isSolved) {
+            return new Cell(col, row, val, isGiven);
+        }
+        const candidates = [...val.toString(2)].reverse()
+            .map((bit, index) => bit === "1" ? index + 1 : null)
+            .filter(candidate => candidate !== null);
+        return new Cell(col, row, 0, isGiven, candidates);
+    }
+
+    public get value(): number {
+        return this.wrappedValue;
+    }
+
+    public set value(value: number) {
+        this.validateCellChange();
+        this.validateValue(value, true);
+        this.candidates = [];
+        this.wrappedValue = Math.floor(value);
+    }
+
+    public get candidates(): number[] {
+        return Array.from(this.wrappedCandidates);
+    }
+
+    public set candidates(values: number[]) {
+        if (!values.length && !this.wrappedCandidates.size) {
+            return;
+        }
+        this.validateCellChange();
+        this.validateCandChange();
+        this.wrappedCandidates.clear();
+        values.forEach(value => {
+            this.validateValue(value, false);
+            this.wrappedCandidates.add(Math.floor(value));
+        });
+    }
+
+    public addCandidate(value: number): void {
+        this.validateCellChange();
+        this.validateCandChange();
+        this.validateValue(value, false);
+        this.wrappedCandidates.add(value);
+    }
+
+    public removeCandidate(value: number): boolean {
+        this.validateCellChange();
+        this.validateCandChange();
+        return this.wrappedCandidates.delete(value);
+    }
+
+    public reset(): void {
+        if (this.isGiven) {
+            return;
+        }
+        this.candidates = [];
+        this.value = 0;
+    }
+
+    public encode(): string {
+        let val = this.value || this.candidates.reduce((acc, cand) => acc + Math.pow(2, cand - 1), 0);
+        const prefix = this.isGiven ? "-" : this.value ? "+" : "";
+        return `${prefix}${val}`;
+    }
+
+    private validateCellChange(): void {
+        if (this.isGiven) {
+            throw new Error(`Cell ${this.col} ${this.row}: can not change given cell`);
+        }
+    }
+
+    private validateCandChange(): void {
+        if (this.value) {
+            throw new Error(`Cell ${this.col} ${this.row}: can not change solved cell candidates`);
+        }
+    }
+
+    private validateValue(value: number, allowZero: boolean = true): void {
+        const v = Math.floor(value);
+        if (isNaN(v) || v > 9 || (allowZero && value < 0) || (!allowZero && value < 1)) {
+            throw new Error(`$Cell ${this.col} ${this.row}: ${v} is not valid value`);
+        }
     }
 }
