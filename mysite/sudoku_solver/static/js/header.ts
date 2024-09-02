@@ -1,10 +1,4 @@
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    return (...args: Parameters<T>) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func(...args), wait);
-    }
-}
+import { debounce } from "./utils.js";
 
 window.addEventListener("load", () => {
     const header = document.querySelector("header");
