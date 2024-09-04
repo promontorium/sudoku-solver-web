@@ -7,11 +7,7 @@
 {% endblock %}
 
 {% block js %}
-    {% if user.is_authenticated %}
-        <script type="module" src="{% static 'js/index-user.js' %}"></script>
-    {% else %}
-        <script type="module" src="{% static 'js/index-guest.js' %}"></script>
-    {% endif %}
+    <script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}
 
 {% block main %}

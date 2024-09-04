@@ -1,4 +1,6 @@
-import { IBoard } from "./board";
+import { BoardFactory } from "./board.js";
+import { CanvasRenderer } from "./canvas-renderer.js";
+import { WinPopupNotification } from "./win-notification.js";
 
 export const enum NOTES_MODES { basic, pencil, auto_notes };
 export let notesMode = NOTES_MODES.basic;
@@ -8,11 +10,9 @@ window.addEventListener("load", () => {
     if (gameControls) {
         document.querySelector("#game-controls-notes")?.addEventListener("click", () => toggleNotesMode(gameControls));
     }
+    const BoardClass = BoardFactory.getBoard();
+    new BoardClass(new CanvasRenderer(), new WinPopupNotification()).start();
 });
-
-export function start(board: IBoard): void {
-    board.start();
-}
 
 function toggleNotesMode(element: Element): void {
     const MODE_CLASSES: Record<NOTES_MODES, string> = {

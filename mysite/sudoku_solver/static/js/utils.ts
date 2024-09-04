@@ -5,3 +5,7 @@ export function debounce<T extends (...args: any[]) => void>(func: T, wait: numb
         timeoutId = setTimeout(() => func(...args), wait);
     }
 }
+
+export function isAuthenticated(): boolean {
+    return document.querySelector("meta[name='is_authenticated']") ? true : false;
+}

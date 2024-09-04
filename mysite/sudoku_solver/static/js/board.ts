@@ -1,11 +1,17 @@
-import { debounce } from "./utils.js";
+import { debounce, isAuthenticated } from "./utils.js";
 import { NOTES_MODES, notesMode } from "./index.js";
 import { ICell, Cell } from "./cell.js";
 import { ICanvasRenderer } from "./canvas-renderer.js";
-import { IWinNotification } from "./win-notification";
+import { IWinNotification } from "./win-notification.js";
 
 export interface IBoard {
     start(): void;
+}
+
+export class BoardFactory {
+    public static getBoard(): new (...args: ConstructorParameters<typeof AbstractBoard>) => IBoard {
+        return isAuthenticated() ? UserBoard : GuestBoard;
+    }
 }
 
 abstract class AbstractBoard implements IBoard {
@@ -279,7 +285,7 @@ abstract class AbstractBoard implements IBoard {
     }
 }
 
-export class GuestBoard extends AbstractBoard {
+class GuestBoard extends AbstractBoard {
     private readonly boardKey = "sudokuboard";
 
     protected override bindHandlers(): void { }
@@ -297,7 +303,7 @@ export class GuestBoard extends AbstractBoard {
     }
 }
 
-export class UserBoard extends AbstractBoard {
+class UserBoard extends AbstractBoard {
     // TODO remove
     private readonly boardKey = "sudokuboard";
 
@@ -331,29 +337,14 @@ export class UserBoard extends AbstractBoard {
         const url = "solve-step/";
         const payload = { "board": this.encode() };
         this.postData(url, payload)
-            .then(data => this.processSolveResponse(data))
+            .then(data => this.processResponse(data))
             .catch(error => console.error(`Solve step request: ${error}`));
-    }
-
-    private processSolveResponse(response: any): void {
-        console.debug(`Solve request response: ${response}`);
-        if (response.reason) {
-            return;
-        }
-        const cells = this.decode(response.result);
-        if (!cells) {
-            console.error("Solve request response: decode error");
-            return;
-        }
-        this.cells = cells;
-        this.postprocessCellsChanges();
-        this.determineWin();
     }
 
     private async postData(url: string, payload: any): Promise<any> {
         const headers = {
             "Content-Type": "application/json",
-            "X-CSRFToken": this.getCSRFToken() ?? ""
+            "X-CSRFToken": this.getCSRFToken() ?? "",
         };
         const init: RequestInit = {
             method: "POST",
@@ -365,5 +356,22 @@ export class UserBoard extends AbstractBoard {
             throw new Error(`Response: ${response}`);
         }
         return await response.json();
+    }
+
+    private processResponse(response: any): void {
+        console.debug("Processing response");
+        if (response.reason) {
+            console.debug(`Response is not ok: ${response.reason}`);
+            return;
+        }
+        console.debug(`Response result: ${response.result}`)
+        const cells = this.decode(response.result);
+        if (!cells) {
+            console.error("Response: decode error");
+            return;
+        }
+        this.cells = cells;
+        this.postprocessCellsChanges();
+        this.determineWin();
     }
 }
