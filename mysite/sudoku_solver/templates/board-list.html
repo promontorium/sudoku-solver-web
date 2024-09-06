@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-list.css' %}">
+{% endblock %}
+
+{% block js %} {% endblock %}
+
+{% block main %}
+    <div class="board-list-container">
+        <h1 class="board-list-container-name">Boards</h1>
+        <ul class="board-list">
+            {% for board in board_list %}
+                <li class="board-list-item">
+                    <a href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">
+                        #{{ board.id }}: {{ board.description|default:"No description" }}. Created: {{ board.created }}. Changed: {{ board.changed }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No boards available.</li>
+            {% endfor %}
+        </ul>
+        <div class="board-list-pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="create-board-container">
+        <h2 class="create-board-container-name">Create a New Board</h2>
+        <form method="post" class="create-board-form" action="{% url 'sudoku-solver:create-board' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="create-board-submit">Create Board</button>
+        </form>
+    </div>
+{% endblock %}

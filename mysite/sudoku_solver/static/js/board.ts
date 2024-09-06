@@ -15,7 +15,6 @@ export class BoardFactory {
 }
 
 abstract class AbstractBoard implements IBoard {
-    protected readonly prevBoardKey = "prevsudokuboard";
     private wrappedCells: ICell[][] = [];
     private selectedCell: ICell | null = null;
     // TODO selectors constants for bind
@@ -23,14 +22,16 @@ abstract class AbstractBoard implements IBoard {
     public constructor(private readonly canvasRenderer: ICanvasRenderer, private readonly winNotification: IWinNotification) { }
 
     public start(): void {
-        this.cells = this.load();
+        this.cells = this.load() ?? Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
         this.canvasRenderer.resizeAndDraw(this.cells);
         this.bind();
     }
 
+    protected abstract getPrevBoard(): string | null;
+
     protected abstract bindHandlers(): void;
 
-    protected abstract load(): ICell[][];
+    protected abstract load(): ICell[][] | null;
 
     protected abstract save(): void;
 
@@ -129,7 +130,7 @@ abstract class AbstractBoard implements IBoard {
 
     private undo(): void {
         console.debug("Running undo");
-        const prevBoard = localStorage.getItem(this.prevBoardKey);
+        const prevBoard = this.getPrevBoard();
         if (!prevBoard) {
             console.debug("Undo: no prev board");
             return;
@@ -287,13 +288,17 @@ abstract class AbstractBoard implements IBoard {
 
 class GuestBoard extends AbstractBoard {
     private readonly boardKey = "sudokuboard";
+    private readonly prevBoardKey = "prevsudokuboard";
+
+    protected override getPrevBoard(): string | null {
+        return localStorage.getItem(this.prevBoardKey);
+    }
 
     protected override bindHandlers(): void { }
 
-    protected override load(): ICell[][] {
+    protected override load(): ICell[][] | null {
         const board = localStorage.getItem(this.boardKey);
-        const cells = board ? this.decode(board) : null;
-        return cells ?? Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
+        return board ? this.decode(board) : null;
     }
 
     protected override save(): void {
@@ -304,21 +309,22 @@ class GuestBoard extends AbstractBoard {
 }
 
 class UserBoard extends AbstractBoard {
-    // TODO remove
-    private readonly boardKey = "sudokuboard";
-
-    // TODO
-    protected override load(): ICell[][] {
-        const board = localStorage.getItem(this.boardKey);
-        const cells = board ? this.decode(board) : null;
-        return cells ?? Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
+    protected override getPrevBoard(): string | null {
+        return null; // TODO
     }
 
-    // TODO
+    protected override load(): ICell[][] | null {
+        const board = document.querySelector("#sudoku-container")?.getAttribute("data-context") || null;
+        return board ? this.decode(board) : null;
+    }
+
     protected override save(): void {
-        const board = this.encode();
-        localStorage.setItem(this.prevBoardKey, localStorage.getItem(this.boardKey) ?? "");
-        localStorage.setItem(this.boardKey, board);
+        console.debug("Running save");
+        const url = "";
+        const payload = { "board": this.encode() };
+        this.postData(url, payload)
+            .then(data => this.processSaveResponse(data))
+            .catch(error => console.error(`Save request: ${error}`));
     }
 
     protected override bindHandlers(): void {
@@ -337,7 +343,7 @@ class UserBoard extends AbstractBoard {
         const url = "solve-step/";
         const payload = { "board": this.encode() };
         this.postData(url, payload)
-            .then(data => this.processResponse(data))
+            .then(data => this.processSolveResponse(data))
             .catch(error => console.error(`Solve step request: ${error}`));
     }
 
@@ -358,8 +364,17 @@ class UserBoard extends AbstractBoard {
         return await response.json();
     }
 
-    private processResponse(response: any): void {
-        console.debug("Processing response");
+    private processSaveResponse(response: any): void {
+        console.debug("Processing save response");
+        if (response.reason) {
+            console.debug(`Response is not ok: ${response.reason}`);
+            return;
+        }
+        console.debug("Board saved");
+    }
+
+    private processSolveResponse(response: any): void {
+        console.debug("Processing solve response");
         if (response.reason) {
             console.debug(`Response is not ok: ${response.reason}`);
             return;

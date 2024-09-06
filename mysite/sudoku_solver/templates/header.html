@@ -4,6 +4,7 @@
         <div class="header-dropdown-container">
             <button class="header-item header-dropdown-titile">{{ user.username }}<b>&triangledown;</b></button>
             <div class="dropdown-content">
+                <a class="header-dropdown-item" href="{% url 'sudoku-solver:board-list' %}">Board List</a>
                 <a class="header-dropdown-item" href="{% url 'sudoku-solver:change-password' %}">Change Password</a>
                 <form action="{% url 'sudoku-solver:logout' %}" method="post">
                     {% csrf_token %}
