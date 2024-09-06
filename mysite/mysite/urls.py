@@ -21,5 +21,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("sudoku_solver/", include("sudoku_solver.urls")),
+    path("sudoku-solver/", include("sudoku_solver.urls")),
 ] + debug_toolbar_urls()

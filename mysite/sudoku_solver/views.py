@@ -54,8 +54,6 @@ class SignUpView(FormView):
 
 
 class ChangePasswordView(PasswordChangeView):
-    # TODO login url
-    # registration/password_change_form.html
     template_name = "registration/change-password.html"
     success_url = reverse_lazy("sudoku-solver:index")
 
@@ -63,9 +61,8 @@ class ChangePasswordView(PasswordChangeView):
 class BoardList(LoginRequiredMixin, ListView):
     model = models.Board
     template_name = "board-list.html"
-    login_url = reverse_lazy("sudoku-solver:login")
     paginate_by = 10
-    context_object_name = "board_list"
+    # context_object_name = "board_list"
 
     def get_queryset(self) -> QuerySet[Any]:
         return models.Board.objects.filter(user=self.request.user)
@@ -78,7 +75,6 @@ class BoardList(LoginRequiredMixin, ListView):
 
 class BoardDetail(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
-    login_url = reverse_lazy("sudoku-solver:login")
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -95,14 +91,14 @@ class BoardDetail(LoginRequiredMixin, TemplateView):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
         request_board = data.get("board")
         if request_board == board_data.board:
-            return JsonResponse({}, status=200)
+            return JsonResponse({"detail": "no changes"}, status=200)
         try:
             board_utils.decode_board(request_board)
         except sudoku.exceptions.SudokuException as e:
             return JsonResponse({"error": str(e)}, status=400)
         board_data.board = request_board
         board_data.save()
-        return JsonResponse({}, status=200)
+        return JsonResponse({"detail": "saved"}, status=200)
 
     def _get_board(self, id: int) -> models.Board:
         if self.request.user.is_superuser:
@@ -111,7 +107,7 @@ class BoardDetail(LoginRequiredMixin, TemplateView):
             return get_object_or_404(models.Board, id=id, user=self.request.user)
 
 
-@login_required(login_url=reverse_lazy("sudoku-solver:login"))
+@login_required()
 def create_board(request: HttpRequest, *args, **kwargs) -> HttpResponse:
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
@@ -122,7 +118,7 @@ def create_board(request: HttpRequest, *args, **kwargs) -> HttpResponse:
     return redirect("sudoku-solver:board-detail", board_id=board.id)
 
 
-@login_required(login_url=reverse_lazy("sudoku-solver:login"))
+@login_required()
 def solve_step(request: HttpRequest, *args, **kwargs) -> HttpResponse:
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
