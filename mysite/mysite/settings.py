@@ -130,4 +130,59 @@ if DEBUG:
 
 LOGIN_URL = "/sudoku-solver/login/"
 
-# TODO configure logger
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} Process: {process} {processName} Thread: {thread}, {threadName} "
+            + "Module: {module} {funcName} {lineno} {name}\n{levelname} - {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "[{asctime}.{msecs:03.0f}] {levelname} {message}",
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": "log.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "sudoku_solver.sudoku.grid": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "sudoku_solver.sudoku.cell": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "sudoku_solver.solver.strategy": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "sudoku_solver.solver.solver": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+    },
+}
