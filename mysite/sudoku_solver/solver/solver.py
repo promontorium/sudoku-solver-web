@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from ..sudoku import Grid
+from ..sudoku import Grid, HistoryManager, as_complex_action
 from .basic_fish import BasicFish
 from .box_line_reduction import BoxLineReduction
 from .hidden_single import HiddenSingle
@@ -42,6 +42,11 @@ class Solver:
     def __str__(self) -> str:
         return "Solver"
 
+    @property
+    def history_manager(self) -> HistoryManager:
+        return self._grid.history_manager
+
+    @as_complex_action
     def solve(self) -> bool:
         self._logger.info("%s: Solving", self)
         if not self._grid.is_consistent:
@@ -60,6 +65,7 @@ class Solver:
         self._logger.info("%s: Total steps %d", self, step)
         return bool(step)
 
+    @as_complex_action
     def solve_step(self) -> bool:
         self._logger.info("%s: Solving step", self)
         if not self._grid.is_consistent:

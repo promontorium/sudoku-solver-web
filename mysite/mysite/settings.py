@@ -164,6 +164,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        "sudoku_solver.sudoku.history_manager": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
         "sudoku_solver.sudoku.grid": {
             "level": "WARNING",
             "handlers": ["console"],
@@ -180,6 +185,11 @@ LOGGING = {
             "propagate": False,
         },
         "sudoku_solver.solver.solver": {
+            "level": "WARNING",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "sudoku_solver.solver.brute_forcer": {
             "level": "WARNING",
             "handlers": ["console"],
             "propagate": False,

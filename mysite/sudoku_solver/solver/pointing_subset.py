@@ -17,7 +17,7 @@ class PointingSubset(IntersectionStrategy):
             if len(tuple(cont.filter_cells(solved=False))) > 1:
                 yield cont
 
-    def _get_affected_container(self, cells: tuple[Cell, ...]) -> Container | None:  # TODO
+    def _get_affected_container(self, cells: tuple[Cell, ...]) -> Container | None:
         rows = {self._grid.get_row(cell) for cell in cells}
         if len(rows) == 1:
             return rows.pop()

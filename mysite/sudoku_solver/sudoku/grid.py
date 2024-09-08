@@ -5,18 +5,24 @@ from .cell import Cell
 from .cells_holder import CellsFilter, CellsHolder
 from .container import Container, ContainerType
 from .exceptions import SudokuException
+from .history_manager import HistoryManager, as_complex_action
 
 
 class Grid(CellsHolder):
     def __init__(self, field: Iterable[int | str]):
         super().__init__(self._create_cells(field))
         self._logger = getLogger(__name__)
+        self._history_manager = HistoryManager(self.filter_cells(given=False))
         self._rows = tuple(self._create_row(i) for i in range(9))
         self._columns = tuple(self._create_column(i) for i in range(9))
         self._boxes = tuple(self._create_box(i) for i in range(9))
 
     def __str__(self) -> str:
         return "Grid"
+
+    @property
+    def history_manager(self) -> HistoryManager:
+        return self._history_manager
 
     @property
     def is_consistent(self) -> bool:
@@ -72,17 +78,20 @@ class Grid(CellsHolder):
         conts = (self.get_row(cell), self.get_column(cell), self.get_box(cell))
         return {cont_cell for cont in conts for cont_cell in cont.filter_cells(**kwargs)} - {cell}
 
+    @as_complex_action
     def set_value(self, cell: Cell, value: int) -> None:
         self._logger.info("%s: Setting cell value: %s = %d", self, cell, value)
         cell.value = value
         for neighbor in self.get_neighbors(cell, has_candidate=cell.value):
             neighbor.candidates -= {cell.value}
 
+    @as_complex_action
     def reset(self) -> None:
         self._logger.info("%s: Resetting", self)
         for cell in self.filter_cells(given=False):
             cell.reset()
 
+    @as_complex_action
     def init_candidates(self) -> None:
         self._logger.info("%s: Creating candidates", self)
         for cell in self.filter_cells(solved=False):
