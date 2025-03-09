@@ -5,3 +5,5 @@ __pycache__
 *.js
 *.js.map
 *.log
+staticfiles
+.env
