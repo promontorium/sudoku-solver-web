@@ -16,8 +16,6 @@ COPY . .
 RUN npm install -g typescript && \
     tsc -p mysite/sudoku_solver/static/tsconfig.json
 
-WORKDIR /app/mysite
-
 # Stage 2: Final image
 FROM python:3.13-slim
 
