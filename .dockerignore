@@ -1,0 +1,10 @@
+.venv
+.vscode
+**/staticfiles
+**/__pycache__
+**/*.sqlite3
+**/*.log
+readme.md
+mypy.ini
+.env
+.git

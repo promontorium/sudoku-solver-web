@@ -1,13 +1,28 @@
-# Use Python base image
+# Stage 1: Build dependencies
+FROM python:3.13-slim AS builder
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Install Node.js for TypeScript
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Compile TypeScript
+WORKDIR /app
+COPY . .
+RUN npm install -g typescript && \
+    tsc -p mysite/sudoku_solver/static/tsconfig.json
+
+WORKDIR /app/mysite
+
+# Stage 2: Final image
 FROM python:3.13-slim
 
-# Install Node.js (for TypeScript compilation)
-RUN apt-get update && apt-get install -y curl
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
-
-# Install TypeScript globally
-RUN npm install -g typescript
+# Copy built dependencies from builder
+COPY --from=builder /usr/local /usr/local
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -15,20 +30,25 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Copy ALL project files
-COPY . .
+# Copy project files
+COPY --from=builder /app .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Compile TypeScript
-RUN tsc -p mysite/sudoku_solver/static/tsconfig.json
-
-# Navigate to the subdirectory containing manage.py
 WORKDIR /app/mysite
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
+# Security: Create user and fix permissions
+RUN useradd -m myuser && chown -R myuser /app
+
+# Copy entrypoint.sh and set permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh && \
+    chown myuser:myuser /entrypoint.sh
+
+# Switch to non-root user
+USER myuser
+
 EXPOSE 8000
-CMD ["gunicorn", "mysite.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+CMD ["/entrypoint.sh"]
