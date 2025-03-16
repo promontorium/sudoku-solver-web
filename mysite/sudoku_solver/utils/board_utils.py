@@ -18,6 +18,6 @@ def encode_board(grid: sudoku.Grid) -> str:
 
 def encode_cell(cell: sudoku.Cell) -> str:
     if cell.value:
-        return f'{'-' if cell.is_given else '+'}{cell.value}'
+        return f"{'-' if cell.is_given else '+'}{cell.value}"
     else:
         return str(sum(2 ** (cand - 1) for cand in cell.candidates))
