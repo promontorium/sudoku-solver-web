@@ -1,52 +1,32 @@
-# Stage 1: Build dependencies
-FROM python:3.13-slim AS builder
-
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Install Node.js for TypeScript
-RUN apt-get update && apt-get install -y curl && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
-
-# Compile TypeScript
-WORKDIR /app
-COPY . .
+# Node.js tools stage
+FROM node:23-alpine AS node-builder
+COPY . /app
 RUN npm install -g typescript && \
-    tsc -p mysite/sudoku_solver/static/tsconfig.json
+    tsc -p /app/mysite/sudoku_solver/static/tsconfig.json
 
-# Stage 2: Final image
-FROM python:3.13-slim
+# Python builder stage
+FROM python:3.13-alpine AS python-builder
+COPY --from=node-builder /app /app
+RUN pip install -r /app/requirements.txt && \
+    python /app/mysite/manage.py collectstatic --noinput
 
-# Copy built dependencies from builder
-COPY --from=builder /usr/local /usr/local
-
-# Set environment variables
+# Final image stage
+FROM python:3.13-alpine
+# Create non-root user
+RUN adduser -D appuser
+# Python environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
-
-WORKDIR /app
-
-# Copy project files
-COPY --from=builder /app .
-
-WORKDIR /app/mysite
-
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Security: Create user and fix permissions
-RUN useradd -m myuser && chown -R myuser /app
-
-# Copy entrypoint.sh and set permissions
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh && \
-    chown myuser:myuser /entrypoint.sh
-
+# Python dependencies from the builder stage
+COPY --from=python-builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=python-builder /usr/local/bin/ /usr/local/bin/
+# Project files
+COPY --from=python-builder --chown=appuser /app /app
+# Entry point, set permissions and make it executable
+COPY --chown=appuser --chmod=+x entrypoint.sh /entrypoint.sh
 # Switch to non-root user
-USER myuser
-
+USER appuser
+# Run
+WORKDIR /app/mysite
 EXPOSE 8000
-
 CMD ["/entrypoint.sh"]
