@@ -6,6 +6,8 @@ RUN npm install -g typescript && \
 
 # Python builder stage
 FROM python:3.13-alpine AS python-builder
+# Disable __pycache__ creation since it will be accepted by .dockerignore x_x
+ENV PYTHONDONTWRITEBYTECODE=1
 COPY --from=node-builder /app /app
 RUN pip install -r /app/requirements.txt && \
     python /app/mysite/manage.py collectstatic --noinput
@@ -22,11 +24,10 @@ COPY --from=python-builder /usr/local/lib/python3.13/site-packages/ /usr/local/l
 COPY --from=python-builder /usr/local/bin/ /usr/local/bin/
 # Project files
 COPY --from=python-builder --chown=appuser /app /app
-# Entry point, set permissions and make it executable
-COPY --chown=appuser --chmod=+x entrypoint.sh /entrypoint.sh
-# Switch to non-root user
+# Make entry point executable
+RUN chmod +x /app/entrypoint.sh
+# Run as non-root user
 USER appuser
-# Run
 WORKDIR /app/mysite
 EXPOSE 8000
-CMD ["/entrypoint.sh"]
+CMD ["/app/entrypoint.sh"]
