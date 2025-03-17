@@ -16,3 +16,5 @@ docker-compose.override.yml
 **/__pycache__
 **/*.log
 **/*.sqlite3
+**/*.js
+**/*.js.map
