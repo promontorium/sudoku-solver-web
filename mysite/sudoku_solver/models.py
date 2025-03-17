@@ -1,5 +1,9 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class User(AbstractUser):
+    pass
 
 
 class Board(models.Model):
@@ -9,7 +13,7 @@ class Board(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Board of {self.user.username} {self.description}. Created: {self.created}. Changed: {self.changed}"
 
     class Meta:

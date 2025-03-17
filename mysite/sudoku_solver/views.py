@@ -10,6 +10,7 @@ from django.http import (
     HttpRequest,
     HttpResponse,
     HttpResponseBadRequest,
+    HttpResponseBase,
     HttpResponseNotAllowed,
     JsonResponse,
 )
@@ -24,15 +25,16 @@ from .utils import board_utils
 class HomePageView(TemplateView):
     template_name = "index.html"
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
         if request.user.is_authenticated:
             return redirect("sudoku-solver:board-list")
         return super().dispatch(request, *args, **kwargs)
 
 
 class SignInView(LoginView):
-    def dispatch(self, request, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
         if request.user.is_authenticated:
+            assert self.next_page, "Next Page is not configured"
             return redirect(self.next_page)
         return super().dispatch(request, *args, **kwargs)
 
@@ -42,12 +44,12 @@ class SignUpView(FormView):
     template_name = "registration/signup.html"
     success_url = reverse_lazy("sudoku-solver:index")
 
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
         if request.user.is_authenticated:
             return redirect(self.success_url)
         return super().dispatch(request, *args, **kwargs)
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: forms.SignUpForm) -> HttpResponse:
         user = form.save()
         login(self.request, user)
         return super().form_valid(form)
@@ -64,10 +66,10 @@ class BoardList(LoginRequiredMixin, ListView):
     paginate_by = 10
     # context_object_name = "board_list"
 
-    def get_queryset(self) -> QuerySet[Any]:
+    def get_queryset(self) -> QuerySet[models.Board]:
         return models.Board.objects.filter(user=self.request.user)
 
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["form"] = forms.CreateBoardForm()
         return context
@@ -76,15 +78,18 @@ class BoardList(LoginRequiredMixin, ListView):
 class BoardDetail(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
 
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> dict[str, str]:
         context = super().get_context_data(**kwargs)
         board_id = self.kwargs.get("board_id")
         board = self._get_board(board_id)
         context["board"] = board.board
         return context
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        board_data = self._get_board(kwargs.get("board_id"))
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        board_id = kwargs.get("board_id")
+        if not isinstance(board_id, int):
+            return JsonResponse({"error": f"incorrect board id {board_id}"}, status=400)
+        board_data = self._get_board(board_id)
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
@@ -108,7 +113,7 @@ class BoardDetail(LoginRequiredMixin, TemplateView):
 
 
 @login_required()
-def create_board(request: HttpRequest, *args, **kwargs) -> HttpResponse:
+def create_board(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
     form = forms.CreateBoardForm(request.POST)
@@ -119,7 +124,7 @@ def create_board(request: HttpRequest, *args, **kwargs) -> HttpResponse:
 
 
 @login_required()
-def solve_step(request: HttpRequest, *args, **kwargs) -> HttpResponse:
+def solve_step(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     if request.method != "POST":
         return HttpResponseNotAllowed(("POST",))
     try:

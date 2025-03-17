@@ -8,7 +8,7 @@ def decode_board(data: str) -> sudoku.Grid:
         if c.startswith("+"):
             cell.value = int(c[1:])
         elif c != "0" and all(char.isdigit() for char in c):
-            cell.candidates = [idx + 1 for idx, char in enumerate(bin(int(c))[2:][::-1]) if char == "1"]
+            cell.candidates = frozenset(idx + 1 for idx, char in enumerate(bin(int(c))[2:][::-1]) if char == "1")
     return grid
 
 
