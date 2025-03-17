@@ -33,8 +33,7 @@ class HomePageView(TemplateView):
 
 class SignInView(LoginView):
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
-        if request.user.is_authenticated:
-            assert self.next_page, "Next Page is not configured"
+        if self.next_page and request.user.is_authenticated:
             return redirect(self.next_page)
         return super().dispatch(request, *args, **kwargs)
 
