@@ -7,4 +7,3 @@ __pycache__
 *.log
 staticfiles
 .env
-docker-compose.override.yml

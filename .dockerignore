@@ -1,5 +1,6 @@
 Dockerfile
 docker-compose.yml
+docker-compose.override.yml
 .dockerignore
 .gitignore
 .git
@@ -9,7 +10,6 @@ readme.md
 .venv
 .vscode
 .mypy_cache
-docker-compose.override.yml
 **/staticfiles
 **/__pycache__
 **/*.log

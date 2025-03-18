@@ -1,0 +1,10 @@
+services:
+  django-web:
+    command: >
+      sh -c "
+        pip install debugpy &&
+        python manage.py migrate --noinput &&
+        python -m debugpy --listen 0.0.0.0:5678 --wait-for-client manage.py runserver 0.0.0.0:8000
+      "
+    ports:
+      - "5678:5678"
