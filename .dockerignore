@@ -4,13 +4,11 @@ docker-compose.yml
 .gitignore
 .git
 readme.md
-mypy.ini
 .env
 
 .venv
 .vscode
 .mypy_cache
-requirements-dev.txt
 docker-compose.override.yml
 **/staticfiles
 **/__pycache__

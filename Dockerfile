@@ -1,7 +1,6 @@
 # Node.js tools stage
 FROM node:23-alpine AS node-builder
 COPY . /app
-# Remove typescript related files after compiling
 RUN npm install -g typescript && \
     tsc -p /app/mysite/sudoku_solver/static/tsconfig.json && \
     find /app/mysite/sudoku_solver/static -type f -name "*.ts" -delete && \
@@ -9,14 +8,18 @@ RUN npm install -g typescript && \
 
 # Python builder stage
 FROM python:3.13-alpine AS python-builder
+COPY --from=node-builder /app /app
+WORKDIR /app
 # Disable __pycache__ creation since it will not be skipped by .dockerignore x_x
 ENV PYTHONDONTWRITEBYTECODE=1
-COPY --from=node-builder /app /app
-# Also remove requirements file and 'old' static folder
-RUN pip install -r /app/requirements.txt && \
-    rm /app/requirements.txt && \
-    python /app/mysite/manage.py collectstatic --noinput && \
-    rm -rf /app/mysite/sudoku_solver/static
+# Install globally
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+# Get uv from image
+COPY --from=ghcr.io/astral-sh/uv:0.6.7-alpine /usr/local/bin/uv /bin/
+RUN uv sync --no-dev --frozen && \
+    rm uv.lock pyproject.toml && \
+    python mysite/manage.py collectstatic --noinput && \
+    rm -rf mysite/sudoku_solver/static
 
 # Final image stage
 FROM python:3.13-alpine
