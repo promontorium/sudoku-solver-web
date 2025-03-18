@@ -1,16 +1,22 @@
 # Node.js tools stage
 FROM node:23-alpine AS node-builder
 COPY . /app
+# Remove typescript related files after compiling
 RUN npm install -g typescript && \
-    tsc -p /app/mysite/sudoku_solver/static/tsconfig.json
+    tsc -p /app/mysite/sudoku_solver/static/tsconfig.json && \
+    find /app/mysite/sudoku_solver/static -type f -name "*.ts" -delete && \
+    rm /app/mysite/sudoku_solver/static/tsconfig.json
 
 # Python builder stage
 FROM python:3.13-alpine AS python-builder
-# Disable __pycache__ creation since it will be accepted by .dockerignore x_x
+# Disable __pycache__ creation since it will not be skipped by .dockerignore x_x
 ENV PYTHONDONTWRITEBYTECODE=1
 COPY --from=node-builder /app /app
+# Also remove requirements file and 'old' static folder
 RUN pip install -r /app/requirements.txt && \
-    python /app/mysite/manage.py collectstatic --noinput
+    rm /app/requirements.txt && \
+    python /app/mysite/manage.py collectstatic --noinput && \
+    rm -rf /app/mysite/sudoku_solver/static
 
 # Final image stage
 FROM python:3.13-alpine
