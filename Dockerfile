@@ -16,7 +16,12 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV UV_PROJECT_ENVIRONMENT=/usr/local
 # Get uv from image
 COPY --from=ghcr.io/astral-sh/uv:0.6.7-alpine /usr/local/bin/uv /bin/
-RUN uv sync --no-dev --frozen && \
+ARG DJANGO_DEBUG=False
+RUN if [ "$DJANGO_DEBUG" = "True" ]; then \
+        uv sync --no-dev --frozen --group debug; \
+    else \
+        uv sync --no-dev --frozen; \
+    fi && \
     rm uv.lock pyproject.toml && \
     python mysite/manage.py collectstatic --noinput && \
     rm -rf mysite/sudoku_solver/static

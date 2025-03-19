@@ -18,7 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from . import settings
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("sudoku-solver/", include("sudoku_solver.urls")),
 ]
+
+if "debug_toolbar" in settings.INSTALLED_APPS:
+    from debug_toolbar.toolbar import debug_toolbar_urls  # type: ignore[import-untyped]
+
+    urlpatterns += debug_toolbar_urls()

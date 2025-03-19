@@ -13,6 +13,9 @@ dependencies = [
 ]
 
 [dependency-groups]
+debug = [
+    "django-debug-toolbar>=5.0.1",
+]
 dev = [
     "django-stubs>=5.1.3",
     "mypy>=1.15.0",

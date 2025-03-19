@@ -1,6 +1,8 @@
 services:
   django-web:
-    build: .
+    build:
+      args:
+        - DJANGO_DEBUG
     container_name: django-docker
     ports:
       - "8000:8000"
