@@ -6,6 +6,8 @@
 - PostgreSQL
 - TypeScript
 - Docker & Docker Compose
+- gunicorn as wsgi server
+- whitenoise for statics
 
 ### .env file example
 ```dosini
