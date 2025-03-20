@@ -17,10 +17,8 @@ class Container(CellsHolder):
         super().__init__(cells)
         self._idx = idx
         self._container_type = container_type
-        if len(self._cells) != 9:
-            raise SudokuException(f"{self}: Invalid cells count {len(self._cells)}")
-        if self._idx not in range(9):
-            raise SudokuException(f"{self}: Invalid container index {self._idx}")
+        self._validate_index()
+        self._validate_cells()
 
     def __str__(self) -> str:
         return f"{self._container_type.value}[{self._idx}]"
@@ -48,3 +46,11 @@ class Container(CellsHolder):
     @property
     def is_row(self) -> bool:
         return self._container_type == ContainerType.ROW
+
+    def _validate_index(self) -> None:
+        if self._idx < 0 or self._idx > 8:
+            raise SudokuException(f"{self}: Invalid index")
+
+    def _validate_cells(self) -> None:
+        if len(self._cells) != 9:
+            raise SudokuException(f"{self}: Invalid cells count {len(self._cells)}")

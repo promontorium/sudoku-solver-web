@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Iterable
 
-from ..sudoku import Cell, Container, Grid
+from ...sudoku import Cell, Container, Grid
 from .exceptions import SolverException
 from .strategy import Strategy
 

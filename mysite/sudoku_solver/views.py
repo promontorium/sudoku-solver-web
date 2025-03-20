@@ -6,19 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models.query import QuerySet
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-    HttpResponseBadRequest,
-    HttpResponseBase,
-    HttpResponseNotAllowed,
-    JsonResponse,
-)
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseBase, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
 from django.views.generic import FormView, ListView, TemplateView
 
-from . import forms, models, solver, sudoku
+from . import forms, models
+from .solver import BruteForcer, Solver, SolverException, StepSolver
+from .sudoku import SudokuException
 from .utils import board_utils
 
 
@@ -98,7 +94,7 @@ class BoardDetail(LoginRequiredMixin, TemplateView):
             return JsonResponse({"detail": "no changes"}, status=200)
         try:
             board_utils.decode_board(request_board)
-        except sudoku.exceptions.SudokuException as e:
+        except SudokuException as e:
             return JsonResponse({"error": str(e)}, status=400)
         board_data.board = request_board
         board_data.save()
@@ -107,14 +103,12 @@ class BoardDetail(LoginRequiredMixin, TemplateView):
     def _get_board(self, id: int) -> models.Board:
         if self.request.user.is_superuser:
             return get_object_or_404(models.Board, id=id)
-        else:
-            return get_object_or_404(models.Board, id=id, user=self.request.user)
+        return get_object_or_404(models.Board, id=id, user=self.request.user)
 
 
 @login_required()
+@require_http_methods(["POST"])
 def create_board(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    if request.method != "POST":
-        return HttpResponseNotAllowed(("POST",))
     form = forms.CreateBoardForm(request.POST)
     if not form.is_valid():
         return HttpResponseBadRequest("Invalid form data")
@@ -123,19 +117,24 @@ def create_board(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpRespons
 
 
 @login_required()
+@require_http_methods(["POST"])
 def solve_step(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    if request.method != "POST":
-        return HttpResponseNotAllowed(("POST",))
+    return _solve(StepSolver, request, args, kwargs)
+
+
+@login_required()
+@require_http_methods(["POST"])
+def solve(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    return _solve(BruteForcer, request, args, kwargs)
+
+
+def _solve(solver_class: type[Solver], request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     try:
-        data = json.loads(request.body)
+        grid = board_utils.decode_board(json.loads(request.body).get("board"))
+        if solver_class(grid).solve():
+            return JsonResponse({"result": board_utils.encode_board(grid)})
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
-    request_board = data.get("board")
-    try:
-        grid = board_utils.decode_board(request_board)
-        if solver.Solver(grid).solve_step():
-            return JsonResponse({"result": board_utils.encode_board(grid)})
-        else:
-            return JsonResponse({"reason": "No step progress"})
-    except sudoku.exceptions.SudokuException as e:
+    except (SudokuException, SolverException) as e:
         return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse({"reason": "No solution found"})

@@ -34,12 +34,12 @@ class CellsHolder(ABC):
     def cells(self) -> tuple[Cell, ...]:
         return self._cells
 
-    def get_cell(self, column: int, row: int) -> Cell:
+    def get_cell(self, col: int, row: int) -> Cell:
         try:
-            cell = self._cells[column + row * 9]
+            cell = self._cells[col + row * 9]
         except IndexError:
-            raise SudokuException(f"{self}: Coordinates {column=} {row=} out of range")
-        if cell.coordinates != (column, row):
+            raise SudokuException(f"{self}: Coordinates {col=} {row=} out of range")
+        if cell.coordinates != (col, row):
             raise SudokuException(f"{self}: Internal error: wrong cells order")
         return cell
 

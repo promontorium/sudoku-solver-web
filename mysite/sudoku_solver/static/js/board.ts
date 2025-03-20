@@ -300,7 +300,9 @@ class GuestBoard extends AbstractBoard {
 
 class UserBoard extends AbstractBoard {
     protected override getPrevBoard(): string | null {
-        return null; // TODO
+        // TODO
+        console.debug("User getPrevBoard is not yet implemented")
+        return null;
     }
 
     protected override load(): ICell[][] | null {
@@ -318,6 +320,7 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override bindExtraEvents(): void {
+        document.querySelector("#game-controls-solve")?.addEventListener("click", () => this.solve());
         document.querySelector("#game-controls-solve-step")?.addEventListener("click", () => this.solveStep());
     }
 
@@ -326,6 +329,15 @@ class UserBoard extends AbstractBoard {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         return parts.pop()?.split(";").shift() ?? null;
+    }
+
+    private solve(): void {
+        console.debug("Running solve");
+        const url = "solve/";
+        const payload = { "board": this.encode() };
+        this.postData(url, payload)
+            .then(data => this.processSolveResponse(data))
+            .catch(error => console.error(`Solve request: ${error}`));
     }
 
     private solveStep(): void {

@@ -14,6 +14,8 @@ urlpatterns = [
     path("boards/", views.BoardList.as_view(), name="board-list"),
     path("boards/create", views.create_board, name="create-board"),
     path("board/<int:board_id>/", views.BoardDetail.as_view(), name="board-detail"),
+    path("solve/", views.solve, name="solve"),
+    path("board/<int:board_id>/solve/", views.solve, name="solve"),
     path("solve-step/", views.solve_step, name="solve-step"),
     path("board/<int:board_id>/solve-step/", views.solve_step, name="solve-step"),
 ]

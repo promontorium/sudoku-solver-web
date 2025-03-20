@@ -1,6 +1,7 @@
+import itertools
 from typing import Collection, Iterable, Sequence
 
-from ..sudoku import Cell, Container, Grid
+from ...sudoku import Cell, Container, Grid
 from .exceptions import SolverException
 from .multi_containers_strategy import MultiContainersStrategy
 
@@ -19,7 +20,7 @@ class XChain(MultiContainersStrategy):
         return "X-Chain"
 
     def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]:
-        return [("all", self._grid.rows + self._grid.columns + self._grid.boxes)]
+        return [("all", itertools.chain(self._grid.rows, self._grid.columns, self._grid.boxes))]
 
     def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool:
         for chain in self._build_x_chains(cells_subsets):

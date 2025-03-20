@@ -2,7 +2,7 @@ import logging
 from itertools import combinations
 from typing import Iterable
 
-from ..sudoku import Cell, Container, Grid
+from ...sudoku import Cell, Container, Grid
 from .exceptions import SolverException
 from .multi_containers_strategy import MultiContainersStrategy
 

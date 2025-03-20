@@ -1,3 +1,4 @@
+from itertools import chain
 from logging import getLogger
 from typing import Iterable, Unpack
 
@@ -27,7 +28,7 @@ class Grid(CellsHolder):
     @property
     def is_consistent(self) -> bool:
         self._logger.info("%s: Running consistency check", self)
-        return all(cont.is_consistent for cont in self._rows + self._columns + self._boxes)
+        return all(cont.is_consistent for cont in chain(self._rows, self._columns, self._boxes))
 
     @property
     def rows(self) -> tuple[Container, ...]:
@@ -54,17 +55,17 @@ class Grid(CellsHolder):
                 result += str(value) if value else "."
         return result
 
-    def get_row(self, cell: Cell) -> Container:
-        try:
-            return self._rows[cell.coordinates[1]]
-        except IndexError:
-            raise SudokuException(f"{self}: Illegal row index {cell.coordinates[1]} for {cell=}")
-
     def get_column(self, cell: Cell) -> Container:
         try:
             return self._columns[cell.coordinates[0]]
         except IndexError:
             raise SudokuException(f"{self}: Illegal column index {cell.coordinates[0]} for {cell=}")
+
+    def get_row(self, cell: Cell) -> Container:
+        try:
+            return self._rows[cell.coordinates[1]]
+        except IndexError:
+            raise SudokuException(f"{self}: Illegal row index {cell.coordinates[1]} for {cell=}")
 
     def get_box(self, cell: Cell) -> Container:
         column, row = cell.coordinates
@@ -128,5 +129,4 @@ class Grid(CellsHolder):
         return result
 
     def _prepare_candidates(self, cell: Cell) -> frozenset[int]:
-        values = {neighbor.value for neighbor in self.get_neighbors(cell, solved=True)}
-        return frozenset(range(1, 10)) - values
+        return frozenset(range(1, 10)) - {neighbor.value for neighbor in self.get_neighbors(cell, solved=True)}

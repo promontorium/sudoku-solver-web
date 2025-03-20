@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from logging import getLogger
 from typing import Iterable
 
-from ..sudoku import Cell, Container, Grid
+from ...sudoku import Cell, Container, Grid
 
 
 class Strategy(ABC):

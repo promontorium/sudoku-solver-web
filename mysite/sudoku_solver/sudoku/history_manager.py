@@ -135,7 +135,7 @@ class HistoryManagerHolder(Protocol):
         pass
 
 
-# TODO self fix self type hints
+# TODO type hints
 def as_complex_action(func: Callable[_P, _T]) -> Callable[_P, _T]:
     @wraps(func)
     def wrapper(self: HistoryManagerHolder, *args: _P.args, **kwargs: _P.kwargs) -> _T:
