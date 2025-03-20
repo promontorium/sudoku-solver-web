@@ -5,11 +5,14 @@ from .hidden_single import HiddenSingle
 from .naked_single import NakedSingle
 
 
+# TODO reimplement from scratch. tooooo much voodoo here
+# fast heapq based brute forcer reference https://leetcode.com/problems/sudoku-solver/
 class BruteForcer:
     def __init__(self, grid: Grid):
         self._logger = getLogger(__name__)
-        self._grid = Grid([cell.value if cell.is_given else 0 for cell in grid.cells])
+        self._grid = Grid(cell.value if cell.is_given else 0 for cell in grid.cells)
         self._grid.init_candidates()
+
         self._force_restore = False
         self._restore_points: list[tuple[frozenset[int], tuple[tuple[Cell, tuple[int, frozenset[int]]], ...]]] = []
         self._solvers = (NakedSingle(self._grid), HiddenSingle(self._grid))

@@ -9,11 +9,11 @@ export class WinPopupNotification implements IWinNotification {
     private readonly element;
 
     public constructor() {
-        this.element = document.querySelector(this.elementSelector)!;
+        this.element = document.querySelector(this.elementSelector) as HTMLElement;
         if (!this.element) {
-            throw new Error("Victory is not possible...");
+            throw new Error("WinPopupNotification: Required DOM element not found");
         }
-        this.bind();
+        this.bindEvents();
     }
 
     public get state(): boolean {
@@ -24,17 +24,18 @@ export class WinPopupNotification implements IWinNotification {
         this.element.classList.toggle(this.isVisibleClassName, state);
     }
 
-    private bind(): void {
+    private bindEvents(): void {
+        const closeHandler = () => this.state = false;
         window.addEventListener("click", event => {
             if (event.target === this.element) {
-                this.state = false;
+                closeHandler();
             }
         });
         document.addEventListener("keydown", event => {
             if (["Enter", "Escape"].includes(event.key)) {
-                this.state = false;
+                closeHandler();
             }
         });
-        document.querySelector(this.closeButtonSelector)?.addEventListener("click", () => this.state = false);
+        this.element.querySelector(this.closeButtonSelector)?.addEventListener("click", closeHandler);
     }
 }

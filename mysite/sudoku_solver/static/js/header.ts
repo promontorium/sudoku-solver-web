@@ -5,10 +5,10 @@ window.addEventListener("load", () => {
     if (!header) {
         return;
     }
-    let lastScrollY = window.scrollY;
+    let lastScrollPosition = window.scrollY;
     window.addEventListener("scroll", debounce(() => {
-        const currentScrollY = window.scrollY;
-        header.classList.toggle("scrolled-down", currentScrollY >= lastScrollY);
-        lastScrollY = currentScrollY;
+        const currentScrollPosition = window.scrollY;
+        header.classList.toggle("scrolled-down", currentScrollPosition >= lastScrollPosition);
+        lastScrollPosition = currentScrollPosition;
     }, 25));
 });

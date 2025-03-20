@@ -3,7 +3,7 @@ import { ICell } from "./cell.js";
 export interface ICanvasRenderer {
     readonly canvas: HTMLCanvasElement;
     draw(cells: ICell[][]): void;
-    resizeAndDraw(cells: ICell[][]): void;
+    resize(cells: ICell[][]): void;
     getCellByOffset(offsetX: number, offsetY: number): { col: number, row: number };
 }
 
@@ -11,9 +11,21 @@ export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
     private readonly containserSelector = "#sudoku-container";
     private readonly canvasSelector = "#canvas-grid";
+    private readonly COLORS = {
+        GRID_BORDER: "#344861",
+        CELL_BORDER: "#bfc6d4",
+        GIVEN_TEXT: "#344861",
+        SOLVED_TEXT: "#325aaf",
+        CANDIDATE_TEXT: "#6e7c8c",
+        SELECTED: "#bbdefb",
+        CONFLICT: "#f7cfd6",
+        SAME_VALUE: "#c3d7ea",
+        HAS_CANDIDATE: "#d4ebda",
+        NEIGHBOR: "#e2ebf3"
+    };
     private readonly ctx;
     private readonly container;
-    // TODO Colors/Fonts constants
+    // TODO constants
 
     public constructor() {
         this.container = document.querySelector(this.containserSelector)!;
@@ -31,13 +43,14 @@ export class CanvasRenderer implements ICanvasRenderer {
     }
 
     public draw(cells: ICell[][]): void {
-        this.ctx.reset();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.ctx.reset(); // TODO is clearRect enough ?
         const cellSize = this.getCellSize();
         cells.flat().forEach(cell => this.drawCell(cell, cellSize));
         this.drawBorders(cellSize);
     }
 
-    public resizeAndDraw(cells: ICell[][]): void {
+    public resize(cells: ICell[][]): void {
         const { paddingLeft, paddingRight, paddingTop, paddingBottom } = getComputedStyle(this.container);
         const paddingHorizontal = parseFloat(paddingLeft) + parseFloat(paddingRight);
         const paddingVertical = parseFloat(paddingTop) + parseFloat(paddingBottom);
@@ -64,11 +77,11 @@ export class CanvasRenderer implements ICanvasRenderer {
     }
 
     private getCellCursorColor(cell: ICell): string | null {
-        return cell.isSelected ? "#bbdefb" :
-            cell.isConflict ? "#f7cfd6" :
-                cell.isSameVal ? "#c3d7ea" :
-                    cell.hasCandidate ? "#d4ebda" :
-                        cell.isNeighbor ? "#e2ebf3" :
+        return cell.isSelected ? this.COLORS.SELECTED :
+            cell.isConflict ? this.COLORS.CONFLICT :
+                cell.isSameVal ? this.COLORS.SAME_VALUE :
+                    cell.hasCandidate ? this.COLORS.HAS_CANDIDATE :
+                        cell.isNeighbor ? this.COLORS.NEIGHBOR :
                             null;
     }
 
@@ -86,7 +99,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawGridBorders(cellSize: number): void {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = "#344861";
+        this.ctx.strokeStyle = this.COLORS.GRID_BORDER;
         this.ctx.lineWidth = 2;
         this.ctx.rect(1, 1, (cellSize * 9) - 2, (cellSize * 9) - 2);
         this.ctx.closePath();
@@ -95,7 +108,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawBoxesBorders(cellSize: number): void {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = "#344861";
+        this.ctx.strokeStyle = this.COLORS.GRID_BORDER;
         this.ctx.lineWidth = 2;
         for (let i = 1; i < 3; i++) {
             this.ctx.moveTo(0, i * 3 * cellSize);
@@ -109,7 +122,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawCellsBorders(cellSize: number) {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = "#bfc6d4";
+        this.ctx.strokeStyle = this.COLORS.CELL_BORDER;
         this.ctx.lineWidth = 1;
         for (let i = 1; i < 9; i++) {
             if (!(i % 3)) {
@@ -141,11 +154,11 @@ export class CanvasRenderer implements ICanvasRenderer {
         if (!cell.value) {
             return;
         }
+        const fontSize = Math.floor(size * 0.75) - 5;
         this.ctx.beginPath();
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = cell.isGiven ? "#344861" : "#325aaf";
-        const fontSize = Math.floor(size * 0.75) - 5;
+        this.ctx.fillStyle = cell.isGiven ? this.COLORS.GIVEN_TEXT : this.COLORS.SOLVED_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
         const x = (cell.col * size) + (size / 2);
         const y = (cell.row * size) + (size / 2);
@@ -158,11 +171,11 @@ export class CanvasRenderer implements ICanvasRenderer {
         if (!cell.candidates.length) {
             return;
         }
+        const fontSize = Math.floor(size * 0.375) - 5;
         this.ctx.beginPath();
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = "#6e7c8c";
-        const fontSize = Math.floor(size * 0.375) - 5;
+        this.ctx.fillStyle = this.COLORS.CANDIDATE_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
         cell.candidates.forEach(candidate => {
             const xIndex = (candidate - 1) % 3;

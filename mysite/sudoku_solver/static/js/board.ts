@@ -1,5 +1,5 @@
 import { debounce, isAuthenticated } from "./utils.js";
-import { NOTES_MODES, notesMode } from "./index.js";
+import { NotesMode, notesMode } from "./index.js";
 import { ICell, Cell } from "./cell.js";
 import { ICanvasRenderer } from "./canvas-renderer.js";
 import { IWinNotification } from "./win-notification.js";
@@ -17,19 +17,24 @@ export class BoardFactory {
 abstract class AbstractBoard implements IBoard {
     private wrappedCells: ICell[][] = [];
     private selectedCell: ICell | null = null;
-    // TODO selectors constants for bind
+    private readonly DIRECTIONS = {
+        ArrowLeft: { row: 0, col: -1 },
+        ArrowRight: { row: 0, col: 1 },
+        ArrowUp: { row: -1, col: 0 },
+        ArrowDown: { row: 1, col: 0 },
+    };
 
     public constructor(private readonly canvasRenderer: ICanvasRenderer, private readonly winNotification: IWinNotification) { }
 
     public start(): void {
-        this.cells = this.load() ?? Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
-        this.canvasRenderer.resizeAndDraw(this.cells);
-        this.bind();
+        this.cells = this.load() ?? this.createEmptyBoard();
+        this.canvasRenderer.resize(this.cells);
+        this.bindEvents();
     }
 
     protected abstract getPrevBoard(): string | null;
 
-    protected abstract bindHandlers(): void;
+    protected abstract bindExtraEvents(): void;
 
     protected abstract load(): ICell[][] | null;
 
@@ -90,26 +95,27 @@ abstract class AbstractBoard implements IBoard {
         this.postprocessSelectedCellChange();
     }
 
-    private getCellNeighbors(cell: ICell, filterFn: (c: ICell) => boolean = () => true): Set<ICell> {
-        const cells = new Set<ICell>();
-        const boxRowStart = Math.floor(cell.row / 3) * 3;
-        const boxColStart = Math.floor(cell.col / 3) * 3;
-        for (let row = 0; row < this.cells.length; row++) {
-            for (let col = 0; col < this.cells[row].length; col++) {
-                const c = this.cells[row][col];
-                if (c !== cell && filterFn(c) && (
-                    row === cell.row ||
-                    col === cell.col ||
-                    (row >= boxRowStart && row < boxRowStart + 3 && col >= boxColStart && col < boxColStart + 3)
-                )) {
-                    cells.add(c);
-                }
-            }
-        }
-        return cells;
+    private createEmptyBoard(): ICell[][] {
+        return Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => new Cell(j, i)));
     }
 
-    private bind(): void {
+    private getCellNeighbors(cell: ICell, filterFn: (c: ICell) => boolean = () => true): Set<ICell> {
+        const boxRowStart = Math.floor(cell.row / 3) * 3;
+        const boxColStart = Math.floor(cell.col / 3) * 3;
+        return new Set(
+            this.cells.flatMap(row =>
+                row.filter(c =>
+                    c !== cell && filterFn(c) && (
+                        c.row === cell.row || c.col === cell.col || (
+                            c.row >= boxRowStart && c.row < boxRowStart + 3 && c.col >= boxColStart && c.col < boxColStart + 3
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    private bindEvents(): void {
         document.addEventListener("keydown", event => this.handleOnKeyPressed(event.key));
         document.querySelectorAll(".numpad-item").forEach(item => {
             if (item instanceof HTMLElement && item.dataset["value"]) {
@@ -124,8 +130,8 @@ abstract class AbstractBoard implements IBoard {
         ];
         actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
         this.canvasRenderer.canvas.addEventListener("click", event => this.handleOnClick(event));
-        window.addEventListener("resize", debounce(() => this.canvasRenderer.resizeAndDraw(this.cells), 100));
-        this.bindHandlers();
+        window.addEventListener("resize", debounce(() => this.canvasRenderer.resize(this.cells), 100));
+        this.bindExtraEvents();
     }
 
     private undo(): void {
@@ -195,8 +201,8 @@ abstract class AbstractBoard implements IBoard {
         }
         if (!isNaN(parseInt(value))) {
             this.processCellInput(parseInt(value));
-        } else {
-            this.processCellSelection(value);
+        } else if (value in this.DIRECTIONS) {
+            this.navigateSelection(value as keyof typeof this.DIRECTIONS);
         }
     }
 
@@ -204,10 +210,12 @@ abstract class AbstractBoard implements IBoard {
         if (value < 0 || value > 9 || !this.selectedCell || this.selectedCell.isGiven) {
             return;
         }
-        const changed = notesMode === NOTES_MODES.pencil
-            ? this.processCellNotesChange(this.selectedCell, value)
-            : this.processCellValueChange(this.selectedCell, value);
-        if (!changed) {
+        const handlers: Record<NotesMode, (cell: ICell, val: number) => boolean> = {
+            [NotesMode.Basic]: this.processCellValueChange,
+            [NotesMode.AutoNotes]: this.processCellValueChange,
+            [NotesMode.Pencil]: this.processCellNotesChange,
+        };
+        if (!handlers[notesMode](this.selectedCell, value)) {
             return;
         }
         this.postprocessCellsChanges();
@@ -235,36 +243,23 @@ abstract class AbstractBoard implements IBoard {
             return false;
         }
         cell.value = cell.value === value ? 0 : value;
-        if (notesMode === NOTES_MODES.auto_notes && cell.value) {
+        if (notesMode === NotesMode.AutoNotes && cell.value) {
             this.getCellNeighbors(cell, c => !c.value).forEach(c => c.removeCandidate(cell.value));
         }
         return true;
     }
 
-    private processCellSelection(value: string): void {
+    private navigateSelection(direction: keyof typeof this.DIRECTIONS) {
         if (!this.selectedCell) {
             return;
         }
-        const maxIndex = 8;
-        let { col, row } = this.selectedCell;
-        switch (value) {
-            case "ArrowLeft":
-                col = col ? col - 1 : maxIndex;
-                break;
-            case "ArrowRight":
-                col = col < maxIndex ? col + 1 : 0;
-                break;
-            case "ArrowUp":
-                row = row ? row - 1 : maxIndex;
-                break;
-            case "ArrowDown":
-                row = row < maxIndex ? row + 1 : 0;
-                break;
-        }
-        if (col === this.selectedCell.col && row === this.selectedCell.row) {
+        const delta = this.DIRECTIONS[direction];
+        let newRow = (this.selectedCell.row + delta.row + 9) % 9;
+        let newCol = (this.selectedCell.col + delta.col + 9) % 9;
+        if (newRow === this.selectedCell.row && newCol === this.selectedCell.col) {
             return;
         }
-        this.selectedCell = this.cells[row][col];
+        this.selectedCell = this.cells[newRow][newCol];
         this.postprocessSelectedCellChange();
     }
 
@@ -294,7 +289,7 @@ class GuestBoard extends AbstractBoard {
         return localStorage.getItem(this.prevBoardKey);
     }
 
-    protected override bindHandlers(): void { }
+    protected override bindExtraEvents(): void { }
 
     protected override load(): ICell[][] | null {
         const board = localStorage.getItem(this.boardKey);
@@ -314,7 +309,7 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override load(): ICell[][] | null {
-        const board = document.querySelector("#sudoku-container")?.getAttribute("data-context") || null;
+        const board = document.querySelector("#sudoku-container")?.getAttribute("data-context");
         return board ? this.decode(board) : null;
     }
 
@@ -327,7 +322,7 @@ class UserBoard extends AbstractBoard {
             .catch(error => console.error(`Save request: ${error}`));
     }
 
-    protected override bindHandlers(): void {
+    protected override bindExtraEvents(): void {
         document.querySelector("#game-controls-solve-step")?.addEventListener("click", () => this.solveStep());
     }
 
