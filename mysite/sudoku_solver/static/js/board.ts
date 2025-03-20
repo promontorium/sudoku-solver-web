@@ -210,12 +210,7 @@ abstract class AbstractBoard implements IBoard {
         if (value < 0 || value > 9 || !this.selectedCell || this.selectedCell.isGiven) {
             return;
         }
-        const handlers: Record<NotesMode, (cell: ICell, val: number) => boolean> = {
-            [NotesMode.Basic]: this.processCellValueChange,
-            [NotesMode.AutoNotes]: this.processCellValueChange,
-            [NotesMode.Pencil]: this.processCellNotesChange,
-        };
-        if (!handlers[notesMode](this.selectedCell, value)) {
+        if (!(notesMode == NotesMode.Pencil ? this.processCellNotesChange(this.selectedCell, value) : this.processCellValueChange(this.selectedCell, value))) {
             return;
         }
         this.postprocessCellsChanges();
