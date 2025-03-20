@@ -13,7 +13,7 @@ services:
         condition: service_healthy
 
   postgres-db:
-    image: postgres:17-alpine
+    image: postgres:17.4-alpine3.21
     env_file:
       - .env
     volumes:
