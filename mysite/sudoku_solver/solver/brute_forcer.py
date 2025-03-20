@@ -18,6 +18,9 @@ class BruteForcer(Solver):
         return "Brute forcer"
 
     def _solve(self) -> bool:
+        if not self._temp_grid.is_consistent:
+            self._logger.warning("%s: %s is inconsistent", self, self._grid)
+            return False
         res = self._solve_temp_grid()
         if res:
             self._apply_solution()
