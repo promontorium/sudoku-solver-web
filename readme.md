@@ -1,6 +1,7 @@
-## Sudoku Solver Web App
+# Sudoku Solver Web App
 
-### Technologies Used
+## Technologies Used
+
 - Python
 - Django
 - PostgreSQL
@@ -9,8 +10,9 @@
 - gunicorn as wsgi server
 - whitenoise for statics
 
-### .env file example
-```dosini
+## .env file example
+
+```env
 DJANGO_SECRET_KEY=your-key...
 DJANGO_ALLOWED_HOSTS=localhost
 DJANGO_DEBUG=False
@@ -23,8 +25,10 @@ POSTGRES_USER=myuser
 POSTGRES_PASSWORD=mypassword
 ```
 
-### docker-compose.override.yml
+## docker-compose.override.yml
+
 For debugging. VS Code laucnch config example:
+
 ```json
 {
     "name": "Docker: Debug Django",
@@ -44,32 +48,33 @@ For debugging. VS Code laucnch config example:
 ```
 
 ## Implemented Strategies
+
 - Basic Strategies
-    - Naked Subsets
-        - Naked Single
-        - Naked Pair
-        - Naked Triple
-        - Naked Quadruple
-    - Hidden Subsets
-        - Hidden Single
-        - Hidden Pair
-        - Hidden Triple
-        - Hidden Quadruple
-    - Intersections
-        - Pointing Pair
-        - Pointing Triple
-        - Box/Line Reduction
+  - Naked Subsets
+    - Naked Single
+    - Naked Pair
+    - Naked Triple
+    - Naked Quadruple
+  - Hidden Subsets
+    - Hidden Single
+    - Hidden Pair
+    - Hidden Triple
+    - Hidden Quadruple
+  - Intersections
+    - Pointing Pair
+    - Pointing Triple
+    - Box/Line Reduction
 - Basic Fish
-    - X-Wing
-    - Swordfish
-    - Jellyfish
-    - Squirmbag
-    - Whale
-    - Leviathan
+  - X-Wing
+  - Swordfish
+  - Jellyfish
+  - Squirmbag
+  - Whale
+  - Leviathan
 - Wings
-    - Y-Wing/XY-Wing
-    - XYZ-Wing
+  - Y-Wing/XY-Wing
+  - XYZ-Wing
 - Coloring
-    - Single Chain/Simple Coloring
+  - Single Chain/Simple Coloring
 - Chains and Loops
-    - X-Chain
+  - X-Chain
