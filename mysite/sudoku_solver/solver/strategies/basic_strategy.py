@@ -11,12 +11,10 @@ class BasicStrategy(Strategy):
         self._SUBSET_NAME = {2: "pair", 3: "triple", 4: "quadruple"}
 
     @abstractmethod
-    def _get_base_containers(self) -> Iterable[Container]:
-        pass
+    def _get_base_containers(self) -> Iterable[Container]: ...
 
     @abstractmethod
-    def _solve_container(self, container: Container) -> bool:
-        pass
+    def _solve_container(self, container: Container) -> bool: ...
 
     def solve(self) -> bool:
         return any(self._solve_container(cont) for cont in self._get_base_containers())

@@ -10,12 +10,10 @@ from .strategy import Strategy
 
 class WingStrategy(Strategy):
     @abstractmethod
-    def _get_pivot_cands_count(self) -> int:
-        pass
+    def _get_pivot_cands_count(self) -> int: ...
 
     @abstractmethod
-    def _get_base_cells(self, pivot: Cell, pincers: tuple[Cell, Cell]) -> Iterable[Cell]:
-        pass
+    def _get_base_cells(self, pivot: Cell, pincers: tuple[Cell, Cell]) -> Iterable[Cell]: ...
 
     def solve(self) -> bool:
         for pivot in self._grid.filter_cells(solved=False):

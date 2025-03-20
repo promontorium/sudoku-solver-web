@@ -10,8 +10,7 @@ class Solver(ABC):
         self._logger = getLogger(__name__)
 
     @abstractmethod
-    def __str__(self) -> str:
-        pass
+    def __str__(self) -> str: ...
 
     @property
     def history_manager(self) -> HistoryManager:
@@ -28,5 +27,4 @@ class Solver(ABC):
         return res
 
     @abstractmethod
-    def _solve(self) -> bool:
-        pass
+    def _solve(self) -> bool: ...

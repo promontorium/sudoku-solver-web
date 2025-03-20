@@ -14,12 +14,10 @@ class MultiContainersStrategy(Strategy):
             raise SolverException(f"{self}: unexpected subset length {self._subset_length}")
 
     @abstractmethod
-    def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]:
-        pass
+    def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]: ...
 
     @abstractmethod
-    def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool:
-        pass
+    def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool: ...
 
     def solve(self) -> bool:
         for conts_type, conts in self._get_containers_subsets():

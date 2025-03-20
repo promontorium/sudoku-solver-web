@@ -1,15 +1,12 @@
 from collections import deque
 from functools import wraps
 from logging import getLogger
-from typing import Callable, Iterable, Mapping, ParamSpec, Protocol, TypeVar
+from typing import Callable, Concatenate, Iterable, Mapping, ParamSpec, Protocol, TypeVar
 
 from events import Events  # type: ignore[import-untyped]
 
 from .cell import Cell
 from .exceptions import HistoryManagerException
-
-_T = TypeVar("_T")
-_P = ParamSpec("_P")
 
 
 class HistoryManager:
@@ -131,19 +128,22 @@ class HistoryManager:
 
 class HistoryManagerHolder(Protocol):
     @property
-    def history_manager(self) -> HistoryManager:
-        pass
+    def history_manager(self) -> HistoryManager: ...
 
 
-# TODO type hints
-def as_complex_action(func: Callable[_P, _T]) -> Callable[_P, _T]:
+_T = TypeVar("_T")
+_P = ParamSpec("_P")
+_HMH = TypeVar("_HMH", bound=HistoryManagerHolder)
+
+
+def as_complex_action(func: Callable[Concatenate[_HMH, _P], _T]) -> Callable[Concatenate[_HMH, _P], _T]:
     @wraps(func)
-    def wrapper(self: HistoryManagerHolder, *args: _P.args, **kwargs: _P.kwargs) -> _T:
+    def wrapper(self: _HMH, /, *args: _P.args, **kwargs: _P.kwargs) -> _T:
         prev_state = self.history_manager.is_complex_action
         self.history_manager.is_complex_action = True
         try:
-            return func(self, *args, **kwargs)  # type: ignore[arg-type]
+            return func(self, *args, **kwargs)
         finally:
             self.history_manager.is_complex_action = prev_state
 
-    return wrapper  # type: ignore[return-value]
+    return wrapper

@@ -6,8 +6,7 @@ from .basic_strategy import BasicStrategy
 
 class IntersectionStrategy(BasicStrategy):
     @abstractmethod
-    def _get_affected_container(self, cells: tuple[Cell, ...]) -> Container | None:
-        pass
+    def _get_affected_container(self, cells: tuple[Cell, ...]) -> Container | None: ...
 
     def _solve_container(self, container: Container) -> bool:
         for cand, cells in self._get_candidate_cells_map(container, min_cells=2, max_cells=3).items():

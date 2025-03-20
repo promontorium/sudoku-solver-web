@@ -18,13 +18,11 @@ class CellsHolder(ABC):
         self._cells = tuple(cells)
 
     @abstractmethod
-    def __str__(self) -> str:
-        pass
+    def __str__(self) -> str: ...
 
     @property
     @abstractmethod
-    def is_consistent(self) -> bool:
-        pass
+    def is_consistent(self) -> bool: ...
 
     @property
     def is_solved(self) -> bool:

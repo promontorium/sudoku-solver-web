@@ -11,12 +11,10 @@ class Strategy(ABC):
         self._logger = getLogger(__name__)
 
     @abstractmethod
-    def __str__(self) -> str:
-        pass
+    def __str__(self) -> str: ...
 
     @abstractmethod
-    def solve(self) -> bool:
-        pass
+    def solve(self) -> bool: ...
 
     def _get_candidate_cells_map(
         self, container: Container, *, min_cells: int = 1, max_cells: int = 9, candidates: Iterable[int] = range(1, 10)
