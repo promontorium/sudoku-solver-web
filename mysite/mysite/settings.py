@@ -163,12 +163,12 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "formatter": "verbose",
-            "filename": "log.log",
-        },
+        # "file": {
+        #     "level": "DEBUG",
+        #     "class": "logging.FileHandler",
+        #     "formatter": "verbose",
+        #     "filename": "log.log",
+        # },
     },
     "loggers": {
         "django": {
