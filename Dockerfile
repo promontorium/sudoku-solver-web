@@ -2,9 +2,8 @@
 FROM node:23-alpine3.20 AS node-builder
 COPY . /app
 RUN npm install -g typescript && \
-    tsc -p /app/mysite/sudoku_solver/static/tsconfig.json && \
-    find /app/mysite/sudoku_solver/static -type f -name "*.ts" -delete && \
-    rm /app/mysite/sudoku_solver/static/tsconfig.json
+    tsc -b /app/mysite/sudoku_solver/static/tsconfig.json && \
+    rm -rf /app/mysite/sudoku_solver/static/ts /app/mysite/sudoku_solver/static/tsconfig.*
 
 # Python builder stage
 FROM python:3.13.2-alpine3.21 AS python-builder
@@ -16,15 +15,10 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV UV_PROJECT_ENVIRONMENT=/usr/local
 # Get uv from image
 COPY --from=ghcr.io/astral-sh/uv:0.6.8-python3.8-alpine /usr/local/bin/uv /bin/
-ARG DJANGO_DEBUG=False
-RUN if [ "$DJANGO_DEBUG" = "True" ]; then \
-        uv sync --no-dev --frozen --group debug; \
-    else \
-        uv sync --no-dev --frozen; \
-    fi && \
-    rm uv.lock pyproject.toml && \
+ARG DJANGO_DEBUG
+RUN uv sync ${DJANGO_DEBUG:+--group debug} --no-dev --frozen && \
     python mysite/manage.py collectstatic --noinput && \
-    rm -rf mysite/sudoku_solver/static
+    rm -rf uv.lock pyproject.toml mysite/sudoku_solver/static
 
 # Final image stage
 FROM python:3.13.2-alpine3.21

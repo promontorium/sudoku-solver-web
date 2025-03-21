@@ -15,7 +15,7 @@
 ```env
 DJANGO_SECRET_KEY=your-key...
 DJANGO_ALLOWED_HOSTS=localhost
-DJANGO_DEBUG=False
+DJANGO_DEBUG=True
 
 POSTGRES_ENGINE=django.db.backends.postgresql
 POSTGRES_HOST=postgres-db

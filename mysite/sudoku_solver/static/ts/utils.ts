@@ -6,5 +6,4 @@ export function debounce<T extends (...args: any[]) => void>(func: T, wait: numb
     }
 }
 
-export const isAuthenticated = (): boolean =>
-    !!document.querySelector("meta[name='is_authenticated']");
+export const isAuthenticated = (): boolean => !!document.querySelector("meta[name='is_authenticated']");
