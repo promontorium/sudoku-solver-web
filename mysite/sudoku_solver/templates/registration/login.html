@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}" />
 {% endblock %}
 
 {% block main %}
@@ -12,7 +12,9 @@
         <form method="post" class="login-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <p class="other-login-option">Don't have an accoount? Create one <a href="{% url 'sudoku-solver:signup' %}">here</a></p>
+            <p class="other-login-option">
+                Don't have an accoount? Create one <a href="{% url 'sudoku-solver:signup' %}">here</a>
+            </p>
             <button type="submit" name="login-submit">Sign In</button>
         </form>
     </div>

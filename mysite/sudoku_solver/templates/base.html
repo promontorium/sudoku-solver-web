@@ -2,28 +2,29 @@
 
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Sudoku Solver</title>
+        <meta name="viewport" content="width=device-width" />
+        {% if user.is_authenticated %}
+            <meta name="is_authenticated" />
+        {% endif %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'styles/header.css' %}" />
+        {% block css %}
+        {% endblock %}
+        <script type="module" src="{% static 'js/header.js' %}"></script>
+        {% block js %}
+        {% endblock %}
+    </head>
 
-<head>
-    <title>Sudoku Solver</title>
-    <meta name="viewport" content="width=device-width">
-    {% if user.is_authenticated %}
-        <meta name="is_authenticated">
-    {% endif %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/header.css' %}">
-    {% block css %}{% endblock %}
-    <script type="module" src="{% static 'js/header.js' %}"></script>
-    {% block js %}{% endblock %}
-</head>
-
-<body>
-    <header>
-        {% include 'header.html' %}
-    </header>
-    <main>
-        {% block main %}{% endblock %}
-    </main>
-</body>
-
+    <body>
+        <header>
+            {% include 'header.html' %}
+        </header>
+        <main>
+            {% block main %}
+            {% endblock %}
+        </main>
+    </body>
 </html>

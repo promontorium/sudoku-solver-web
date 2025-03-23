@@ -3,10 +3,12 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-list.css' %}" />
 {% endblock %}
 
-{% block js %} {% endblock %}
+{% block js %}
+
+{% endblock %}
 
 {% block main %}
     <div class="board-list-container">
@@ -14,9 +16,7 @@
         <ul class="board-list">
             {% for board in board_list %}
                 <li class="board-list-item">
-                    <a href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">
-                        #{{ board.id }}: {{ board.description|default:"No description" }}. Created: {{ board.created }}. Changed: {{ board.changed }}
-                    </a>
+                    <a href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">#{{ board.id }}: {{ board.description|default:'No description' }}. Created: {{ board.created }}. Changed: {{ board.changed }}</a>
                 </li>
             {% empty %}
                 <li>No boards available.</li>
@@ -28,9 +28,7 @@
                     <a href="?page=1">&laquo; first</a>
                     <a href="?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>
+                <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                 {% if page_obj.has_next %}
                     <a href="?page={{ page_obj.next_page_number }}">next</a>
                     <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
