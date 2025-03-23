@@ -9,6 +9,7 @@ readme.md
 
 .venv
 .vscode
+.prettierrc.toml
 .mypy_cache
 **/staticfiles
 **/__pycache__
