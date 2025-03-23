@@ -42,8 +42,8 @@ class Cell:
         if self._candidates == cands:
             return
         self._logger.info("%s: Updating candidates %s -> %s", self, self._candidates, cands)
-        self._assert_is_mutable()
-        self._assert_candidates_are_mutable()
+        self._assert_mutable()
+        self._assert_candidates_mutable()
         for cand in cands:
             self._validate_value(cand, allow_zero=False)
         self._candidates = cands
@@ -59,7 +59,7 @@ class Cell:
         if self._value == value:
             return
         self._logger.info("%s: Updating value %d -> %d", self, self._value, value)
-        self._assert_is_mutable()
+        self._assert_mutable()
         self._validate_value(value)
         self._value = value
         self._candidates = frozenset()
@@ -95,11 +95,11 @@ class Cell:
         self.value = 0
         self.candidates = frozenset()
 
-    def _assert_is_mutable(self) -> None:
+    def _assert_mutable(self) -> None:
         if self.is_given:
             raise SudokuException(f"{self}: Cannot modify given cell")
 
-    def _assert_candidates_are_mutable(self) -> None:
+    def _assert_candidates_mutable(self) -> None:
         if self.is_solved:
             raise SudokuException(f"{self}: Cannot modify solved cell candidates")
 

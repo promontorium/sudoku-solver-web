@@ -40,7 +40,7 @@ export class Cell implements ICell {
         this.value = value;
         this.isGiven = isGiven;
         this.candidates = candidates;
-        this.assertIsConsistent();
+        this.assertConsistent();
     }
 
     public static fromEncoded(encoded: string, row: number, col: number): ICell {
@@ -62,7 +62,7 @@ export class Cell implements ICell {
     }
 
     public set value(value: number) {
-        this.assertIsMutable();
+        this.assertMutable();
         this.validateValue(value, true);
         this.wrappedValue = value;
         this.wrappedCandidates.clear();
@@ -76,8 +76,8 @@ export class Cell implements ICell {
         if (!values.length && !this.wrappedCandidates.size) {
             return;
         }
-        this.assertIsMutable();
-        this.assertCandidatesAreMutable();
+        this.assertMutable();
+        this.assertCandidatesMutable();
         this.wrappedCandidates = new Set(
             values.map((v) => {
                 this.validateValue(v, false);
@@ -93,15 +93,15 @@ export class Cell implements ICell {
     }
 
     public addCandidate(value: number): void {
-        this.assertIsMutable();
-        this.assertCandidatesAreMutable();
+        this.assertMutable();
+        this.assertCandidatesMutable();
         this.validateValue(value, false);
         this.wrappedCandidates.add(value);
     }
 
     public removeCandidate(value: number): boolean {
-        this.assertIsMutable();
-        this.assertCandidatesAreMutable();
+        this.assertMutable();
+        this.assertCandidatesMutable();
         return this.wrappedCandidates.delete(value);
     }
 
@@ -113,19 +113,19 @@ export class Cell implements ICell {
         this.wrappedValue = 0;
     }
 
-    private assertIsConsistent(): void {
+    private assertConsistent(): void {
         if (this.isGiven && !this.value) {
             throw new Error(`Cell(${this.col}, ${this.row}): Given cell must have non-zero value`);
         }
     }
 
-    private assertIsMutable(): void {
+    private assertMutable(): void {
         if (this.isGiven) {
             throw new Error(`Cell(${this.col}, ${this.row}): Cannot modify given cell`);
         }
     }
 
-    private assertCandidatesAreMutable(): void {
+    private assertCandidatesMutable(): void {
         if (this.value) {
             throw new Error(`Cell(${this.col}, ${this.row}): Cannot modify solved cell candidates`);
         }
