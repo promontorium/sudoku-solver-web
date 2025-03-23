@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import Iterable
 
-from ...sudoku import Cell, Container, Grid
-from .exceptions import SolverException
-from .strategy import Strategy
+from ... import Cell, Container, Grid
+from ..exceptions import StrategyException
+from ..strategy import Strategy
 
 
 class MultiContainersStrategy(Strategy):
@@ -11,7 +11,7 @@ class MultiContainersStrategy(Strategy):
         super().__init__(grid)
         self._subset_length = subset_length
         if self._subset_length < 2:
-            raise SolverException(f"{self}: unexpected subset length {self._subset_length}")
+            raise StrategyException(f"{self}: unexpected subset length {self._subset_length}")
 
     @abstractmethod
     def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]: ...

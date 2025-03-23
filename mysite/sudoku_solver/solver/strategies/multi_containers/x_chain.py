@@ -1,8 +1,8 @@
 import itertools
 from typing import Collection, Iterable, Sequence
 
-from ...sudoku import Cell, Container, Grid
-from .exceptions import SolverException
+from ... import Cell, Container, Grid
+from ..exceptions import StrategyException
 from .multi_containers_strategy import MultiContainersStrategy
 
 
@@ -20,7 +20,7 @@ class XChain(MultiContainersStrategy):
         return "X-Chain"
 
     def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]:
-        return [("all", itertools.chain(self._grid.rows, self._grid.columns, self._grid.boxes))]
+        return (("all", itertools.chain(self._grid.rows, self._grid.columns, self._grid.boxes)),)
 
     def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool:
         for chain in self._build_x_chains(cells_subsets):
@@ -45,7 +45,7 @@ class XChain(MultiContainersStrategy):
         self, cells_pairs: Collection[set[Cell]], cells: set[Cell], r: tuple[Cell, ...], link: bool
     ) -> list[tuple[Cell, ...]]:
         if not r:
-            raise SolverException(f"{self}: Build chain internal error")
+            raise StrategyException(f"{self}: Build chain internal error")
         result: list[tuple[Cell, ...]] = []
         links = self._find_links(r[-1], cells, cells_pairs, link)
         for cell in links:

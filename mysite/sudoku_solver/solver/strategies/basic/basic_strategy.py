@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Iterable
 
-from ...sudoku import Container, Grid
-from .strategy import Strategy
+from ... import Container, Grid
+from ..strategy import Strategy
 
 
 class BasicStrategy(Strategy):

@@ -1,8 +1,8 @@
 import itertools
 from typing import Collection, Iterable, Mapping
 
-from ...sudoku import Cell, Container, Grid
-from .exceptions import SolverException
+from ... import Cell, Container, Grid
+from ..exceptions import StrategyException
 from .multi_containers_strategy import MultiContainersStrategy
 
 
@@ -22,7 +22,7 @@ class SingleChain(MultiContainersStrategy):
         return "Single Chain/Simple Coloring"
 
     def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]:
-        return [("all", itertools.chain(self._grid.rows, self._grid.columns, self._grid.boxes))]
+        return (("all", itertools.chain(self._grid.rows, self._grid.columns, self._grid.boxes)),)
 
     def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool:
         for chain in self._build_chains(cells_subsets):
@@ -89,7 +89,7 @@ class SingleChain(MultiContainersStrategy):
                 continue
             colors = [color for _, color in chain_cells]
             if colors.count(True) > 1 and colors.count(False) > 1:
-                raise SolverException(
+                raise StrategyException(
                     f"{self}: {candidate}. Color removal: both colors appears twice in {cont} for {chain=}"
                 )
             color_to_delete = True if colors.count(True) > 1 else (False if colors.count(False) > 1 else None)

@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from logging import getLogger
 
-from ..sudoku import Grid, HistoryManager, as_complex_action
+from . import Grid, HistoryManager, as_complex_action
+from .exceptions import SolverException
+from .strategies import StrategyException
 
 
 class Solver(ABC):
@@ -19,7 +21,10 @@ class Solver(ABC):
     @as_complex_action
     def solve(self) -> bool:
         self._logger.info("%s: Solving ...", self)
-        res = self._solve()
+        try:
+            res = self._solve()
+        except StrategyException as e:
+            raise SolverException("asd", e)
         if res:
             self._logger.info("%s: Solved", self)
         else:

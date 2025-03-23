@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from ...sudoku import Container
+from ... import Container
 from .basic_strategy import BasicStrategy
 
 

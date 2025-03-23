@@ -1,23 +1,24 @@
-from ..sudoku import Grid
+from . import Grid
 from .solver import Solver
-from .strategies.basic_fish import BasicFish
-from .strategies.box_line_reduction import BoxLineReduction
-from .strategies.hidden_single import HiddenSingle
-from .strategies.hidden_subset import HiddenSubset
-from .strategies.naked_single import NakedSingle
-from .strategies.naked_subset import NakedSubset
-from .strategies.pointing_subset import PointingSubset
-from .strategies.single_chain import SingleChain
-from .strategies.strategy import Strategy
-from .strategies.x_chain import XChain
-from .strategies.xyz_wing import XYZWing
-from .strategies.y_wing import YWing
+from .strategies import (
+    BasicFish,
+    BoxLineReduction,
+    HiddenSingle,
+    HiddenSubset,
+    NakedSingle,
+    NakedSubset,
+    PointingSubset,
+    SingleChain,
+    XChain,
+    XYZWing,
+    YWing,
+)
 
 
 class StepSolver(Solver):
     def __init__(self, grid: Grid):
         super().__init__(grid)
-        self._solvers: list[Strategy] = [
+        self._solvers = [
             NakedSingle(self._grid),
             HiddenSingle(self._grid),
             NakedSubset(self._grid, 2),

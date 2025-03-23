@@ -1,7 +1,7 @@
 from itertools import chain
 from typing import Iterable
 
-from ...sudoku import Cell, Container
+from .... import Cell, Container
 from .intersection_strategy import IntersectionStrategy
 
 

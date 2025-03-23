@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from ...sudoku import Cell
+from ... import Cell
 from .wing_strategy import WingStrategy
 
 

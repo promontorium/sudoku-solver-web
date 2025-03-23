@@ -2,8 +2,8 @@ import logging
 from itertools import combinations
 from typing import Iterable
 
-from ...sudoku import Cell, Container, Grid
-from .exceptions import SolverException
+from ... import Cell, Container, Grid
+from ..exceptions import StrategyException
 from .multi_containers_strategy import MultiContainersStrategy
 
 
@@ -25,8 +25,8 @@ class BasicFish(MultiContainersStrategy):
 
     def __init__(self, grid: Grid, subset_length: int):
         super().__init__(grid, subset_length)
-        if self._subset_length not in range(2, 8):
-            raise SolverException(f"{self}: unexpected subset length {self._subset_length}")
+        if self._subset_length < 2 or self._subset_length > 7:
+            raise StrategyException(f"{self}: unexpected subset length {self._subset_length}")
         self._ROWS_GROUP = "rows"
         self._COLUMNS_GROUP = "cols"
 
@@ -35,8 +35,7 @@ class BasicFish(MultiContainersStrategy):
         return BASIC_FISHES.get(self._subset_length, "BASIC_FISH")
 
     def _get_containers_subsets(self) -> Iterable[tuple[str, Iterable[Container]]]:
-        yield self._ROWS_GROUP, self._grid.rows
-        yield self._COLUMNS_GROUP, self._grid.columns
+        return ((self._ROWS_GROUP, self._grid.rows), (self._COLUMNS_GROUP, self._grid.columns))
 
     def _solve_cell_subsets(self, containers_type: str, candidate: int, cells_subsets: list[set[Cell]]) -> bool:
         for cells_subsets_combination in combinations(cells_subsets, self._subset_length):
@@ -79,9 +78,9 @@ class BasicFish(MultiContainersStrategy):
             case self._COLUMNS_GROUP:
                 result = {self._grid.get_column(cell) for cell in subsets_cells}
             case _:
-                raise SolverException(f"{self}: Unexpected base containsers group type {conts_group_type}")
+                raise StrategyException(f"{self}: Unexpected base containsers group type {conts_group_type}")
         if len(result) != self._subset_length:
-            raise SolverException(f"{self}: Internal error")
+            raise StrategyException(f"{self}: Internal error")
         return result
 
     def _get_affected_containers(self, subsets_cells: Iterable[Cell], conts_group_type: str) -> set[Container]:
@@ -91,5 +90,5 @@ class BasicFish(MultiContainersStrategy):
             case self._COLUMNS_GROUP:
                 result = {self._grid.get_row(cell) for cell in subsets_cells}
             case _:
-                raise SolverException(f"{self}: Unexpected affected containsers group type {conts_group_type}")
+                raise StrategyException(f"{self}: Unexpected affected containsers group type {conts_group_type}")
         return result if len(result) == self._subset_length else set()

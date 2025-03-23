@@ -1,2 +1,2 @@
-class SolverException(Exception):
+class StrategyException(Exception):
     pass

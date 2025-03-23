@@ -1,10 +1,10 @@
 import heapq
 
-from ..sudoku import Grid
+from . import Grid
 from .solver import Solver
 
 
-# reference https://leetcode.com/problems/sudoku-solver/
+# inspired by https://leetcode.com/problems/sudoku-solver/
 class BruteForcer(Solver):
     def __init__(self, grid: Grid):
         super().__init__(grid)
