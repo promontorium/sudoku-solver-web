@@ -22,6 +22,6 @@ class Strategy(ABC):
         result: dict[int, tuple[Cell, ...]] = {}
         for cand in candidates:
             cells = tuple(container.filter_cells(has_candidate=cand))
-            if len(cells) in range(min_cells, max_cells + 1):
+            if min_cells <= len(cells) <= max_cells:
                 result[cand] = cells
         return result
