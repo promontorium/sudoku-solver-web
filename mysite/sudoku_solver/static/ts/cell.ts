@@ -27,7 +27,13 @@ export class Cell implements ICell {
     private wrappedValue = 0;
     private wrappedCandidates = new Set<number>();
 
-    public constructor(col: number, row: number, value: number = 0, isGiven: boolean = false, candidates: number[] = []) {
+    public constructor(
+        col: number,
+        row: number,
+        value: number = 0,
+        isGiven: boolean = false,
+        candidates: number[] = []
+    ) {
         this.col = col;
         this.row = row;
         this.validateCoordinates();
@@ -59,7 +65,7 @@ export class Cell implements ICell {
         this.assertIsMutable();
         this.validateValue(value, true);
         this.wrappedValue = value;
-        this.wrappedCandidates.clear()
+        this.wrappedCandidates.clear();
     }
 
     public get candidates(): number[] {
@@ -72,10 +78,12 @@ export class Cell implements ICell {
         }
         this.assertIsMutable();
         this.assertCandidatesAreMutable();
-        this.wrappedCandidates = new Set(values.map(v => {
-            this.validateValue(v, false);
-            return v;
-        }));
+        this.wrappedCandidates = new Set(
+            values.map((v) => {
+                this.validateValue(v, false);
+                return v;
+            })
+        );
     }
 
     public encode(): string {
@@ -124,7 +132,14 @@ export class Cell implements ICell {
     }
 
     private validateCoordinates(): void {
-        if (!Number.isInteger(this.col) || !Number.isInteger(this.row) || this.col < 0 || this.row < 0 || this.col > 8 || this.row > 8) {
+        if (
+            !Number.isInteger(this.col) ||
+            !Number.isInteger(this.row) ||
+            this.col < 0 ||
+            this.row < 0 ||
+            this.col > 8 ||
+            this.row > 8
+        ) {
             throw new Error(`Cell(${this.col}, ${this.row}): Invalid coordinates`);
         }
     }

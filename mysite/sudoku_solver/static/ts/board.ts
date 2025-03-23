@@ -24,7 +24,10 @@ abstract class AbstractBoard implements IBoard {
         ArrowDown: { row: 1, col: 0 },
     };
 
-    public constructor(private readonly canvasRenderer: ICanvasRenderer, private readonly winNotification: IWinNotification) { }
+    public constructor(
+        private readonly canvasRenderer: ICanvasRenderer,
+        private readonly winNotification: IWinNotification
+    ) {}
 
     public start(): void {
         this.cells = this.load() ?? this.createEmptyBoard();
@@ -51,7 +54,7 @@ abstract class AbstractBoard implements IBoard {
     }
 
     protected encode(): string {
-        return this.cells.flatMap(row => row.map(cell => cell.encode())).toString();
+        return this.cells.flatMap((row) => row.map((cell) => cell.encode())).toString();
     }
 
     protected decode(data: string): ICell[][] | null {
@@ -61,7 +64,9 @@ abstract class AbstractBoard implements IBoard {
             return null;
         }
         try {
-            return Array.from({ length: 9 }, (_, i) => Array.from({ length: 9 }, (_, j) => Cell.fromEncoded(values[(i * 9) + j], i, j)));
+            return Array.from({ length: 9 }, (_, i) =>
+                Array.from({ length: 9 }, (_, j) => Cell.fromEncoded(values[i * 9 + j], i, j))
+            );
         } catch (error) {
             console.warn(`Decode cells. Cell creation error: ${error}`);
         }
@@ -69,7 +74,7 @@ abstract class AbstractBoard implements IBoard {
     }
 
     protected determineWin(): void {
-        if (this.cells.flat().some(cell => !cell.value)) {
+        if (this.cells.flat().some((cell) => !cell.value)) {
             return;
         }
         const values = new Set();
@@ -103,21 +108,25 @@ abstract class AbstractBoard implements IBoard {
         const boxRowStart = Math.floor(cell.row / 3) * 3;
         const boxColStart = Math.floor(cell.col / 3) * 3;
         return new Set(
-            this.cells.flatMap(row =>
-                row.filter(c =>
-                    c !== cell && filterFn(c) && (
-                        c.row === cell.row || c.col === cell.col || (
-                            c.row >= boxRowStart && c.row < boxRowStart + 3 && c.col >= boxColStart && c.col < boxColStart + 3
-                        )
-                    )
+            this.cells.flatMap((row) =>
+                row.filter(
+                    (c) =>
+                        c !== cell &&
+                        filterFn(c) &&
+                        (c.row === cell.row ||
+                            c.col === cell.col ||
+                            (c.row >= boxRowStart &&
+                                c.row < boxRowStart + 3 &&
+                                c.col >= boxColStart &&
+                                c.col < boxColStart + 3))
                 )
             )
         );
     }
 
     private bindEvents(): void {
-        document.addEventListener("keydown", event => this.handleOnKeyPressed(event.key));
-        document.querySelectorAll(".numpad-item").forEach(item => {
+        document.addEventListener("keydown", (event) => this.handleOnKeyPressed(event.key));
+        document.querySelectorAll(".numpad-item").forEach((item) => {
             if (item instanceof HTMLElement && item.dataset["value"]) {
                 item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
             }
@@ -129,8 +138,11 @@ abstract class AbstractBoard implements IBoard {
             { id: "#game-controls-undo", action: () => this.undo() },
         ];
         actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
-        this.canvasRenderer.canvas.addEventListener("click", event => this.handleOnClick(event));
-        window.addEventListener("resize", debounce(() => this.canvasRenderer.resize(this.cells), 100));
+        this.canvasRenderer.canvas.addEventListener("click", (event) => this.handleOnClick(event));
+        window.addEventListener(
+            "resize",
+            debounce(() => this.canvasRenderer.resize(this.cells), 100)
+        );
         this.bindExtraEvents();
     }
 
@@ -153,16 +165,19 @@ abstract class AbstractBoard implements IBoard {
 
     private reset(): void {
         console.debug("Running reset");
-        this.cells.flat().forEach(cell => cell.reset());
+        this.cells.flat().forEach((cell) => cell.reset());
         this.postprocessCellsChanges();
     }
 
     private createNotes(): void {
         console.debug("Running create notes");
-        this.cells.flat().filter(cell => !cell.value).forEach(cell => {
-            const usedValues = Array.from(this.getCellNeighbors(cell)).map(c => c.value);
-            cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter(v => !usedValues.includes(v));
-        });
+        this.cells
+            .flat()
+            .filter((cell) => !cell.value)
+            .forEach((cell) => {
+                const usedValues = Array.from(this.getCellNeighbors(cell)).map((c) => c.value);
+                cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter((v) => !usedValues.includes(v));
+            });
         this.postprocessCellsChanges();
     }
 
@@ -210,7 +225,11 @@ abstract class AbstractBoard implements IBoard {
         if (value < 0 || value > 9 || !this.selectedCell || this.selectedCell.isGiven) {
             return;
         }
-        if (!(notesMode == NotesMode.Pencil ? this.processCellNotesChange(this.selectedCell, value) : this.processCellValueChange(this.selectedCell, value))) {
+        if (
+            !(notesMode == NotesMode.Pencil
+                ? this.processCellNotesChange(this.selectedCell, value)
+                : this.processCellValueChange(this.selectedCell, value))
+        ) {
             return;
         }
         this.postprocessCellsChanges();
@@ -239,7 +258,7 @@ abstract class AbstractBoard implements IBoard {
         }
         cell.value = cell.value === value ? 0 : value;
         if (notesMode === NotesMode.AutoNotes && cell.value) {
-            this.getCellNeighbors(cell, c => !c.value).forEach(c => c.removeCandidate(cell.value));
+            this.getCellNeighbors(cell, (c) => !c.value).forEach((c) => c.removeCandidate(cell.value));
         }
         return true;
     }
@@ -261,7 +280,7 @@ abstract class AbstractBoard implements IBoard {
     private updateCellsFlags(): void {
         const neighborCells = this.selectedCell ? this.getCellNeighbors(this.selectedCell) : new Set<ICell>();
         const value = this.selectedCell?.value ?? 0;
-        this.cells.flat().forEach(cell => {
+        this.cells.flat().forEach((cell) => {
             cell.isSelected = cell === this.selectedCell;
             cell.isNeighbor = neighborCells.has(cell);
             cell.hasCandidate = !cell.isSelected && cell.candidates.includes(value);
@@ -284,7 +303,7 @@ class GuestBoard extends AbstractBoard {
         return localStorage.getItem(this.prevBoardKey);
     }
 
-    protected override bindExtraEvents(): void { }
+    protected override bindExtraEvents(): void {}
 
     protected override load(): ICell[][] | null {
         const board = localStorage.getItem(this.boardKey);
@@ -301,7 +320,7 @@ class GuestBoard extends AbstractBoard {
 class UserBoard extends AbstractBoard {
     protected override getPrevBoard(): string | null {
         // TODO
-        console.debug("User getPrevBoard is not yet implemented")
+        console.debug("User getPrevBoard is not yet implemented");
         return null;
     }
 
@@ -313,10 +332,10 @@ class UserBoard extends AbstractBoard {
     protected override save(): void {
         console.debug("Running save");
         const url = "";
-        const payload = { "board": this.encode() };
+        const payload = { board: this.encode() };
         this.postData(url, payload)
-            .then(data => this.processSaveResponse(data))
-            .catch(error => console.error(`Save request: ${error}`));
+            .then((data) => this.processSaveResponse(data))
+            .catch((error) => console.error(`Save request: ${error}`));
     }
 
     protected override bindExtraEvents(): void {
@@ -334,19 +353,19 @@ class UserBoard extends AbstractBoard {
     private solve(): void {
         console.debug("Running solve");
         const url = "solve/";
-        const payload = { "board": this.encode() };
+        const payload = { board: this.encode() };
         this.postData(url, payload)
-            .then(data => this.processSolveResponse(data))
-            .catch(error => console.error(`Solve request: ${error}`));
+            .then((data) => this.processSolveResponse(data))
+            .catch((error) => console.error(`Solve request: ${error}`));
     }
 
     private solveStep(): void {
         console.debug("Running solve step");
         const url = "solve-step/";
-        const payload = { "board": this.encode() };
+        const payload = { board: this.encode() };
         this.postData(url, payload)
-            .then(data => this.processSolveResponse(data))
-            .catch(error => console.error(`Solve step request: ${error}`));
+            .then((data) => this.processSolveResponse(data))
+            .catch((error) => console.error(`Solve step request: ${error}`));
     }
 
     private async postData(url: string, payload: any): Promise<any> {
@@ -381,7 +400,7 @@ class UserBoard extends AbstractBoard {
             console.debug(`Response is not ok: ${response.reason}`);
             return;
         }
-        console.debug(`Response result: ${response.result}`)
+        console.debug(`Response result: ${response.result}`);
         const cells = this.decode(response.result);
         if (!cells) {
             console.error("Response: decode error");

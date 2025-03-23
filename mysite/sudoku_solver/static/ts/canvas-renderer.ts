@@ -4,7 +4,7 @@ export interface ICanvasRenderer {
     readonly canvas: HTMLCanvasElement;
     draw(cells: ICell[][]): void;
     resize(cells: ICell[][]): void;
-    getCellByOffset(offsetX: number, offsetY: number): { col: number, row: number };
+    getCellByOffset(offsetX: number, offsetY: number): { col: number; row: number };
 }
 
 export class CanvasRenderer implements ICanvasRenderer {
@@ -21,7 +21,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         CONFLICT: "#f7cfd6",
         SAME_VALUE: "#c3d7ea",
         HAS_CANDIDATE: "#d4ebda",
-        NEIGHBOR: "#e2ebf3"
+        NEIGHBOR: "#e2ebf3",
     };
     private readonly ctx;
     private readonly container;
@@ -46,7 +46,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // this.ctx.reset(); // TODO is clearRect enough ?
         const cellSize = this.getCellSize();
-        cells.flat().forEach(cell => this.drawCell(cell, cellSize));
+        cells.flat().forEach((cell) => this.drawCell(cell, cellSize));
         this.drawBorders(cellSize);
     }
 
@@ -65,7 +65,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.draw(cells);
     }
 
-    public getCellByOffset(offsetX: number, offsetY: number): { col: number, row: number } {
+    public getCellByOffset(offsetX: number, offsetY: number): { col: number; row: number } {
         const cellSize = this.getCellSize();
         const col = Math.floor(offsetX / cellSize);
         const row = Math.floor(offsetY / cellSize);
@@ -77,12 +77,17 @@ export class CanvasRenderer implements ICanvasRenderer {
     }
 
     private getCellCursorColor(cell: ICell): string | null {
-        return cell.isSelected ? this.COLORS.SELECTED :
-            cell.isConflict ? this.COLORS.CONFLICT :
-                cell.isSameVal ? this.COLORS.SAME_VALUE :
-                    cell.hasCandidate ? this.COLORS.HAS_CANDIDATE :
-                        cell.isNeighbor ? this.COLORS.NEIGHBOR :
-                            null;
+        return cell.isSelected
+            ? this.COLORS.SELECTED
+            : cell.isConflict
+            ? this.COLORS.CONFLICT
+            : cell.isSameVal
+            ? this.COLORS.SAME_VALUE
+            : cell.hasCandidate
+            ? this.COLORS.HAS_CANDIDATE
+            : cell.isNeighbor
+            ? this.COLORS.NEIGHBOR
+            : null;
     }
 
     private drawCell(cell: ICell, size: number): void {
@@ -101,7 +106,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.COLORS.GRID_BORDER;
         this.ctx.lineWidth = 2;
-        this.ctx.rect(1, 1, (cellSize * 9) - 2, (cellSize * 9) - 2);
+        this.ctx.rect(1, 1, cellSize * 9 - 2, cellSize * 9 - 2);
         this.ctx.closePath();
         this.ctx.stroke();
     }
@@ -160,8 +165,8 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.textBaseline = "middle";
         this.ctx.fillStyle = cell.isGiven ? this.COLORS.GIVEN_TEXT : this.COLORS.SOLVED_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
-        const x = (cell.col * size) + (size / 2);
-        const y = (cell.row * size) + (size / 2);
+        const x = cell.col * size + size / 2;
+        const y = cell.row * size + size / 2;
         this.ctx.fillText(cell.value.toString(), x, y);
         this.ctx.closePath();
         this.ctx.fill();
@@ -177,11 +182,11 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.textBaseline = "middle";
         this.ctx.fillStyle = this.COLORS.CANDIDATE_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
-        cell.candidates.forEach(candidate => {
+        cell.candidates.forEach((candidate) => {
             const xIndex = (candidate - 1) % 3;
             const yIndex = Math.floor((candidate - 1) / 3);
-            const x = (cell.col * size) + ((xIndex + 1) * size / 4);
-            const y = (cell.row * size) + ((yIndex + 1) * size / 4);
+            const x = cell.col * size + ((xIndex + 1) * size) / 4;
+            const y = cell.row * size + ((yIndex + 1) * size) / 4;
             this.ctx.fillText(candidate.toString(), x, y);
         });
         this.ctx.closePath();

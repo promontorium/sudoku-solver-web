@@ -6,9 +6,12 @@ window.addEventListener("load", () => {
         return;
     }
     let lastScrollPosition = window.scrollY;
-    window.addEventListener("scroll", debounce(() => {
-        const currentScrollPosition = window.scrollY;
-        header.classList.toggle("scrolled-down", currentScrollPosition >= lastScrollPosition);
-        lastScrollPosition = currentScrollPosition;
-    }, 25));
+    window.addEventListener(
+        "scroll",
+        debounce(() => {
+            const currentScrollPosition = window.scrollY;
+            header.classList.toggle("scrolled-down", currentScrollPosition >= lastScrollPosition);
+            lastScrollPosition = currentScrollPosition;
+        }, 25)
+    );
 });

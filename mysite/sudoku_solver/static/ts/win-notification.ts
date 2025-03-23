@@ -25,13 +25,13 @@ export class WinPopupNotification implements IWinNotification {
     }
 
     private bindEvents(): void {
-        const closeHandler = () => this.state = false;
-        window.addEventListener("click", event => {
+        const closeHandler = () => (this.state = false);
+        window.addEventListener("click", (event) => {
             if (event.target === this.element) {
                 closeHandler();
             }
         });
-        document.addEventListener("keydown", event => {
+        document.addEventListener("keydown", (event) => {
             if (["Enter", "Escape"].includes(event.key)) {
                 closeHandler();
             }

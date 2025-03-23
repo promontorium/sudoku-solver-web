@@ -26,6 +26,6 @@
         "strictPropertyInitialization": true,
         "useUnknownInCatchVariables": true,
         "rootDir": "./ts",
-        "outDir": "./js",
-    },
+        "outDir": "./js"
+    }
 }
