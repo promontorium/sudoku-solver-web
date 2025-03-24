@@ -5,14 +5,14 @@
 
 .login-container-name {
     text-align: center;
-    color: grey;
+    color: #808080;
 }
 
 .login-form {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px #0000004d;
 }
 
 .login-form p,
@@ -21,23 +21,33 @@
 }
 
 .login-form label {
-    color: rgb(111, 111, 111);
+    color: #6f6f6f;
 }
 
-.login-form input[type="text"],
-.login-form input[type="email"],
-.login-form input[type="password"] {
+.login-form a {
+    color: #333;
+}
+
+.login-form a:hover {
+    color: #007bff;
+}
+
+.login-form input {
     width: 100%;
     padding: 10px;
     margin: 5px auto;
     border: 1px solid #ccc;
     border-radius: 10px;
     font-size: 15px;
-    color: grey;
+    color: #808080;
+}
+
+.login-form input:hover {
+    outline: 2px solid #47a0ff;
 }
 
 .login-form input:focus {
-    outline-color: #007bff;
+    outline: 2px solid #0267d3;
 }
 
 .login-form .errorlist {
@@ -55,7 +65,7 @@
     width: 100%;
     cursor: pointer;
     background-color: #007bff;
-    color: white;
+    color: #ffffff;
     font-size: 15px;
     border: none;
     border-radius: 10px;
@@ -63,10 +73,10 @@
 
 .login-form button:hover {
     background-color: #006ce0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px #00000033;
 }
 
 .login-form button:active {
     background-color: #0267d3;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px #0000004d;
 }

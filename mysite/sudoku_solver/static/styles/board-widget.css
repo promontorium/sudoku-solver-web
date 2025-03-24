@@ -12,7 +12,7 @@
 }
 
 .board-container td {
-    border: 1px solid #353535;
+    border: 1px solid var(--border-color);
     padding: 0;
     width: 70px;
     height: 70px;
@@ -29,18 +29,17 @@
     font-size: 20px;
 }
 
-.board-container input:focus {
-    box-shadow: 0 0 0 2px #52e7b1;
-    outline: none;
+.board-container input:hover {
+    background-color: #7979792f;
 }
 
 .board-container input.given {
     font-size: 22px;
-    color: #92f592;
+    color: #797979;
 }
 
 .board-container input.candidates {
     font-size: 12px;
-    color: #c3aafd;
+    color: #bccbcc;
     letter-spacing: -0.5px;
 }

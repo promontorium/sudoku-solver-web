@@ -2,21 +2,20 @@
 .create-board-container {
     max-width: 1000px;
     margin: auto;
+    margin-bottom: 6%;
 }
 
 .board-list-container-name,
 .create-board-container-name {
     text-align: center;
-    color: grey;
+    color: #808080;
 }
 
-.board-list a,
-.board-list-pagination a {
+.board-list-container a {
     color: inherit;
 }
 
-.board-list a:hover,
-.board-list-pagination a:hover {
+.board-list-container a:hover {
     color: #007bff;
 }
 
@@ -27,23 +26,44 @@
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px #0000004d;
     list-style-type: none;
 }
 
+.board-list li:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.board-list a {
+    display: block;
+    text-align: center;
+}
+
 .board-list-item {
-    margin: 5px;
+    padding: 5px;
+}
+
+.board-list-pagination {
+    text-align: center;
+}
+
+.board-list-pagination span {
+    color: #808080;
+}
+
+.board-list-pagination a {
+    color: #333;
 }
 
 .create-board-form {
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px #0000004d;
     padding: 20px;
 }
 
 .create-board-form label {
-    color: rgb(111, 111, 111);
+    color: #6f6f6f;
 }
 
 .create-board-form input {
@@ -53,11 +73,15 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     font-size: 15px;
-    color: grey;
+    color: #333;
+}
+
+.create-board-form input:hover {
+    outline: 2px solid #47a0ff;
 }
 
 .create-board-form input:focus {
-    outline-color: #007bff;
+    outline: 2px solid #0267d3;
 }
 
 .create-board-form button {
@@ -66,18 +90,18 @@
     width: 100%;
     cursor: pointer;
     background-color: #007bff;
-    color: white;
-    font-size: 15px;
+    color: #fff;
+    font-size: 16px;
     border: none;
     border-radius: 10px;
 }
 
 .create-board-form button:hover {
     background-color: #006ce0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px #00000033;
 }
 
 .create-board-form button:active {
     background-color: #0267d3;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px #0000004d;
 }
