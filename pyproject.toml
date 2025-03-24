@@ -68,13 +68,18 @@ disallow_untyped_defs = false
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
+module = "mysite.sudoku_solver.admin"
+disallow_any_generics = false
+
+[[tool.mypy.overrides]]
 module = "mysite.sudoku_solver.forms"
+disallow_any_generics = false
 warn_return_any = false
-disable_error_code = "type-arg"
 
 [[tool.mypy.overrides]]
 module = "mysite.sudoku_solver.views"
+disallow_any_generics = false
 warn_return_any = false
 disallow_any_explicit = false
 disallow_any_decorated = false
-disable_error_code = ["type-arg", "attr-defined", "union-attr"]
+disable_error_code = ["attr-defined", "union-attr"]
