@@ -1,5 +1,11 @@
 {% extends 'admin/base.html' %}
 
+{% load static %}
+
+{% block extrahead %}
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+{% endblock %}
+
 {% block title %}
     {% if subtitle %}
         {{ subtitle }} |
@@ -15,8 +21,3 @@
         {% include 'admin/color_theme_toggle.html' %}
     {% endif %}
 {% endblock %}
-
-{% comment %}
-{% block nav - global %}
-{% endblock %}
-{% endcomment %}
