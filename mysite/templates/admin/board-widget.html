@@ -1,0 +1,22 @@
+<div class="board-container">
+    <p>Click to edit. Enter [1-9]. Givens starts with '!' (e.g !5), candidates with '#' (e.g #123)</p>
+    <table>
+        {% for row in board %}
+            <tr>
+                {% for cell in row %}
+                    <td>
+                        {% if cell.candidates %}
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="#{{ cell.candidates|join:'' }}" class="candidates" />
+                        {% elif cell.is_given %}
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="!{{ cell.value }}" class="given" />
+                        {% elif cell.value %}
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="{{ cell.value }}" />
+                        {% else %}
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" />
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>

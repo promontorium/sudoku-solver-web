@@ -1,11 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from . import models
+from . import forms, models
 
 admin.site.register(models.User, UserAdmin)
 
 
 @admin.register(models.Board)
 class BoardAdmin(admin.ModelAdmin):
-    pass
+    form = forms.AdminBoardForm
+    list_display = ("user", "description", "created", "changed")
+    list_filter = (("created", admin.DateFieldListFilter), ("changed", admin.DateFieldListFilter))
+    search_fields = ("description", "created", "changed")
+    list_display_links = ("description",)
