@@ -36,11 +36,12 @@
             </span>
         </div>
     </div>
+
     <div class="create-board-container">
         <h2 class="create-board-container-name">Create a New Board</h2>
         <form method="post" class="create-board-form" action="{% url 'sudoku-solver:create-board' %}">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ create_board_form.as_p }}
             <button type="submit" name="create-board-submit">Create Board</button>
         </form>
     </div>

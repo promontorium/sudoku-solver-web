@@ -1,7 +1,7 @@
 from typing import Any, Mapping
 
 from django.core.files.uploadedfile import UploadedFile
-from django.forms import Widget
+from django.forms import widgets
 from django.template.loader import render_to_string
 from django.utils.datastructures import MultiValueDict
 from django.utils.safestring import SafeString
@@ -10,7 +10,7 @@ from .sudoku import Grid
 from .utils.board_utils import decode_board, encode_board
 
 
-class BoardWidget(Widget):
+class BoardWidget(widgets.Widget):
     template_name = "admin/board-widget.html"
 
     class Media:

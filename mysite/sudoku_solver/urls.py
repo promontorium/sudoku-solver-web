@@ -1,5 +1,5 @@
-from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.urls import path, reverse_lazy
 
 from . import views
 
@@ -7,10 +7,18 @@ app_name = "sudoku-solver"
 
 urlpatterns = [
     path("", views.HomePageView.as_view(), name="index"),
-    path("login/", views.SignInView.as_view(next_page="sudoku-solver:index"), name="login"),
-    path("logout/", auth_views.LogoutView.as_view(next_page="sudoku-solver:index"), name="logout"),
+    path(
+        "login/",
+        LoginView.as_view(next_page=reverse_lazy("sudoku-solver:index"), redirect_authenticated_user=True),
+        name="login",
+    ),
+    path("logout/", LogoutView.as_view(next_page=reverse_lazy("sudoku-solver:index")), name="logout"),
     path("signup/", views.SignUpView.as_view(), name="signup"),
-    path("change-password/", views.ChangePasswordView.as_view(), name="change-password"),
+    path(
+        "change-password/",
+        PasswordChangeView.as_view(success_url=reverse_lazy("sudoku-solver:index")),
+        name="change-password",
+    ),
     path("boards/", views.BoardList.as_view(), name="board-list"),
     path("boards/create", views.create_board, name="create-board"),
     path("board/<int:board_id>/", views.BoardDetail.as_view(), name="board-detail"),

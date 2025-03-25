@@ -59,7 +59,7 @@
     margin-top: 15px;
 }
 
-.login-form button {
+.login-form button[type="submit"] {
     margin: 10px 0 0 0;
     padding: 15px;
     width: 100%;
@@ -71,12 +71,12 @@
     border-radius: 10px;
 }
 
-.login-form button:hover {
+.login-form button[type="submit"]:hover {
     background-color: #006ce0;
     box-shadow: 0 4px 20px #00000033;
 }
 
-.login-form button:active {
+.login-form button[type="submit"]:active {
     background-color: #0267d3;
     box-shadow: 0 4px 20px #0000004d;
 }

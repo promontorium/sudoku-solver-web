@@ -4,58 +4,36 @@ from typing import Any
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseBase, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import generic
 from django.views.decorators.http import require_http_methods
-from django.views.generic import FormView, ListView, TemplateView
 
-from . import forms, models
+from . import forms, mixins, models
 from .solver import BruteForcer, Solver, SolverException, StepSolver
 from .sudoku import SudokuException
 from .utils import board_utils
 
 
-class HomePageView(TemplateView):
+class HomePageView(mixins.RedirectAuthenticatedMixin, generic.TemplateView):
     template_name = "index.html"
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
-        if request.user.is_authenticated:
-            return redirect("sudoku-solver:board-list")
-        return super().dispatch(request, *args, **kwargs)
+    authenticated_url = reverse_lazy("sudoku-solver:board-list")
 
 
-class SignInView(LoginView):
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
-        if self.next_page and request.user.is_authenticated:
-            return redirect(self.next_page)
-        return super().dispatch(request, *args, **kwargs)
-
-
-class SignUpView(FormView):
+class SignUpView(mixins.RedirectAuthenticatedMixin, generic.FormView):
     form_class = forms.SignUpForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("sudoku-solver:index")
-
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
-        if request.user.is_authenticated:
-            return redirect(self.success_url)
-        return super().dispatch(request, *args, **kwargs)
+    authenticated_url = success_url
 
     def form_valid(self, form: forms.SignUpForm) -> HttpResponse:
-        user = form.save()
-        login(self.request, user)
+        login(self.request, form.save())
         return super().form_valid(form)
 
 
-class ChangePasswordView(PasswordChangeView):
-    template_name = "registration/change-password.html"
-    success_url = reverse_lazy("sudoku-solver:index")
-
-
-class BoardList(LoginRequiredMixin, ListView):
+class BoardList(LoginRequiredMixin, generic.ListView):
     model = models.Board
     template_name = "board-list.html"
     paginate_by = 10
@@ -66,11 +44,11 @@ class BoardList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["form"] = forms.CreateBoardForm()
+        context["create_board_form"] = forms.CreateBoardForm()
         return context
 
 
-class BoardDetail(LoginRequiredMixin, TemplateView):
+class BoardDetail(LoginRequiredMixin, generic.TemplateView):
     template_name = "index.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, str]:
@@ -119,16 +97,16 @@ def create_board(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpRespons
 @login_required()
 @require_http_methods(["POST"])
 def solve_step(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    return _solve(StepSolver, request, args, kwargs)
+    return _solve_helper(StepSolver, request)
 
 
 @login_required()
 @require_http_methods(["POST"])
 def solve(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    return _solve(BruteForcer, request, args, kwargs)
+    return _solve_helper(BruteForcer, request)
 
 
-def _solve(solver_class: type[Solver], request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+def _solve_helper(solver_class: type[Solver], request: HttpRequest) -> JsonResponse:
     try:
         grid = board_utils.decode_board(json.loads(request.body).get("board"))
         if solver_class(grid).solve():
