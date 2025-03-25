@@ -11,10 +11,13 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/header.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'styles/footer.css' %}" />
         {% block css %}
+
         {% endblock %}
         <script type="module" src="{% static 'js/header.js' %}"></script>
         {% block js %}
+
         {% endblock %}
     </head>
 
@@ -24,7 +27,11 @@
         </header>
         <main>
             {% block main %}
+
             {% endblock %}
         </main>
+        <footer>
+            {% include 'footer.html' %}
+        </footer>
     </body>
 </html>

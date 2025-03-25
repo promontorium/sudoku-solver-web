@@ -1,6 +1,5 @@
 #sudoku-container {
     text-align: center;
-    margin-bottom: 6%;
 }
 
 #sudoku-container h1 {
@@ -50,6 +49,7 @@
     color: #325aaf;
     font-weight: 550;
     cursor: default;
+    text-align: center;
 }
 
 .pencil-mode #game-controls-notes {
