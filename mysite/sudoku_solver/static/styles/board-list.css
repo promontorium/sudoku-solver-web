@@ -8,7 +8,7 @@
 .board-list-container-name,
 .create-board-container-name {
     text-align: center;
-    color: #808080;
+    color: var(--container-title);
 }
 
 .board-list-container a {
@@ -16,17 +16,17 @@
 }
 
 .board-list-container a:hover {
-    color: #007bff;
+    color: var(--a-hover);
 }
 
 .board-list {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    background: #fff;
+    background: var(--container-background);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px #0000004d;
+    box-shadow: 0 2px 5px var(--container-box-shadow);
     list-style-type: none;
 }
 
@@ -48,40 +48,46 @@
 }
 
 .board-list-pagination span {
-    color: #808080;
+    color: var(--container-title);
 }
 
 .board-list-pagination a {
-    color: #333;
+    color: var(--a);
 }
 
 .create-board-form {
-    background: #fff;
+    background: var(--container-background);
     border-radius: 10px;
-    box-shadow: 0 2px 5px #0000004d;
+    box-shadow: 0 2px 5px var(--container-box-shadow);
     padding: 20px;
 }
 
+.create-board-form input {
+    color: var(--input);
+    background-color: var(--input-background);
+}
+
 .create-board-form label {
-    color: #6f6f6f;
+    color: var(--form-label);
 }
 
 .create-board-form input {
+    color: var(--input);
+    background-color: var(--input-background);
     width: 100%;
     padding: 10px;
     margin: 5px auto;
-    border: 1px solid #ccc;
+    border: 1px solid var(--form-input-border);
     border-radius: 10px;
     font-size: 15px;
-    color: #333;
 }
 
 .create-board-form input:hover {
-    outline: 2px solid #47a0ff;
+    outline: 2px solid var(--form-input-border-hover);
 }
 
 .create-board-form input:focus {
-    outline: 2px solid #0267d3;
+    outline: 2px solid var(--form-input-border-focus);
 }
 
 .create-board-form button {
@@ -89,19 +95,19 @@
     padding: 15px;
     width: 100%;
     cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--form-button-background);
+    color: var(--form-button);
     font-size: 16px;
     border: none;
     border-radius: 10px;
 }
 
 .create-board-form button:hover {
-    background-color: #006ce0;
-    box-shadow: 0 4px 20px #00000033;
+    background-color: var(--form-button-hover-background);
+    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
 }
 
 .create-board-form button:active {
-    background-color: #0267d3;
-    box-shadow: 0 4px 20px #0000004d;
+    background-color: var(--form-button-active-background);
+    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
 }

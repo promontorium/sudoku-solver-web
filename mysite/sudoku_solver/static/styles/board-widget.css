@@ -1,3 +1,9 @@
+:root {
+    --border-widget-border-input-given: #797979;
+    --border-widget-border-input-candiadtes: #218e95;
+    --border-widget-border-input-hover: #7979792f;
+}
+
 .board-container {
     display: block;
 }
@@ -30,16 +36,16 @@
 }
 
 .board-container input:hover {
-    background-color: #7979792f;
+    background-color: var(--border-widget-border-input-hover);
 }
 
 .board-container input.given {
     font-size: 22px;
-    color: #797979;
+    color: var(--border-widget-border-input-given);
 }
 
 .board-container input.candidates {
     font-size: 12px;
-    color: #bccbcc;
+    color: var(--border-widget-border-input-candiadtes);
     letter-spacing: -0.5px;
 }

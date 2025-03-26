@@ -1,3 +1,14 @@
+:root {
+    --login-form-errors: #f13333;
+    --login-form-password-widget-background: #f0f0f0;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --login-form-password-widget-background: #4d4b4b;
+    }
+}
+
 .login-container {
     max-width: 600px;
     margin: auto;
@@ -5,14 +16,14 @@
 
 .login-container-name {
     text-align: center;
-    color: #808080;
+    color: var(--container-title);
 }
 
 .login-form {
-    background: #fff;
+    background: var(--container-background);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px #0000004d;
+    box-shadow: 0 2px 5px var(--container-box-shadow);
 }
 
 .login-form p,
@@ -20,31 +31,36 @@
     margin: 0 0 10px 0;
 }
 
-.login-form label {
-    color: #6f6f6f;
+.login-form a {
+    color: var(--a);
 }
 
 .login-form a:hover {
-    color: #007bff;
+    color: var(--a-hover);
+}
+
+.login-form label {
+    color: var(--form-label);
 }
 
 .login-form input {
+    color: var(--input);
+    background-color: var(--input-background);
     width: 100%;
     padding: 10px;
     margin: 5px auto;
-    border: 1px solid #ccc;
+    border: 1px solid var(--form-input-border);
     border-radius: 10px;
     font-size: 15px;
-    color: #808080;
 }
 
 .login-form input:hover {
-    border-color: #47a0ff;
+    border-color: var(--form-input-border-hover);
 }
 
 .login-form input:focus-visible {
     outline: none;
-    border-color: #0267d3;
+    border-color: var(--form-input-border-focus);
 }
 
 .login-form .password-widget-wrapper {
@@ -61,15 +77,15 @@
     width: 35px;
     padding: 4px;
     margin: 5px auto;
-    background-color: #f0f0f0;
+    background-color: var(--login-form-password-widget-background);
     border-radius: 0 10px 10px 0;
-    border: 1px solid #ccc;
+    border: 1px solid var(--form-input-border);
     border-left: 0;
 }
 
 .login-form .errorlist {
     padding-left: 15px;
-    color: #f13333;
+    color: var(--login-form-errors);
 }
 
 .login-form .other-login-option {
@@ -81,19 +97,19 @@
     padding: 15px;
     width: 100%;
     cursor: pointer;
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: var(--form-button-background);
+    color: var(--form-button);
     font-size: 15px;
     border: none;
     border-radius: 10px;
 }
 
 .login-form button[type="submit"]:hover {
-    background-color: #006ce0;
-    box-shadow: 0 4px 20px #00000033;
+    background-color: var(--form-button-hover-background);
+    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
 }
 
 .login-form button[type="submit"]:active {
-    background-color: #0267d3;
-    box-shadow: 0 4px 20px #0000004d;
+    background-color: var(--form-button-active-background);
+    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
 }

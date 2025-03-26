@@ -1,11 +1,53 @@
+:root {
+    --body: #333;
+    --body-background: #f0f0f0;
+    --text-shadow: #00000066;
+    --input: #808080;
+    --input-background: #fff;
+    --a: #3f67af;
+    --a-hover: #4b97e9;
+    --container-background: #fff;
+    --form-button: #fff;
+    --form-button-background: #007bff;
+    --form-button-hover-background: #006ce0;
+    --form-button-hover-box-shadow: #00000033;
+    --form-button-active-background: #0267d3;
+    --form-button-active-box-shadow: #0000004d;
+    --form-input-border: #ccc;
+    --form-input-border-hover: #47a0ff;
+    --form-input-border-focus: #0267d3;
+    --form-label: #6f6f6f;
+    --container-box-shadow: #0000004d;
+    --container-title: #808080;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --body: #918884;
+        --body-background: #212327;
+        --text-shadow: #79797955;
+        --box-shadow: #45454566;
+        --input: #cdcdcd;
+        --input-background: #5b5b5b;
+        --a: #c9c9c9;
+        --container-background: #3b3a3a;
+        --form-button-background: #305a6f;
+        --form-button-hover-background: #305669;
+        --form-button-active-background: #3e6d85;
+        --form-input-border: #757575;
+        --form-input-border-focus: #1e7add;
+        --form-label: #bdbdbd;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     font-family: sans-serif, Arial;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: var(--body-background);
+    color: var(--body);
     margin: 0;
     padding: 0;
 }
