@@ -24,10 +24,6 @@
     color: #6f6f6f;
 }
 
-.login-form a {
-    color: #333;
-}
-
 .login-form a:hover {
     color: #007bff;
 }
