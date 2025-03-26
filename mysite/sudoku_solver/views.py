@@ -4,6 +4,7 @@ from typing import Any
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -20,6 +21,17 @@ from .utils import board_utils
 class HomePageView(mixins.RedirectAuthenticatedMixin, generic.TemplateView):
     template_name = "index.html"
     authenticated_url = reverse_lazy("sudoku-solver:board-list")
+
+
+class SignInView(LoginView):
+    form_class = forms.SignInForm
+    next_page = reverse_lazy("sudoku-solver:index")
+    redirect_authenticated_user = True
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = forms.ChangePasswordForm
+    success_url = reverse_lazy("sudoku-solver:index")
 
 
 class SignUpView(mixins.RedirectAuthenticatedMixin, generic.FormView):

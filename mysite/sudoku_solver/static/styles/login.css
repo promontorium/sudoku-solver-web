@@ -47,16 +47,16 @@
     border-color: #0267d3;
 }
 
-.login-form .input-wrapper {
+.login-form .password-widget-wrapper {
     display: flex;
 }
 
-.login-form .input-wrapper input {
+.login-form .password-widget-wrapper input {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
 
-.login-form .password-reveal-wrapper {
+.login-form .password-widget-reveal-wrapper {
     cursor: pointer;
     width: 35px;
     padding: 4px;

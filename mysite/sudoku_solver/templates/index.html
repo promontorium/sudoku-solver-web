@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/win-popup.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'styles/board.css' %}" />
 {% endblock %}
 
@@ -11,5 +12,6 @@
 {% endblock %}
 
 {% block main %}
+    {% include 'win-popup.html' %}
     {% include 'board.html' %}
 {% endblock %}

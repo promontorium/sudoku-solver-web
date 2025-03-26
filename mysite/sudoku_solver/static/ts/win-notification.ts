@@ -3,9 +3,9 @@ export interface IWinNotification {
 }
 
 export class WinPopupNotification implements IWinNotification {
-    private readonly elementSelector = "#win-popup";
-    private readonly isVisibleClassName = "is-visible";
-    private readonly closeButtonSelector = "#win-popup-close";
+    private readonly elementSelector = ".win-popup-wrapper";
+    private readonly closeButtonSelector = ".win-popup-close";
+    private readonly isHiddenClassName = "hidden";
     private readonly element;
 
     public constructor() {
@@ -17,11 +17,11 @@ export class WinPopupNotification implements IWinNotification {
     }
 
     public get state(): boolean {
-        return this.element.classList.contains(this.isVisibleClassName);
+        return !this.element.classList.contains(this.isHiddenClassName);
     }
 
     public set state(state: boolean) {
-        this.element.classList.toggle(this.isVisibleClassName, state);
+        this.element.classList.toggle(this.isHiddenClassName, !state);
     }
 
     private bindEvents(): void {

@@ -11,6 +11,7 @@
         <h2 class="login-container-name">Login</h2>
         <form method="post" class="login-form">
             {% csrf_token %}
+            {{ form.media }}
             {{ form.as_p }}
             <p class="other-login-option">
                 Don't have an accoount? Create one <a href="{% url 'sudoku-solver:signup' %}">here</a>
