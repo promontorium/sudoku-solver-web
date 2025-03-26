@@ -3,29 +3,23 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, Us
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.contrib.auth.password_validation import password_validators_help_text_html
 
-from . import models, widgets
+from . import fields, models, widgets
 
 type User = AbstractBaseUser | AnonymousUser
 
 
 class SignInForm(AuthenticationForm):
-    password = forms.CharField(
-        strip=False, label="Password", widget=widgets.PasswordWidget(attrs={"autocomplete": "current-password"})
-    )
+    password = fields.PasswordField(label="Password", widget_attrs={"autocomplete": "current-password"})
 
 
 class SignUpForm(UserCreationForm):
-    password1 = forms.CharField(
-        strip=False,
-        label="Password",
-        help_text=password_validators_help_text_html(),
-        widget=widgets.PasswordWidget(attrs={"autocomplete": "new-password"}),
+    password1 = fields.PasswordField(
+        label="Password", help_text=password_validators_help_text_html(), widget_attrs={"autocomplete": "new-password"}
     )
-    password2 = forms.CharField(
-        strip=False,
+    password2 = fields.PasswordField(
         label="Repeat password",
         help_text="Enter the same password as before, for verification.",
-        widget=widgets.PasswordWidget(attrs={"autocomplete": "new-password"}),
+        widget_attrs={"autocomplete": "new-password"},
     )
 
     class Meta:
@@ -34,22 +28,18 @@ class SignUpForm(UserCreationForm):
 
 
 class ChangePasswordForm(PasswordChangeForm):
-    old_password = forms.CharField(
-        strip=False,
-        label="Old password",
-        widget=widgets.PasswordWidget(attrs={"autocomplete": "current-password", "autofocus": True}),
+    old_password = fields.PasswordField(
+        label="Old password", widget_attrs={"autocomplete": "current-password", "autofocus": True}
     )
-    new_password1 = forms.CharField(
-        strip=False,
+    new_password1 = fields.PasswordField(
         label="New password",
         help_text=password_validators_help_text_html(),
-        widget=widgets.PasswordWidget(attrs={"autocomplete": "new-password"}),
+        widget_attrs={"autocomplete": "new-password"},
     )
-    new_password2 = forms.CharField(
-        strip=False,
+    new_password2 = fields.PasswordField(
         label="Repeat password",
         help_text="Enter the same password as before, for verification.",
-        widget=widgets.PasswordWidget(attrs={"autocomplete": "new-password"}),
+        widget_attrs={"autocomplete": "new-password"},
     )
 
 

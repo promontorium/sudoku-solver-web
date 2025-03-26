@@ -81,6 +81,10 @@ module = "mysite.sudoku_solver.mixins"
 disallow_any_explicit = false
 
 [[tool.mypy.overrides]]
+module = "mysite.sudoku_solver.fields"
+disallow_any_explicit = false
+
+[[tool.mypy.overrides]]
 module = "mysite.sudoku_solver.widgets"
 disallow_any_explicit = false
 
