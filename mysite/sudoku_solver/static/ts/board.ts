@@ -31,6 +31,7 @@ abstract class AbstractBoard implements IBoard {
 
     public start(): void {
         this.cells = this.load() ?? this.createEmptyBoard();
+        this.canvasRenderer.toggleColorScheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
         this.canvasRenderer.resize(this.cells);
         this.bindEvents();
     }
@@ -143,6 +144,10 @@ abstract class AbstractBoard implements IBoard {
             "resize",
             debounce(() => this.canvasRenderer.resize(this.cells), 100)
         );
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+            this.canvasRenderer.toggleColorScheme(event.matches);
+            this.canvasRenderer.draw(this.cells);
+        });
         this.bindExtraEvents();
     }
 

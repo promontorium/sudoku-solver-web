@@ -5,14 +5,14 @@ export interface ICanvasRenderer {
     draw(cells: ICell[][]): void;
     resize(cells: ICell[][]): void;
     getCellByOffset(offsetX: number, offsetY: number): { col: number; row: number };
+    toggleColorScheme(dark: boolean): void;
 }
 
 export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
     private readonly containserSelector = "#sudoku-container";
     private readonly canvasSelector = "#canvas-grid";
-    // TODO support dark mode
-    private readonly COLORS = {
+    private readonly COLORS_LIGHT = {
         GRID_BORDER: "#344861",
         CELL_BORDER: "#bfc6d4",
         GIVEN_TEXT: "#344861",
@@ -24,6 +24,19 @@ export class CanvasRenderer implements ICanvasRenderer {
         HAS_CANDIDATE: "#d4ebda",
         NEIGHBOR: "#e2ebf3",
     };
+    private readonly COLORS_DARK = {
+        GRID_BORDER: "#e7e7e7",
+        CELL_BORDER: "#cccccc",
+        GIVEN_TEXT: "#e0e0e0",
+        SOLVED_TEXT: "#81c7ff",
+        CANDIDATE_TEXT: "#9fa6b1",
+        SELECTED: "#84bbe850",
+        CONFLICT: "#db656550",
+        SAME_VALUE: "#5a80b050",
+        HAS_CANDIDATE: "#9bd1a950",
+        NEIGHBOR: "#e2ebf350",
+    };
+    private colors = this.COLORS_LIGHT;
     private readonly ctx;
     private readonly container;
     // TODO constants
@@ -73,21 +86,25 @@ export class CanvasRenderer implements ICanvasRenderer {
         return { col: col, row: row };
     }
 
+    public toggleColorScheme(dark: boolean): void {
+        this.colors = dark ? this.COLORS_DARK : this.COLORS_LIGHT;
+    }
+
     private getCellSize(): number {
         return Math.min(this.canvas.offsetWidth, this.canvas.offsetHeight) / 9;
     }
 
     private getCellCursorColor(cell: ICell): string | null {
         return cell.isSelected
-            ? this.COLORS.SELECTED
+            ? this.colors.SELECTED
             : cell.isConflict
-            ? this.COLORS.CONFLICT
+            ? this.colors.CONFLICT
             : cell.isSameVal
-            ? this.COLORS.SAME_VALUE
+            ? this.colors.SAME_VALUE
             : cell.hasCandidate
-            ? this.COLORS.HAS_CANDIDATE
+            ? this.colors.HAS_CANDIDATE
             : cell.isNeighbor
-            ? this.COLORS.NEIGHBOR
+            ? this.colors.NEIGHBOR
             : null;
     }
 
@@ -105,7 +122,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawGridBorders(cellSize: number): void {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.COLORS.GRID_BORDER;
+        this.ctx.strokeStyle = this.colors.GRID_BORDER;
         this.ctx.lineWidth = 2;
         this.ctx.rect(1, 1, cellSize * 9 - 2, cellSize * 9 - 2);
         this.ctx.closePath();
@@ -114,7 +131,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawBoxesBorders(cellSize: number): void {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.COLORS.GRID_BORDER;
+        this.ctx.strokeStyle = this.colors.GRID_BORDER;
         this.ctx.lineWidth = 2;
         for (let i = 1; i < 3; i++) {
             this.ctx.moveTo(0, i * 3 * cellSize);
@@ -128,7 +145,7 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     private drawCellsBorders(cellSize: number) {
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.COLORS.CELL_BORDER;
+        this.ctx.strokeStyle = this.colors.CELL_BORDER;
         this.ctx.lineWidth = 1;
         for (let i = 1; i < 9; i++) {
             if (!(i % 3)) {
@@ -164,7 +181,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.beginPath();
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = cell.isGiven ? this.COLORS.GIVEN_TEXT : this.COLORS.SOLVED_TEXT;
+        this.ctx.fillStyle = cell.isGiven ? this.colors.GIVEN_TEXT : this.colors.SOLVED_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
         const x = cell.col * size + size / 2;
         const y = cell.row * size + size / 2;
@@ -181,7 +198,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         this.ctx.beginPath();
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = this.COLORS.CANDIDATE_TEXT;
+        this.ctx.fillStyle = this.colors.CANDIDATE_TEXT;
         this.ctx.font = `${fontSize}px sans-serif`;
         cell.candidates.forEach((candidate) => {
             const xIndex = (candidate - 1) % 3;
