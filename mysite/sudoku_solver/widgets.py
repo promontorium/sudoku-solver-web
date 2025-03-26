@@ -10,6 +10,13 @@ from .sudoku import Grid
 from .utils.board_utils import decode_board, encode_board
 
 
+class PasswordWidget(widgets.PasswordInput):
+    template_name = "password-widget.html"
+
+    class Media:
+        js = ("js/password-widget.js",)
+
+
 class BoardWidget(widgets.Widget):
     template_name = "admin/board-widget.html"
 

@@ -8,6 +8,9 @@ type User = AbstractBaseUser | AnonymousUser
 
 
 class SignUpForm(UserCreationForm):
+    password1 = forms.CharField(label="Password", widget=widgets.PasswordWidget)
+    password2 = forms.CharField(label="Repeat password", widget=widgets.PasswordWidget)
+
     class Meta:
         model = models.User
         fields = ("username", "email", "password1", "password2")

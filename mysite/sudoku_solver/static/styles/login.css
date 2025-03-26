@@ -39,11 +39,32 @@
 }
 
 .login-form input:hover {
-    outline: 2px solid #47a0ff;
+    border-color: #47a0ff;
 }
 
-.login-form input:focus {
-    outline: 2px solid #0267d3;
+.login-form input:focus-visible {
+    outline: none;
+    border-color: #0267d3;
+}
+
+.login-form .input-wrapper {
+    display: flex;
+}
+
+.login-form .input-wrapper input {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.login-form .password-reveal-wrapper {
+    cursor: pointer;
+    width: 35px;
+    padding: 4px;
+    margin: 5px auto;
+    background-color: #f0f0f0;
+    border-radius: 0 10px 10px 0;
+    border: 1px solid #ccc;
+    border-left: 0;
 }
 
 .login-form .errorlist {
