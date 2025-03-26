@@ -23,7 +23,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --body: #918884;
+        --body: #dddddd;
         --body-background: #212327;
         --input: #cdcdcd;
         --input-background: #5b5b5b;
