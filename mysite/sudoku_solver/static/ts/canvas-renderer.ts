@@ -11,6 +11,7 @@ export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
     private readonly containserSelector = "#sudoku-container";
     private readonly canvasSelector = "#canvas-grid";
+    // TODO support dark mode
     private readonly COLORS = {
         GRID_BORDER: "#344861",
         CELL_BORDER: "#bfc6d4",

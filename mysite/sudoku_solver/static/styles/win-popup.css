@@ -1,3 +1,9 @@
+:root {
+    --win-popup-header: #4caf50;
+    --win-popup-close: #aaa;
+    --win-popup-close-hover: #ff5252;
+}
+
 .win-popup-wrapper {
     position: fixed;
     z-index: 1;
@@ -5,7 +11,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #00000099;
+    background-color: var(--container-box-shadow);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
 }
@@ -15,29 +21,29 @@
 }
 
 .win-popup {
-    background-color: #fff;
+    background-color: var(--body-background);
     margin: 10% auto;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 20px #0000004d;
+    box-shadow: 0 4px 20px var(--win-popup-shadow);
     width: 80%;
     max-width: 500px;
 }
 
 .win-popup h1 {
-    color: #4caf50;
+    color: var(--win-popup-header);
     text-align: center;
     margin-bottom: 10px;
 }
 
 .win-popup p {
-    color: #555;
+    color: var(--body);
     text-align: center;
     margin: 10px 0;
 }
 
 .win-popup-close {
-    color: #aaa;
+    color: var(--win-popup-close);
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -45,8 +51,8 @@
 }
 
 .win-popup-close:hover {
-    color: #ff5252;
-    text-shadow: 0 4px 20px #00000066;
+    color: var(--win-popup-close-hover);
+    text-shadow: 0 4px 20px var(--text-shadow);
 }
 
 .win-popup-wrapper:not(.hidden) .win-popup {

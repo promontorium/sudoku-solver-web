@@ -1,9 +1,27 @@
+:root {
+    --game-controls-background: #eaeef4;
+    --game-controls-background-hover: #dce3ed;
+    --game-controls-background-active: #d2dae7;
+    --game-controls-label: #325aaf;
+    --game-controls-notes-pencil-outline: #325aaf;
+    --game-controls-notes-auto-outline: #0de7b8;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --game-controls-background: #2e2e31;
+        --game-controls-background-hover: #333333;
+        --game-controls-background-active: #383838;
+        --game-controls-notes-auto-outline: #038367;
+    }
+}
+
 #sudoku-container {
     text-align: center;
 }
 
 #sudoku-container h1 {
-    color: #344861;
+    color: var(--container-title);
     padding: 10px;
     margin: 0;
 }
@@ -28,7 +46,7 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background-color: #eaeef4;
+    background-color: var(--game-controls-background);
     user-select: none;
     padding: 10px;
     margin: 5px;
@@ -36,28 +54,28 @@
 
 .game-controls-item:hover,
 .numpad-item:hover {
-    background-color: #dce3ed;
+    background-color: var(--game-controls-background-hover);
 }
 
 .game-controls-item:active,
 .numpad-item:active {
-    background-color: #d2dae7;
+    background-color: var(--game-controls-background-active);
 }
 
 .game-controls-label {
     font-size: 13px;
-    color: #325aaf;
+    color: var(--game-controls-label);
     font-weight: 550;
     cursor: default;
     text-align: center;
 }
 
 .pencil-mode #game-controls-notes {
-    outline: 2px solid #325aaf;
+    outline: 2px solid var(--game-controls-notes-pencil-outline);
 }
 
 .auto-notes-mode #game-controls-notes {
-    outline: 2px solid #0de7b8;
+    outline: 2px solid var(--game-controls-notes-auto-outline);
 }
 
 #numpad {
@@ -76,6 +94,6 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background-color: #eaeef4;
+    background-color: var(--game-controls-background);
     user-select: none;
 }
