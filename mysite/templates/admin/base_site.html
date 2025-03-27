@@ -6,13 +6,6 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
 {% endblock %}
 
-{% block title %}
-    {% if subtitle %}
-        {{ subtitle }} |
-    {% endif %}
-    {{ title }} | {{ site_title|default:_('Django site admin') }}
-{% endblock %}
-
 {% block branding %}
     <div id="site-name">
         <a href="{% url 'admin:index' %}">My Site Administration</a>
