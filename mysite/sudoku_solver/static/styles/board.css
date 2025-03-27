@@ -30,7 +30,7 @@
     user-select: none;
 }
 
-#game-controls {
+.game-controls {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;
@@ -69,16 +69,16 @@
 }
 
 #game-controls-notes {
-    .pencil-mode & {
+    &.pencil-mode {
         outline: 2px solid var(--game-controls-item-outline-on);
     }
 
-    .auto-notes-mode & {
+    &.auto-notes-mode {
         outline: 2px solid var(--game-controls-item-outline-alt);
     }
 }
 
-#game-numpad {
+.game-numpad {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;

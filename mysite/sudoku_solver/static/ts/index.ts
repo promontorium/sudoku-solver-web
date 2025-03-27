@@ -10,10 +10,9 @@ export const enum NotesMode {
 export let notesMode = NotesMode.Basic;
 
 window.addEventListener("load", () => {
-    const gameControls = document.querySelector("#game-controls");
     const notesButton = document.querySelector("#game-controls-notes");
-    if (gameControls && notesButton) {
-        notesButton.addEventListener("click", () => toggleNotesMode(gameControls));
+    if (notesButton) {
+        notesButton.addEventListener("click", () => toggleNotesMode(notesButton));
     }
     const BoardClass = BoardFactory.getBoard();
     new BoardClass(new CanvasRenderer(), new WinPopupNotification()).start();
