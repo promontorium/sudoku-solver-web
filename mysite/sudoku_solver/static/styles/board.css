@@ -2,9 +2,7 @@
     --game-controls-item-background: #eaeef4;
     --game-controls-item-background-hover: #dce3ed;
     --game-controls-item-background-active: #d2dae7;
-    --game-controls-label: #325aaf;
-    --game-controls-item-outline-on: #325aaf;
-    --game-controls-item-outline-alt: #0de7b8;
+    --game-controls-main: #325aaf;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,11 +56,15 @@
     &:active {
         background-color: var(--game-controls-item-background-active);
     }
+
+    svg {
+        fill: var(--game-controls-main);
+    }
 }
 
 .game-controls-label {
     font-size: 13px;
-    color: var(--game-controls-label);
+    color: var(--game-controls-main);
     font-weight: 550;
     cursor: default;
     text-align: center;
@@ -70,11 +72,11 @@
 
 #game-controls-notes {
     &.pencil-mode {
-        outline: 2px solid var(--game-controls-item-outline-on);
+        outline: 2px solid var(--game-controls-main);
     }
 
     &.auto-notes-mode {
-        outline: 2px solid var(--game-controls-item-outline-alt);
+        outline: 2px dashed var(--game-controls-main);
     }
 }
 
@@ -103,5 +105,9 @@
 
     &:active {
         background-color: var(--game-controls-item-background-active);
+    }
+
+    svg {
+        fill: var(--game-controls-main);
     }
 }
