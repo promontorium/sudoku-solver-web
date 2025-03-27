@@ -1,10 +1,10 @@
-.win-popup-wrapper {
+#win-popup-wrapper {
     --win-popup-title: #4caf50;
     --win-popup-close-button: #aaa;
     --win-popup-close-button-hover: #ff5252;
 }
 
-.win-popup-wrapper {
+#win-popup-wrapper {
     position: fixed;
     z-index: 1;
     left: 0;
