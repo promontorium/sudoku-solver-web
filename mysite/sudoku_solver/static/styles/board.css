@@ -18,12 +18,12 @@
 
 #sudoku-container {
     text-align: center;
-}
 
-#sudoku-container h1 {
-    color: var(--container-title);
-    padding: 10px;
-    margin: 0;
+    & h1 {
+        color: var(--container-title);
+        padding: 10px;
+        margin: 0;
+    }
 }
 
 #canvas-grid {
@@ -50,16 +50,14 @@
     user-select: none;
     padding: 10px;
     margin: 5px;
-}
 
-.game-controls-item:hover,
-.numpad-item:hover {
-    background-color: var(--game-controls-background-hover);
-}
+    &:hover {
+        background-color: var(--game-controls-background-hover);
+    }
 
-.game-controls-item:active,
-.numpad-item:active {
-    background-color: var(--game-controls-background-active);
+    &:active {
+        background-color: var(--game-controls-background-active);
+    }
 }
 
 .game-controls-label {
@@ -96,4 +94,12 @@
     cursor: pointer;
     background-color: var(--game-controls-background);
     user-select: none;
+
+    &:hover {
+        background-color: var(--game-controls-background-hover);
+    }
+
+    &:active {
+        background-color: var(--game-controls-background-active);
+    }
 }

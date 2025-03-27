@@ -14,10 +14,24 @@
     background-color: var(--container-box-shadow);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
+
+    &.hidden {
+        display: none;
+    }
+
+    &:not(.hidden) .win-popup {
+        opacity: 0;
+        animation: fadeIn ease 0.4s forwards;
+    }
 }
 
-.win-popup-wrapper.hidden {
-    display: none;
+@keyframes fadeIn {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .win-popup {
@@ -28,18 +42,18 @@
     box-shadow: 0 4px 20px var(--win-popup-shadow);
     width: 80%;
     max-width: 500px;
-}
 
-.win-popup h1 {
-    color: var(--win-popup-header);
-    text-align: center;
-    margin-bottom: 10px;
-}
+    & h1 {
+        color: var(--win-popup-header);
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
-.win-popup p {
-    color: var(--body);
-    text-align: center;
-    margin: 10px 0;
+    & p {
+        color: var(--body);
+        text-align: center;
+        margin: 10px 0;
+    }
 }
 
 .win-popup-close {
@@ -48,23 +62,9 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-}
 
-.win-popup-close:hover {
-    color: var(--win-popup-close-hover);
-    text-shadow: 0 4px 20px var(--text-shadow);
-}
-
-.win-popup-wrapper:not(.hidden) .win-popup {
-    opacity: 0;
-    animation: fadeIn ease 0.4s forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        transform: translateY(-100%);
-    }
-    to {
-        opacity: 1;
+    &:hover {
+        color: var(--win-popup-close-hover);
+        text-shadow: 0 4px 20px var(--text-shadow);
     }
 }

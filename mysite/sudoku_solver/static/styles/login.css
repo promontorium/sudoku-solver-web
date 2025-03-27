@@ -23,101 +23,101 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
-}
 
-.login-form p,
-.login-form ul {
-    margin: 0 0 10px 0;
-}
+    & label {
+        color: var(--form-label);
+    }
 
-.login-form a {
-    color: var(--a);
-}
+    & p,
+    ul {
+        margin: 0 0 10px 0;
+    }
 
-.login-form a:hover {
-    color: var(--a-hover);
-}
+    & a {
+        color: var(--a);
 
-.login-form label {
-    color: var(--form-label);
-}
+        &:hover {
+            color: var(--a-hover);
+        }
+    }
 
-.login-form input {
-    color: var(--input);
-    background-color: var(--input-background);
-    width: 100%;
-    padding: 10px;
-    margin: 5px auto;
-    border: 1px solid var(--form-input-border);
-    border-radius: 10px;
-    font-size: 15px;
-}
+    & input {
+        color: var(--input);
+        background-color: var(--input-background);
+        width: 100%;
+        padding: 10px;
+        margin: 5px auto;
+        border: 1px solid var(--form-input-border);
+        border-radius: 10px;
+        font-size: 15px;
 
-.login-form input:hover {
-    border-color: var(--form-input-border-hover);
-}
+        &:hover {
+            border-color: var(--form-input-border-hover);
+        }
 
-.login-form input:focus-visible {
-    outline: none;
-    border-color: var(--form-input-border-focus);
-}
+        &:focus-visible {
+            outline: none;
+            border-color: var(--form-input-border-focus);
+        }
+    }
 
-.login-form .password-widget-wrapper {
-    display: flex;
-}
+    & .other-login-option {
+        margin-top: 15px;
+    }
 
-.login-form .password-widget-wrapper input {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-}
+    & .password-widget-wrapper {
+        display: flex;
+    }
 
-.login-form .password-widget-reveal-wrapper {
-    cursor: pointer;
-    width: 35px;
-    padding: 4px;
-    margin: 5px auto;
-    background-color: var(--login-form-password-widget-background);
-    border-radius: 0 10px 10px 0;
-    border: 1px solid var(--form-input-border);
-    border-left: 0;
-    user-select: none;
-}
+    & .password-widget-wrapper input {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
 
-.login-form .password-widget-reveal-wrapper:hover {
-    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-}
+    & .errorlist {
+        padding-left: 15px;
+        color: var(--error);
+    }
 
-.login-form .password-widget-reveal-wrapper:active {
-    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
-}
+    & .password-widget-reveal-wrapper {
+        cursor: pointer;
+        width: 35px;
+        padding: 4px;
+        margin: 5px auto;
+        background-color: var(--login-form-password-widget-background);
+        border-radius: 0 10px 10px 0;
+        border: 1px solid var(--form-input-border);
+        border-left: 0;
+        user-select: none;
 
-.login-form .errorlist {
-    padding-left: 15px;
-    color: var(--error);
-}
+        &:hover {
+            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        }
 
-.login-form .other-login-option {
-    margin-top: 15px;
-}
+        &:active {
+            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        }
+    }
 
-.login-form button[type="submit"] {
-    margin: 10px 0 0 0;
-    padding: 15px;
-    width: 100%;
-    cursor: pointer;
-    background-color: var(--form-button-background);
-    color: var(--form-button);
-    font-size: 15px;
-    border: none;
-    border-radius: 10px;
-}
+    & button[type="submit"] {
+        margin: 10px 0 0 0;
+        padding: 15px;
+        width: 100%;
+        cursor: pointer;
+        background-color: var(--form-button-background);
+        color: var(--form-button);
+        font-size: 15px;
+        border: none;
+        border-radius: 10px;
 
-.login-form button[type="submit"]:hover {
-    background-color: var(--form-button-hover-background);
-    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-}
+        &:hover {
+            background-color: var(--form-button-hover-background);
+            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        }
 
-.login-form button[type="submit"]:active {
-    background-color: var(--form-button-active-background);
-    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        &:active {
+            background-color: var(--form-button-active-background);
+            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        }
+    }
 }

@@ -6,46 +6,46 @@
 
 .board-container {
     display: block;
-}
 
-.board-container p {
-    font-size: 20px;
-}
+    & p {
+        font-size: 20px;
+    }
 
-.board-container table {
-    border-collapse: collapse;
-    margin: 20px 0;
-}
+    & table {
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
 
-.board-container td {
-    border: 1px solid var(--border-color);
-    padding: 0;
-    width: 70px;
-    height: 70px;
-    text-align: center;
-    position: relative;
-}
+    & td {
+        border: 1px solid var(--border-color);
+        padding: 0;
+        width: 70px;
+        height: 70px;
+        text-align: center;
+        position: relative;
+    }
 
-.board-container input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    text-align: center;
-    padding: 0;
-    font-size: 20px;
-}
+    & input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        text-align: center;
+        padding: 0;
+        font-size: 20px;
 
-.board-container input:hover {
-    background-color: var(--border-widget-border-input-hover);
-}
+        &:hover {
+            background-color: var(--border-widget-border-input-hover);
+        }
 
-.board-container input.given {
-    font-size: 22px;
-    color: var(--border-widget-border-input-given);
-}
+        &.given {
+            font-size: 22px;
+            color: var(--border-widget-border-input-given);
+        }
 
-.board-container input.candidates {
-    font-size: 12px;
-    color: var(--border-widget-border-input-candiadtes);
-    letter-spacing: -0.5px;
+        &.candidates {
+            font-size: 12px;
+            color: var(--border-widget-border-input-candiadtes);
+            letter-spacing: -0.5px;
+        }
+    }
 }

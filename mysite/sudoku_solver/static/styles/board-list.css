@@ -1,22 +1,20 @@
-.board-list-container,
-.create-board-container {
+.board-list-container {
     max-width: 1000px;
     margin: auto;
     margin-bottom: 6%;
+
+    & a {
+        color: inherit;
+        &:hover {
+            color: var(--a-hover);
+        }
+    }
 }
 
 .board-list-container-name,
 .create-board-container-name {
     text-align: center;
     color: var(--container-title);
-}
-
-.board-list-container a {
-    color: inherit;
-}
-
-.board-list-container a:hover {
-    color: var(--a-hover);
 }
 
 .board-list {
@@ -28,15 +26,15 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
     list-style-type: none;
-}
 
-.board-list li:not(:last-child) {
-    margin-bottom: 8px;
-}
+    & a {
+        display: block;
+        text-align: center;
+    }
 
-.board-list a {
-    display: block;
-    text-align: center;
+    & li:not(:last-child) {
+        margin-bottom: 8px;
+    }
 }
 
 .board-list-item {
@@ -45,14 +43,20 @@
 
 .board-list-pagination {
     text-align: center;
+
+    & a {
+        color: var(--a);
+    }
+
+    & span {
+        color: var(--container-title);
+    }
 }
 
-.board-list-pagination span {
-    color: var(--container-title);
-}
-
-.board-list-pagination a {
-    color: var(--a);
+.create-board-container {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 6%;
 }
 
 .create-board-form {
@@ -60,54 +64,49 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
     padding: 20px;
-}
 
-.create-board-form input {
-    color: var(--input);
-    background-color: var(--input-background);
-}
+    & label {
+        color: var(--form-label);
+    }
 
-.create-board-form label {
-    color: var(--form-label);
-}
+    & input {
+        color: var(--input);
+        background-color: var(--input-background);
+        width: 100%;
+        padding: 10px;
+        margin: 5px auto;
+        border: 1px solid var(--form-input-border);
+        border-radius: 10px;
+        font-size: 15px;
 
-.create-board-form input {
-    color: var(--input);
-    background-color: var(--input-background);
-    width: 100%;
-    padding: 10px;
-    margin: 5px auto;
-    border: 1px solid var(--form-input-border);
-    border-radius: 10px;
-    font-size: 15px;
-}
+        &:hover {
+            outline: 2px solid var(--form-input-border-hover);
+        }
 
-.create-board-form input:hover {
-    outline: 2px solid var(--form-input-border-hover);
-}
+        &:active {
+            outline: 2px solid var(--form-input-border-focus);
+        }
+    }
 
-.create-board-form input:focus {
-    outline: 2px solid var(--form-input-border-focus);
-}
+    & button {
+        margin: 10px 0 0 0;
+        padding: 15px;
+        width: 100%;
+        cursor: pointer;
+        background-color: var(--form-button-background);
+        color: var(--form-button);
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
 
-.create-board-form button {
-    margin: 10px 0 0 0;
-    padding: 15px;
-    width: 100%;
-    cursor: pointer;
-    background-color: var(--form-button-background);
-    color: var(--form-button);
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
-}
+        &:hover {
+            background-color: var(--form-button-hover-background);
+            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        }
 
-.create-board-form button:hover {
-    background-color: var(--form-button-hover-background);
-    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-}
-
-.create-board-form button:active {
-    background-color: var(--form-button-active-background);
-    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        &:active {
+            background-color: var(--form-button-active-background);
+            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        }
+    }
 }
