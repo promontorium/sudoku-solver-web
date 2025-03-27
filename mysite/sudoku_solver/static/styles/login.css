@@ -1,5 +1,4 @@
 :root {
-    --login-form-errors: #f13333;
     --login-form-password-widget-background: #f0f0f0;
 }
 
@@ -81,11 +80,20 @@
     border-radius: 0 10px 10px 0;
     border: 1px solid var(--form-input-border);
     border-left: 0;
+    user-select: none;
+}
+
+.login-form .password-widget-reveal-wrapper:hover {
+    box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+}
+
+.login-form .password-widget-reveal-wrapper:active {
+    box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
 }
 
 .login-form .errorlist {
     padding-left: 15px;
-    color: var(--login-form-errors);
+    color: var(--error);
 }
 
 .login-form .other-login-option {

@@ -19,6 +19,7 @@
     --form-label: #6f6f6f;
     --container-box-shadow: #0000004d;
     --container-title: #808080;
+    --error: #ff6347;
 }
 
 @media (prefers-color-scheme: dark) {
