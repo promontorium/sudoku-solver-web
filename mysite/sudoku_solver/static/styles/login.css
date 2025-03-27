@@ -1,9 +1,9 @@
-:root {
+.login-container {
     --login-form-password-widget-background: #f0f0f0;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    .login-container {
         --login-form-password-widget-background: #4d4b4b;
     }
 }
@@ -24,16 +24,16 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
 
-    & label {
+    label {
         color: var(--form-label);
     }
 
-    & p,
+    p,
     ul {
         margin: 0 0 10px 0;
     }
 
-    & a {
+    a {
         color: var(--a);
 
         &:hover {
@@ -41,7 +41,7 @@
         }
     }
 
-    & input {
+    input {
         color: var(--input);
         background-color: var(--input-background);
         width: 100%;
@@ -61,25 +61,25 @@
         }
     }
 
-    & .other-login-option {
+    .other-login-option {
         margin-top: 15px;
     }
 
-    & .password-widget-wrapper {
+    .password-widget-wrapper {
         display: flex;
     }
 
-    & .password-widget-wrapper input {
+    .password-widget-wrapper input {
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
     }
 
-    & .errorlist {
+    .errorlist {
         padding-left: 15px;
         color: var(--error);
     }
 
-    & .password-widget-reveal-wrapper {
+    .password-widget-reveal-wrapper {
         cursor: pointer;
         width: 35px;
         padding: 4px;
@@ -99,7 +99,7 @@
         }
     }
 
-    & button[type="submit"] {
+    button[type="submit"] {
         margin: 10px 0 0 0;
         padding: 15px;
         width: 100%;

@@ -127,7 +127,7 @@ abstract class AbstractBoard implements IBoard {
 
     private bindEvents(): void {
         document.addEventListener("keydown", (event) => this.handleOnKeyPressed(event.key));
-        document.querySelectorAll(".numpad-item").forEach((item) => {
+        document.querySelectorAll(".game-numpad-item").forEach((item) => {
             if (item instanceof HTMLElement && item.dataset["value"]) {
                 item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
             }
@@ -330,7 +330,7 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override load(): ICell[][] | null {
-        const board = document.querySelector("#sudoku-container")?.getAttribute("data-context");
+        const board = document.querySelector("#game-wrapper")?.getAttribute("data-context");
         return board ? this.decode(board) : null;
     }
 

@@ -10,8 +10,8 @@ export interface ICanvasRenderer {
 
 export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
-    private readonly containserSelector = "#sudoku-container";
-    private readonly canvasSelector = "#canvas-grid";
+    private readonly containserSelector = "#game-wrapper";
+    private readonly canvasSelector = "#game-grid-canvas";
     private readonly COLORS_LIGHT = {
         GRID_BORDER: "#344861",
         CELL_BORDER: "#bfc6d4",

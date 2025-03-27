@@ -1,7 +1,7 @@
-:root {
-    --win-popup-header: #4caf50;
-    --win-popup-close: #aaa;
-    --win-popup-close-hover: #ff5252;
+.win-popup-wrapper {
+    --win-popup-title: #4caf50;
+    --win-popup-close-button: #aaa;
+    --win-popup-close-button-hover: #ff5252;
 }
 
 .win-popup-wrapper {
@@ -39,17 +39,17 @@
     margin: 10% auto;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 20px var(--win-popup-shadow);
+    box-shadow: 0 4px 20px var(--container-box-shadow);
     width: 80%;
     max-width: 500px;
 
-    & h1 {
-        color: var(--win-popup-header);
+    h1 {
+        color: var(--win-popup-title);
         text-align: center;
         margin-bottom: 10px;
     }
 
-    & p {
+    p {
         color: var(--body);
         text-align: center;
         margin: 10px 0;
@@ -57,14 +57,14 @@
 }
 
 .win-popup-close {
-    color: var(--win-popup-close);
+    color: var(--win-popup-close-button);
     float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
 
     &:hover {
-        color: var(--win-popup-close-hover);
+        color: var(--win-popup-close-button-hover);
         text-shadow: 0 4px 20px var(--text-shadow);
     }
 }

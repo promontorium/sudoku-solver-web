@@ -3,8 +3,8 @@
     margin: auto;
     margin-bottom: 6%;
 
-    & a {
-        color: inherit;
+    a {
+        color: var(--a);
         &:hover {
             color: var(--a-hover);
         }
@@ -18,21 +18,14 @@
 }
 
 .board-list {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
     background: var(--container-background);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
     list-style-type: none;
+    text-align: center;
 
-    & a {
-        display: block;
-        text-align: center;
-    }
-
-    & li:not(:last-child) {
+    li:not(:last-child) {
         margin-bottom: 8px;
     }
 }
@@ -44,11 +37,7 @@
 .board-list-pagination {
     text-align: center;
 
-    & a {
-        color: var(--a);
-    }
-
-    & span {
+    span {
         color: var(--container-title);
     }
 }
@@ -65,11 +54,11 @@
     box-shadow: 0 2px 5px var(--container-box-shadow);
     padding: 20px;
 
-    & label {
+    label {
         color: var(--form-label);
     }
 
-    & input {
+    input {
         color: var(--input);
         background-color: var(--input-background);
         width: 100%;
@@ -83,12 +72,12 @@
             outline: 2px solid var(--form-input-border-hover);
         }
 
-        &:active {
+        &:focus-visible {
             outline: 2px solid var(--form-input-border-focus);
         }
     }
 
-    & button {
+    button {
         margin: 10px 0 0 0;
         padding: 15px;
         width: 100%;

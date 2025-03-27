@@ -1,32 +1,32 @@
-:root {
-    --game-controls-background: #eaeef4;
-    --game-controls-background-hover: #dce3ed;
-    --game-controls-background-active: #d2dae7;
+.game-controls-wrapper {
+    --game-controls-item-background: #eaeef4;
+    --game-controls-item-background-hover: #dce3ed;
+    --game-controls-item-background-active: #d2dae7;
     --game-controls-label: #325aaf;
-    --game-controls-notes-pencil-outline: #325aaf;
-    --game-controls-notes-auto-outline: #0de7b8;
+    --game-controls-item-outline-on: #325aaf;
+    --game-controls-item-outline-alt: #0de7b8;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --game-controls-background: #2e2e31;
-        --game-controls-background-hover: #333333;
-        --game-controls-background-active: #383838;
-        --game-controls-notes-auto-outline: #038367;
+    .game-controls-wrapper {
+        --game-controls-item-background: #2e2e31;
+        --game-controls-item-background-hover: #333333;
+        --game-controls-item-background-active: #383838;
+        --game-controls-item-outline-alt: #038367;
     }
 }
 
-#sudoku-container {
+#game-wrapper {
     text-align: center;
 
-    & h1 {
+    h1 {
         color: var(--container-title);
         padding: 10px;
         margin: 0;
     }
 }
 
-#canvas-grid {
+#game-grid-canvas {
     user-select: none;
 }
 
@@ -36,7 +36,7 @@
     padding: 10px 0 0 0;
 }
 
-.game-controls-item-wrap {
+.game-controls-item-wrapper {
     width: 100%;
     max-width: 70px;
     margin: 5px;
@@ -46,17 +46,17 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background-color: var(--game-controls-background);
+    background-color: var(--game-controls-item-background);
     user-select: none;
     padding: 10px;
     margin: 5px;
 
     &:hover {
-        background-color: var(--game-controls-background-hover);
+        background-color: var(--game-controls-item-background-hover);
     }
 
     &:active {
-        background-color: var(--game-controls-background-active);
+        background-color: var(--game-controls-item-background-active);
     }
 }
 
@@ -68,38 +68,40 @@
     text-align: center;
 }
 
-.pencil-mode #game-controls-notes {
-    outline: 2px solid var(--game-controls-notes-pencil-outline);
+#game-controls-notes {
+    .pencil-mode & {
+        outline: 2px solid var(--game-controls-item-outline-on);
+    }
+
+    .auto-notes-mode & {
+        outline: 2px solid var(--game-controls-item-outline-alt);
+    }
 }
 
-.auto-notes-mode #game-controls-notes {
-    outline: 2px solid var(--game-controls-notes-auto-outline);
-}
-
-#numpad {
+#game-numpad {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;
 }
 
-.numpad-item-wrap {
+.game-numpad-item-wrap {
     width: 100%;
     max-width: 60px;
     margin: 5px;
 }
 
-.numpad-item {
+.game-numpad-item {
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background-color: var(--game-controls-background);
+    background-color: var(--game-controls-item-background);
     user-select: none;
 
     &:hover {
-        background-color: var(--game-controls-background-hover);
+        background-color: var(--game-controls-item-background-hover);
     }
 
     &:active {
-        background-color: var(--game-controls-background-active);
+        background-color: var(--game-controls-item-background-active);
     }
 }
