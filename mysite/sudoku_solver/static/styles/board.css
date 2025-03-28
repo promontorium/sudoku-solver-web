@@ -14,6 +14,35 @@
     }
 }
 
+/* Sudoku board colors */
+#game-wrapper {
+    --game-grid-border: #344861;
+    --game-grid-cell-border: #bfc6d4;
+    --game-grid-given: #344861;
+    --game-grid-solved: #325aaf;
+    --game-grid-candidate: #6e7c8c;
+    --game-grid-selected: #bbdefb;
+    --game-grid-conflict: #f7cfd6;
+    --game-grid-same-value: #c3d7ea;
+    --game-grid-has-candidate: #d4ebda;
+    --game-grid-neighbor: #e2ebf3;
+}
+
+@media (prefers-color-scheme: dark) {
+    #game-wrapper {
+        --game-grid-border: #e7e7e7;
+        --game-grid-cell-border: #cccccc;
+        --game-grid-given: #e0e0e0;
+        --game-grid-solved: #81c7ff;
+        --game-grid-candidate: #9fa6b1;
+        --game-grid-selected: #84bbe850;
+        --game-grid-conflict: #db656550;
+        --game-grid-same-value: #5a80b050;
+        --game-grid-has-candidate: #9bd1a950;
+        --game-grid-neighbor: #e2ebf350;
+    }
+}
+
 #game-wrapper {
     text-align: center;
 

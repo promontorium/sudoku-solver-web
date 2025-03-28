@@ -5,38 +5,25 @@ export interface ICanvasRenderer {
     draw(cells: ICell[][]): void;
     resize(cells: ICell[][]): void;
     getCellByOffset(offsetX: number, offsetY: number): { col: number; row: number };
-    toggleColorScheme(dark: boolean): void;
+    loadColorScheme(): void;
 }
 
 export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
     private readonly containserSelector = "#game-wrapper";
     private readonly canvasSelector = "#game-grid-canvas";
-    private readonly COLORS_LIGHT = {
-        GRID_BORDER: "#344861",
-        CELL_BORDER: "#bfc6d4",
-        GIVEN_TEXT: "#344861",
-        SOLVED_TEXT: "#325aaf",
-        CANDIDATE_TEXT: "#6e7c8c",
-        SELECTED: "#bbdefb",
-        CONFLICT: "#f7cfd6",
-        SAME_VALUE: "#c3d7ea",
-        HAS_CANDIDATE: "#d4ebda",
-        NEIGHBOR: "#e2ebf3",
+    private colors!: {
+        GRID_BORDER: string;
+        CELL_BORDER: string;
+        GIVEN_TEXT: string;
+        SOLVED_TEXT: string;
+        CANDIDATE_TEXT: string;
+        SELECTED: string;
+        CONFLICT: string;
+        SAME_VALUE: string;
+        HAS_CANDIDATE: string;
+        NEIGHBOR: string;
     };
-    private readonly COLORS_DARK = {
-        GRID_BORDER: "#e7e7e7",
-        CELL_BORDER: "#cccccc",
-        GIVEN_TEXT: "#e0e0e0",
-        SOLVED_TEXT: "#81c7ff",
-        CANDIDATE_TEXT: "#9fa6b1",
-        SELECTED: "#84bbe850",
-        CONFLICT: "#db656550",
-        SAME_VALUE: "#5a80b050",
-        HAS_CANDIDATE: "#9bd1a950",
-        NEIGHBOR: "#e2ebf350",
-    };
-    private colors = this.COLORS_LIGHT;
     private readonly ctx;
     private readonly container;
     // TODO constants
@@ -54,6 +41,7 @@ export class CanvasRenderer implements ICanvasRenderer {
         if (!this.ctx) {
             throw new Error("Canvas context not found");
         }
+        this.loadColorScheme();
     }
 
     public draw(cells: ICell[][]): void {
@@ -86,8 +74,20 @@ export class CanvasRenderer implements ICanvasRenderer {
         return { col: col, row: row };
     }
 
-    public toggleColorScheme(dark: boolean): void {
-        this.colors = dark ? this.COLORS_DARK : this.COLORS_LIGHT;
+    public loadColorScheme(): void {
+        const styles = getComputedStyle(this.container);
+        this.colors = {
+            GRID_BORDER: styles.getPropertyValue("--game-grid-border").trim(),
+            CELL_BORDER: styles.getPropertyValue("--game-grid-cell-border").trim(),
+            GIVEN_TEXT: styles.getPropertyValue("--game-grid-given").trim(),
+            SOLVED_TEXT: styles.getPropertyValue("--game-grid-solved").trim(),
+            CANDIDATE_TEXT: styles.getPropertyValue("--game-grid-candidate").trim(),
+            SELECTED: styles.getPropertyValue("--game-grid-selected").trim(),
+            CONFLICT: styles.getPropertyValue("--game-grid-conflict").trim(),
+            SAME_VALUE: styles.getPropertyValue("--game-grid-same-value").trim(),
+            HAS_CANDIDATE: styles.getPropertyValue("--game-grid-has-candidate").trim(),
+            NEIGHBOR: styles.getPropertyValue("--game-grid-neighbor").trim(),
+        };
     }
 
     private getCellSize(): number {
