@@ -13,10 +13,10 @@
     height: 100%;
     background-color: var(--container-box-shadow);
     backdrop-filter: blur(4px);
+}
 
-    &.hidden {
-        display: none;
-    }
+.win-popup-wrapper--hidden {
+    display: none;
 }
 
 .win-popup {
@@ -29,19 +29,19 @@
     max-width: 500px;
 }
 
-.win-popup h1 {
+.win-popup__title {
     color: var(--win-popup-title);
     text-align: center;
     margin-bottom: 10px;
 }
 
-.win-popup p {
+.win-popup__message {
     color: var(--body);
     text-align: center;
     margin: 10px 0;
 }
 
-.win-popup-wrapper:not(.hidden) .win-popup {
+.win-popup-wrapper:not(.win-popup-wrapper--hidden) .win-popup {
     opacity: 0;
     animation: fadeIn ease 0.4s forwards;
 }
@@ -55,7 +55,7 @@
     }
 }
 
-.win-popup-close {
+.win-popup__close {
     color: var(--win-popup-close-button);
     float: right;
     font-size: 28px;

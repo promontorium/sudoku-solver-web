@@ -4,8 +4,8 @@ export interface IWinNotification {
 
 export class WinPopupNotification implements IWinNotification {
     private readonly elementSelector = "#win-notification";
-    private readonly closeButtonSelector = ".win-popup-close";
-    private readonly isHiddenClassName = "hidden";
+    private readonly closeButtonSelector = ".win-popup__close";
+    private readonly isHiddenClassName = "win-popup-wrapper--hidden";
     private readonly element;
 
     public constructor() {
