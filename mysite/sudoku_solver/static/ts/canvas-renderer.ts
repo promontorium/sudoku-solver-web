@@ -10,8 +10,6 @@ export interface ICanvasRenderer {
 
 export class CanvasRenderer implements ICanvasRenderer {
     public readonly canvas: HTMLCanvasElement;
-    private readonly containserSelector = "#game-wrapper";
-    private readonly canvasSelector = "#game-grid-canvas";
     private colors!: {
         GRID_BORDER: string;
         CELL_BORDER: string;
@@ -26,20 +24,19 @@ export class CanvasRenderer implements ICanvasRenderer {
     };
     private readonly ctx;
     private readonly container;
-    // TODO constants
 
     public constructor() {
-        this.container = document.querySelector(this.containserSelector)!;
-        if (!this.container) {
-            throw new Error("Container context not found");
-        }
-        this.canvas = document.querySelector(this.canvasSelector)!;
+        this.canvas = document.querySelector("#game-grid")!;
         if (!this.canvas || !(this.canvas instanceof HTMLCanvasElement)) {
             throw new Error("Canvas not found");
         }
         this.ctx = this.canvas.getContext("2d")!;
         if (!this.ctx) {
             throw new Error("Canvas context not found");
+        }
+        this.container = this.canvas.parentElement!;
+        if (!this.container) {
+            throw new Error("Container context not found");
         }
         this.loadColorScheme();
     }

@@ -15,7 +15,7 @@
 }
 
 /* Sudoku board colors */
-#game-wrapper {
+.game-grid-wrapper {
     --game-grid-border: #344861;
     --game-grid-cell-border: #bfc6d4;
     --game-grid-given: #344861;
@@ -29,7 +29,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    #game-wrapper {
+    .game-grid-wrapper {
         --game-grid-border: #e7e7e7;
         --game-grid-cell-border: #cccccc;
         --game-grid-given: #e0e0e0;
@@ -43,17 +43,17 @@
     }
 }
 
-#game-wrapper {
+.game-grid-wrapper {
     text-align: center;
 }
 
-#game-wrapper h1 {
+.game-grid-wrapper h1 {
     color: var(--container-title);
     padding: 10px;
     margin: 0;
 }
 
-#game-grid-canvas {
+.game-grid-wrapper canvas {
     user-select: none;
 }
 
@@ -85,6 +85,14 @@
     &:active {
         background-color: var(--game-controls-item-background-active);
     }
+
+    &.pencil-mode {
+        outline: 2px solid var(--game-controls-main);
+    }
+
+    &.auto-notes-mode {
+        outline: 2px dashed var(--game-controls-main);
+    }
 }
 
 .game-controls-item svg {
@@ -97,16 +105,6 @@
     font-weight: 550;
     cursor: default;
     text-align: center;
-}
-
-#game-controls-notes {
-    &.pencil-mode {
-        outline: 2px solid var(--game-controls-main);
-    }
-
-    &.auto-notes-mode {
-        outline: 2px dashed var(--game-controls-main);
-    }
 }
 
 .game-numpad {

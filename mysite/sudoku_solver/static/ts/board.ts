@@ -329,7 +329,7 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override load(): ICell[][] | null {
-        const board = document.querySelector("#game-wrapper")?.getAttribute("data-context");
+        const board = document.querySelector("#game-grid")?.getAttribute("data-context");
         return board ? this.decode(board) : null;
     }
 

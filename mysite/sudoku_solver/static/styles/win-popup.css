@@ -1,10 +1,10 @@
-#win-popup-wrapper {
+.win-popup-wrapper {
     --win-popup-title: #4caf50;
     --win-popup-close-button: #aaa;
     --win-popup-close-button-hover: #ff5252;
 }
 
-#win-popup-wrapper {
+.win-popup-wrapper {
     position: fixed;
     z-index: 1;
     left: 0;
@@ -41,7 +41,7 @@
     margin: 10px 0;
 }
 
-#win-popup-wrapper:not(.hidden) .win-popup {
+.win-popup-wrapper:not(.hidden) .win-popup {
     opacity: 0;
     animation: fadeIn ease 0.4s forwards;
 }
