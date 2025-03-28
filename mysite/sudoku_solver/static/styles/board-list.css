@@ -1,23 +1,23 @@
-.board-list-container {
+.board-list {
     max-width: 1000px;
     margin: auto;
     margin-bottom: 6%;
 }
 
-.board-list-container a {
+.board-list__link {
     color: var(--a);
     &:hover {
         color: var(--a-hover);
     }
 }
 
-.board-list-container-name,
-.create-board-container-name {
+.board-list__title,
+.create-board__title {
     text-align: center;
     color: var(--container-title);
 }
 
-.board-list {
+.board-list__items {
     background: var(--container-background);
     padding: 20px;
     border-radius: 10px;
@@ -26,40 +26,40 @@
     text-align: center;
 }
 
-.board-list li:not(:last-child) {
+.board-list__item:not(:last-child) {
     margin-bottom: 8px;
 }
 
-.board-list-item {
+.board-list__item {
     padding: 5px;
 }
 
-.board-list-pagination {
+.board-list__pagination {
     text-align: center;
 }
 
-.board-list-pagination span {
+.board-list__current {
     color: var(--container-title);
 }
 
-.create-board-container {
+.create-board {
     max-width: 1000px;
     margin: auto;
     margin-bottom: 6%;
 }
 
-.create-board-form {
+.create-board__form {
     background: var(--container-background);
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
     padding: 20px;
 }
 
-.create-board-form label {
+.create-board__form label {
     color: var(--form-label);
 }
 
-.create-board-form input {
+.create-board__form input {
     color: var(--input);
     background-color: var(--input-background);
     width: 100%;
@@ -78,7 +78,7 @@
     }
 }
 
-.create-board-form button {
+.create-board__button {
     margin: 10px 0 0 0;
     padding: 15px;
     width: 100%;
