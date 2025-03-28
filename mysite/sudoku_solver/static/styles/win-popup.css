@@ -17,46 +17,33 @@
     &.hidden {
         display: none;
     }
+}
 
-    &:not(.hidden) .win-popup {
-        opacity: 0;
-        animation: fadeIn ease 0.4s forwards;
-    }
+.win-popup {
+    background-color: var(--body-background);
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px var(--container-box-shadow);
+    width: 80%;
+    max-width: 500px;
+}
 
-    .win-popup {
-        background-color: var(--body-background);
-        margin: 10% auto;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px var(--container-box-shadow);
-        width: 80%;
-        max-width: 500px;
+.win-popup h1 {
+    color: var(--win-popup-title);
+    text-align: center;
+    margin-bottom: 10px;
+}
 
-        h1 {
-            color: var(--win-popup-title);
-            text-align: center;
-            margin-bottom: 10px;
-        }
+.win-popup p {
+    color: var(--body);
+    text-align: center;
+    margin: 10px 0;
+}
 
-        p {
-            color: var(--body);
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .win-popup-close {
-            color: var(--win-popup-close-button);
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-
-            &:hover {
-                color: var(--win-popup-close-button-hover);
-                text-shadow: 0 4px 20px var(--text-shadow);
-            }
-        }
-    }
+#win-popup-wrapper:not(.hidden) .win-popup {
+    opacity: 0;
+    animation: fadeIn ease 0.4s forwards;
 }
 
 @keyframes fadeIn {
@@ -65,5 +52,18 @@
     }
     to {
         opacity: 1;
+    }
+}
+
+.win-popup-close {
+    color: var(--win-popup-close-button);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--win-popup-close-button-hover);
+        text-shadow: 0 4px 20px var(--text-shadow);
     }
 }

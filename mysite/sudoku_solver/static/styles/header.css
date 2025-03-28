@@ -35,15 +35,15 @@ header {
     .scrolled-down & {
         transform: translateY(-100%);
     }
+}
 
-    a {
-        text-decoration: none;
-    }
+.header-container a {
+    text-decoration: none;
+}
 
-    button {
-        border: none;
-        cursor: pointer;
-    }
+.header-container button {
+    border: none;
+    cursor: pointer;
 }
 
 .header-item {
@@ -62,10 +62,6 @@ header {
 .header-dropdown-container {
     min-width: 160px;
     position: relative;
-
-    &:hover .dropdown-content {
-        display: block;
-    }
 }
 
 .header-dropdown-title {
@@ -81,6 +77,10 @@ header {
     box-shadow: 0px 8px 16px 0px var(--container-box-shadow);
     background-color: var(--header-dropdown-background);
     width: 100%;
+
+    .header-dropdown-container:hover & {
+        display: block;
+    }
 }
 
 .header-dropdown-item {

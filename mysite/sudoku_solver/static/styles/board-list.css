@@ -2,12 +2,12 @@
     max-width: 1000px;
     margin: auto;
     margin-bottom: 6%;
+}
 
-    a {
-        color: var(--a);
-        &:hover {
-            color: var(--a-hover);
-        }
+.board-list-container a {
+    color: var(--a);
+    &:hover {
+        color: var(--a-hover);
     }
 }
 
@@ -24,10 +24,10 @@
     box-shadow: 0 2px 5px var(--container-box-shadow);
     list-style-type: none;
     text-align: center;
+}
 
-    li:not(:last-child) {
-        margin-bottom: 8px;
-    }
+.board-list li:not(:last-child) {
+    margin-bottom: 8px;
 }
 
 .board-list-item {
@@ -36,10 +36,10 @@
 
 .board-list-pagination {
     text-align: center;
+}
 
-    span {
-        color: var(--container-title);
-    }
+.board-list-pagination span {
+    color: var(--container-title);
 }
 
 .create-board-container {
@@ -53,49 +53,49 @@
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
     padding: 20px;
+}
 
-    label {
-        color: var(--form-label);
+.create-board-form label {
+    color: var(--form-label);
+}
+
+.create-board-form input {
+    color: var(--input);
+    background-color: var(--input-background);
+    width: 100%;
+    padding: 10px;
+    margin: 5px auto;
+    border: 1px solid var(--form-input-border);
+    border-radius: 10px;
+    font-size: 15px;
+
+    &:hover {
+        outline: 2px solid var(--form-input-border-hover);
     }
 
-    input {
-        color: var(--input);
-        background-color: var(--input-background);
-        width: 100%;
-        padding: 10px;
-        margin: 5px auto;
-        border: 1px solid var(--form-input-border);
-        border-radius: 10px;
-        font-size: 15px;
+    &:focus-visible {
+        outline: 2px solid var(--form-input-border-focus);
+    }
+}
 
-        &:hover {
-            outline: 2px solid var(--form-input-border-hover);
-        }
+.create-board-form button {
+    margin: 10px 0 0 0;
+    padding: 15px;
+    width: 100%;
+    cursor: pointer;
+    background-color: var(--form-button-background);
+    color: var(--form-button);
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
 
-        &:focus-visible {
-            outline: 2px solid var(--form-input-border-focus);
-        }
+    &:hover {
+        background-color: var(--form-button-hover-background);
+        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
     }
 
-    button {
-        margin: 10px 0 0 0;
-        padding: 15px;
-        width: 100%;
-        cursor: pointer;
-        background-color: var(--form-button-background);
-        color: var(--form-button);
-        font-size: 16px;
-        border: none;
-        border-radius: 10px;
-
-        &:hover {
-            background-color: var(--form-button-hover-background);
-            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-        }
-
-        &:active {
-            background-color: var(--form-button-active-background);
-            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
-        }
+    &:active {
+        background-color: var(--form-button-active-background);
+        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
     }
 }

@@ -45,12 +45,12 @@
 
 #game-wrapper {
     text-align: center;
+}
 
-    h1 {
-        color: var(--container-title);
-        padding: 10px;
-        margin: 0;
-    }
+#game-wrapper h1 {
+    color: var(--container-title);
+    padding: 10px;
+    margin: 0;
 }
 
 #game-grid-canvas {
@@ -85,10 +85,10 @@
     &:active {
         background-color: var(--game-controls-item-background-active);
     }
+}
 
-    svg {
-        fill: var(--game-controls-main);
-    }
+.game-controls-item svg {
+    fill: var(--game-controls-main);
 }
 
 .game-controls-label {
@@ -135,8 +135,8 @@
     &:active {
         background-color: var(--game-controls-item-background-active);
     }
+}
 
-    svg {
-        fill: var(--game-controls-main);
-    }
+.game-numpad-item svg {
+    fill: var(--game-controls-main);
 }

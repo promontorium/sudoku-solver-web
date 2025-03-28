@@ -23,101 +23,101 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px var(--container-box-shadow);
+}
 
-    label {
-        color: var(--form-label);
+.login-form label {
+    color: var(--form-label);
+}
+
+.login-form p,
+.login-form ul {
+    margin: 0 0 10px 0;
+}
+
+.login-form a {
+    color: var(--a);
+
+    &:hover {
+        color: var(--a-hover);
+    }
+}
+
+.login-form input {
+    color: var(--input);
+    background-color: var(--input-background);
+    width: 100%;
+    padding: 10px;
+    margin: 5px auto;
+    border: 1px solid var(--form-input-border);
+    border-radius: 10px;
+    font-size: 15px;
+
+    &:hover {
+        border-color: var(--form-input-border-hover);
     }
 
-    p,
-    ul {
-        margin: 0 0 10px 0;
+    &:focus-visible {
+        outline: none;
+        border-color: var(--form-input-border-focus);
+    }
+}
+
+.login-form button[type="submit"] {
+    margin: 10px 0 0 0;
+    padding: 15px;
+    width: 100%;
+    cursor: pointer;
+    background-color: var(--form-button-background);
+    color: var(--form-button);
+    font-size: 15px;
+    border: none;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: var(--form-button-hover-background);
+        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
     }
 
-    a {
-        color: var(--a);
+    &:active {
+        background-color: var(--form-button-active-background);
+        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+    }
+}
 
-        &:hover {
-            color: var(--a-hover);
-        }
+.other-login-option {
+    margin-top: 15px;
+}
+
+.password-widget-wrapper {
+    display: flex;
+}
+
+.password-widget-wrapper input {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.errorlist {
+    padding-left: 15px;
+    color: var(--error);
+}
+
+.password-widget-reveal-wrapper {
+    cursor: pointer;
+    width: 35px;
+    padding: 4px;
+    margin: 5px auto;
+    background-color: var(--login-form-password-widget-background);
+    border-radius: 0 10px 10px 0;
+    border: 1px solid var(--form-input-border);
+    border-left: 0;
+    user-select: none;
+
+    &:hover {
+        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
     }
 
-    input {
-        color: var(--input);
-        background-color: var(--input-background);
-        width: 100%;
-        padding: 10px;
-        margin: 5px auto;
-        border: 1px solid var(--form-input-border);
-        border-radius: 10px;
-        font-size: 15px;
-
-        &:hover {
-            border-color: var(--form-input-border-hover);
-        }
-
-        &:focus-visible {
-            outline: none;
-            border-color: var(--form-input-border-focus);
-        }
-    }
-
-    .other-login-option {
-        margin-top: 15px;
-    }
-
-    .password-widget-wrapper {
-        display: flex;
-    }
-
-    .password-widget-wrapper input {
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-    .errorlist {
-        padding-left: 15px;
-        color: var(--error);
-    }
-
-    .password-widget-reveal-wrapper {
-        cursor: pointer;
-        width: 35px;
-        padding: 4px;
-        margin: 5px auto;
-        background-color: var(--login-form-password-widget-background);
-        border-radius: 0 10px 10px 0;
-        border: 1px solid var(--form-input-border);
-        border-left: 0;
-        user-select: none;
-
-        &:hover {
-            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-        }
-
-        &:active {
-            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
-        }
-    }
-
-    button[type="submit"] {
-        margin: 10px 0 0 0;
-        padding: 15px;
-        width: 100%;
-        cursor: pointer;
-        background-color: var(--form-button-background);
-        color: var(--form-button);
-        font-size: 15px;
-        border: none;
-        border-radius: 10px;
-
-        &:hover {
-            background-color: var(--form-button-hover-background);
-            box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
-        }
-
-        &:active {
-            background-color: var(--form-button-active-background);
-            box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
-        }
+    &:active {
+        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
     }
 }
