@@ -126,7 +126,7 @@ abstract class AbstractBoard implements IBoard {
 
     private bindEvents(): void {
         document.addEventListener("keydown", (event) => this.handleOnKeyPressed(event.key));
-        document.querySelectorAll(".game-numpad-item").forEach((item) => {
+        document.querySelectorAll(".sudoku__numpad-button").forEach((item) => {
             if (item instanceof HTMLElement && item.dataset["value"]) {
                 item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
             }

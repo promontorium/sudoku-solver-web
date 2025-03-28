@@ -1,4 +1,4 @@
-.game-controls-wrapper {
+.sudoku__interface {
     --game-controls-item-background: #eaeef4;
     --game-controls-item-background-hover: #dce3ed;
     --game-controls-item-background-active: #d2dae7;
@@ -6,7 +6,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .game-controls-wrapper {
+    .sudoku__interface {
         --game-controls-item-background: #2e2e31;
         --game-controls-item-background-hover: #333333;
         --game-controls-item-background-active: #383838;
@@ -15,7 +15,7 @@
 }
 
 /* Sudoku board colors */
-.game-grid-wrapper {
+.sudoku {
     --game-grid-border: #344861;
     --game-grid-cell-border: #bfc6d4;
     --game-grid-given: #344861;
@@ -29,7 +29,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .game-grid-wrapper {
+    .sudoku {
         --game-grid-border: #e7e7e7;
         --game-grid-cell-border: #cccccc;
         --game-grid-given: #e0e0e0;
@@ -43,35 +43,34 @@
     }
 }
 
-.game-grid-wrapper {
+.sudoku {
     text-align: center;
 }
 
-.game-grid-wrapper h1 {
+.sudoku__title {
     color: var(--container-title);
     padding: 10px;
     margin: 0;
 }
 
-.game-grid-wrapper canvas {
+.sudoku__grid {
     user-select: none;
 }
 
-.game-controls {
+.sudoku__controls {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;
 }
 
-.game-controls-item-wrapper {
+.sudoku__control-item {
     width: 100%;
     max-width: 70px;
     margin: 5px;
 }
 
-.game-controls-item {
+.sudoku__control {
     border-radius: 50%;
-    border: none;
     cursor: pointer;
     background-color: var(--game-controls-item-background);
     user-select: none;
@@ -95,11 +94,11 @@
     }
 }
 
-.game-controls-item svg {
+.sudoku__control-icon {
     fill: var(--game-controls-main);
 }
 
-.game-controls-label {
+.sudoku__control-label {
     font-size: 13px;
     color: var(--game-controls-main);
     font-weight: 550;
@@ -107,21 +106,20 @@
     text-align: center;
 }
 
-.game-numpad {
+.sudoku__numpad {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;
 }
 
-.game-numpad-item-wrap {
+.sudoku__numpad-item {
     width: 100%;
     max-width: 60px;
     margin: 5px;
 }
 
-.game-numpad-item {
+.sudoku__numpad-button {
     border-radius: 50%;
-    border: none;
     cursor: pointer;
     background-color: var(--game-controls-item-background);
     user-select: none;
@@ -135,6 +133,6 @@
     }
 }
 
-.game-numpad-item svg {
+.sudoku__numpad-icon {
     fill: var(--game-controls-main);
 }
