@@ -20,10 +20,19 @@
             p {
                 font-size: 20px;
             }
+            a {
+                color: var(--a);
+            }
+            a:hover {
+                color: var(--a-hover);
+            }
         </style>
     </head>
     <body>
         <h1>500 - Internal Server Error</h1>
         <p>Oh no! Something went wrong on our end.</p>
+        <p>
+            <a href="{% url 'sudoku-solver:index' %}">Go back to the homepage</a>
+        </p>
     </body>
 </html>

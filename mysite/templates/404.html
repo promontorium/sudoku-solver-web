@@ -20,10 +20,19 @@
             p {
                 font-size: 20px;
             }
+            a {
+                color: var(--a);
+            }
+            a:hover {
+                color: var(--a-hover);
+            }
         </style>
     </head>
     <body>
         <h1>404 - Page Not Found</h1>
         <p>Oops! It seems like the page you're looking for doesn't exist.</p>
+        <p>
+            <a href="{% url 'sudoku-solver:index' %}">Go back to the homepage</a>
+        </p>
     </body>
 </html>

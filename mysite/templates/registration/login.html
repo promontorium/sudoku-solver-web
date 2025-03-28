@@ -15,16 +15,16 @@
 {% endblock %}
 
 {% block main %}
-    <div class="login-container">
-        <h2 class="login-container-name">Login</h2>
-        <form method="post" class="login-form">
+    <div class="auth">
+        <h2 class="auth__title">Login</h2>
+        <form method="post" class="auth__form">
             {% csrf_token %}
             {{ form.media }}
             {{ form.as_p }}
-            <p class="other-login-option">
-                Don't have an accoount? Create one <a href="{% url 'sudoku-solver:signup' %}">here</a>
+            <p class="auth__other-option">
+                Don't have an account? Create one <a href="{% url 'sudoku-solver:signup' %}" class="auth__link" aria-label="Create an account">here</a>
             </p>
-            <button type="submit" name="login-submit">Sign In</button>
+            <button type="submit" name="login-submit" class="auth__form-button" aria-label="Sign In">Sign In</button>
         </form>
     </div>
 {% endblock %}

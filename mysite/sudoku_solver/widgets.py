@@ -14,7 +14,6 @@ class PasswordWidget(widgets.PasswordInput):
     template_name = "password-widget.html"
 
     class Media:
-        css = {"all": ("styles/password-widget.css",)}
         js = ("js/password-widget.js",)
 
 

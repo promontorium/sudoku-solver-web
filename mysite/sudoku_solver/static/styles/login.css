@@ -1,40 +1,28 @@
-.login-container {
+.auth {
     --login-form-password-widget-background: #f0f0f0;
 }
 
 @media (prefers-color-scheme: dark) {
-    .login-container {
+    .auth {
         --login-form-password-widget-background: #4d4b4b;
     }
 }
 
-.login-container {
+.auth {
     max-width: 600px;
     margin: auto;
 }
 
-.login-container-name {
+.auth__title {
     text-align: center;
     color: var(--container-title);
 }
 
-.login-form {
-    background: var(--container-background);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px var(--container-box-shadow);
+.auth__other-option {
+    margin-top: 15px;
 }
 
-.login-form label {
-    color: var(--form-label);
-}
-
-.login-form p,
-.login-form ul {
-    margin: 0 0 10px 0;
-}
-
-.login-form a {
+.auth__link {
     color: var(--a);
 
     &:hover {
@@ -42,7 +30,23 @@
     }
 }
 
-.login-form input {
+.auth__form {
+    background: var(--container-background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px var(--container-box-shadow);
+}
+
+.auth__form label {
+    color: var(--form-label);
+}
+
+.auth__form p,
+.auth__form ul {
+    margin: 0 0 10px 0;
+}
+
+.auth__form input {
     color: var(--input);
     background-color: var(--input-background);
     width: 100%;
@@ -62,7 +66,7 @@
     }
 }
 
-.login-form button[type="submit"] {
+.auth__form-button {
     margin: 10px 0 0 0;
     padding: 15px;
     width: 100%;
@@ -84,25 +88,21 @@
     }
 }
 
-.other-login-option {
-    margin-top: 15px;
-}
-
-.password-widget-wrapper {
-    display: flex;
-}
-
-.password-widget-wrapper input {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-}
-
-.errorlist {
+.auth__form .errorlist {
     padding-left: 15px;
     color: var(--error);
 }
 
-.password-widget-reveal-wrapper {
+.password-widget {
+    display: flex;
+}
+
+.password-widget input {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.password-widget__reveal-wrapper {
     cursor: pointer;
     width: 35px;
     padding: 4px;
@@ -120,4 +120,8 @@
     &:active {
         box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
     }
+}
+
+.password-widget__reveal--hidden {
+    display: none;
 }
