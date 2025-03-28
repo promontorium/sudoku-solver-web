@@ -10,7 +10,7 @@ window.addEventListener("load", () => {
         "scroll",
         debounce(() => {
             const currentScrollPosition = window.scrollY;
-            header.classList.toggle("scrolled-down", currentScrollPosition >= lastScrollPosition);
+            header.classList.toggle("header--scrolled-down", currentScrollPosition >= lastScrollPosition);
             lastScrollPosition = currentScrollPosition;
         }, 25)
     );
