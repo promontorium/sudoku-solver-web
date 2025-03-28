@@ -1,5 +1,5 @@
 window.addEventListener("load", () => {
-    document.querySelectorAll(".board-container input").forEach((input) => {
+    document.querySelectorAll(".board-container__input").forEach((input) => {
         input.addEventListener("input", (e) => {
             const target = e.target as HTMLInputElement;
             const isGiven = target.value.startsWith("!");
@@ -12,10 +12,10 @@ window.addEventListener("load", () => {
                 : `${res.slice(-1)}`;
             if (target.value.length === 1 && isNaN(parseInt(target.value))) {
                 target.value = "";
-                target.classList.remove("given", "candidates");
+                target.classList.remove("board-container__input--given", "board-container__input--candidates");
             } else {
-                target.classList.toggle("given", isGiven);
-                target.classList.toggle("candidates", isCandsHolder);
+                target.classList.toggle("board-container__input--given", isGiven);
+                target.classList.toggle("board-container__input--candidates", isCandsHolder);
             }
         });
     });
