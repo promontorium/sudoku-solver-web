@@ -66,6 +66,11 @@
     }
 }
 
+.auth__form .errorlist {
+    padding-left: 15px;
+    color: var(--color-error);
+}
+
 .auth__form-button {
     margin: 10px 0 0 0;
     padding: 15px;
@@ -86,11 +91,6 @@
         background-color: var(--color-form-button-active-background);
         box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
     }
-}
-
-.auth__form .errorlist {
-    padding-left: 15px;
-    color: var(--color-error);
 }
 
 .password-widget {

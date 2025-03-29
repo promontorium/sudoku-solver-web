@@ -27,6 +27,21 @@
     box-shadow: 0 4px 20px var(--color-container-box-shadow);
     width: 80%;
     max-width: 500px;
+
+    .win-popup-wrapper:not(.win-popup-wrapper--hidden) & {
+        opacity: 0;
+        animation: fadeIn ease 0.4s forwards;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .win-popup__title {
@@ -39,20 +54,6 @@
     color: var(--color-body);
     text-align: center;
     margin: 10px 0;
-}
-
-.win-popup-wrapper:not(.win-popup-wrapper--hidden) .win-popup {
-    opacity: 0;
-    animation: fadeIn ease 0.4s forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        transform: translateY(-100%);
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 .win-popup__close {
