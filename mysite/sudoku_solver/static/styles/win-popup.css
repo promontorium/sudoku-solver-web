@@ -5,14 +5,14 @@
 }
 
 .win-popup-wrapper {
+    backdrop-filter: blur(4px);
     position: fixed;
     z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background-color: var(--color-container-box-shadow);
-    backdrop-filter: blur(4px);
 }
 
 .win-popup-wrapper--hidden {
@@ -20,13 +20,13 @@
 }
 
 .win-popup {
-    background-color: var(--color-body-background);
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 10px;
     box-shadow: 0 4px 20px var(--color-container-box-shadow);
     width: 80%;
     max-width: 500px;
+    margin: 10% auto;
+    padding: 20px;
+    background-color: var(--color-body-background);
+    border-radius: 10px;
 
     .win-popup-wrapper:not(.win-popup-wrapper--hidden) & {
         opacity: 0;
@@ -45,23 +45,23 @@
 }
 
 .win-popup__title {
+    margin-bottom: 10px;
     color: var(--color-win-popup-title);
     text-align: center;
-    margin-bottom: 10px;
 }
 
 .win-popup__message {
+    margin: 10px 0;
     color: var(--color-body);
     text-align: center;
-    margin: 10px 0;
 }
 
 .win-popup__close {
-    color: var(--color-win-popup-close-button);
     float: right;
+    cursor: pointer;
     font-size: 28px;
     font-weight: bold;
-    cursor: pointer;
+    color: var(--color-win-popup-close-button);
 
     &:hover {
         color: var(--color-win-popup-close-button-hover);

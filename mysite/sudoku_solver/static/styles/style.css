@@ -51,11 +51,11 @@
 }
 
 body {
-    font-family: sans-serif, Arial;
-    background-color: var(--color-body-background);
-    color: var(--color-body);
     margin: 0;
     padding: 0;
+    background-color: var(--color-body-background);
+    font-family: sans-serif, Arial;
+    color: var(--color-body);
 }
 
 main {

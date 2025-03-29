@@ -14,8 +14,8 @@
 }
 
 .auth__title {
-    text-align: center;
     color: var(--color-container-title);
+    text-align: center;
 }
 
 .auth__other-option {
@@ -31,10 +31,10 @@
 }
 
 .auth__form {
-    background: var(--color-container-background);
-    padding: 20px;
-    border-radius: 10px;
     box-shadow: 0 2px 5px var(--color-container-box-shadow);
+    padding: 20px;
+    background: var(--color-container-background);
+    border-radius: 10px;
 }
 
 .auth__form label {
@@ -47,14 +47,14 @@
 }
 
 .auth__form input {
-    color: var(--color-input);
-    background-color: var(--color-input-background);
     width: 100%;
-    padding: 10px;
     margin: 5px auto;
+    padding: 10px;
+    background-color: var(--color-input-background);
     border: 1px solid var(--color-form-input-border);
     border-radius: 10px;
     font-size: 15px;
+    color: var(--color-input);
 
     &:hover {
         border-color: var(--color-form-input-border-hover);
@@ -72,24 +72,24 @@
 }
 
 .auth__form-button {
+    width: 100%;
     margin: 10px 0 0 0;
     padding: 15px;
-    width: 100%;
-    cursor: pointer;
     background-color: var(--color-form-button-background);
-    color: var(--color-form-button);
-    font-size: 15px;
+    cursor: pointer;
     border: none;
     border-radius: 10px;
+    font-size: 15px;
+    color: var(--color-form-button);
 
     &:hover {
-        background-color: var(--color-form-button-hover-background);
         box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
+        background-color: var(--color-form-button-hover-background);
     }
 
     &:active {
-        background-color: var(--color-form-button-active-background);
         box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
+        background-color: var(--color-form-button-active-background);
     }
 }
 
@@ -98,20 +98,20 @@
 }
 
 .password-widget input {
-    border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .password-widget__reveal-wrapper {
-    cursor: pointer;
+    user-select: none;
     width: 35px;
-    padding: 4px;
     margin: 5px auto;
+    padding: 4px;
     background-color: var(--color-auth-form-password-widget-background);
-    border-radius: 0 10px 10px 0;
+    cursor: pointer;
     border: 1px solid var(--color-form-input-border);
     border-left: 0;
-    user-select: none;
+    border-radius: 0 10px 10px 0;
 
     &:hover {
         box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);

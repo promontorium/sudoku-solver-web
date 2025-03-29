@@ -47,9 +47,9 @@
 }
 
 .sudoku__title {
-    color: var(--color-container-title);
-    padding: 10px;
     margin: 0;
+    padding: 10px;
+    color: var(--color-container-title);
 }
 
 .sudoku__grid {
@@ -80,10 +80,10 @@
 
 .sudoku__controls-button,
 .sudoku__numpad-button {
-    border-radius: 50%;
-    cursor: pointer;
-    background-color: var(--color-sudoku-game-interface-background);
     user-select: none;
+    background-color: var(--color-sudoku-game-interface-background);
+    cursor: pointer;
+    border-radius: 50%;
 
     &:hover {
         background-color: var(--color-sudoku-game-interface-background-hover);
@@ -95,8 +95,8 @@
 }
 
 .sudoku__controls-button {
-    padding: 10px;
     margin: 5px;
+    padding: 10px;
 
     &.pencil-mode {
         outline: 2px solid var(--color-sudoku-game-interface);
@@ -113,9 +113,9 @@
 }
 
 .sudoku__controls-label {
-    font-size: 13px;
-    color: var(--color-sudoku-game-interface);
-    font-weight: 550;
     cursor: default;
+    font-size: 13px;
+    font-weight: 550;
+    color: var(--color-sudoku-game-interface);
     text-align: center;
 }

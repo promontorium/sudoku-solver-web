@@ -14,17 +14,17 @@
 
 .board-list__title,
 .create-board__title {
-    text-align: center;
     color: var(--color-container-title);
+    text-align: center;
 }
 
 .board-list__items {
-    background: var(--color-container-background);
-    padding: 20px;
-    border-radius: 10px;
     box-shadow: 0 2px 5px var(--color-container-box-shadow);
-    list-style-type: none;
+    padding: 20px;
+    background: var(--color-container-background);
+    border-radius: 10px;
     text-align: center;
+    list-style-type: none;
 }
 
 .board-list__item {
@@ -50,10 +50,10 @@
 }
 
 .create-board__form {
-    background: var(--color-container-background);
-    border-radius: 10px;
     box-shadow: 0 2px 5px var(--color-container-box-shadow);
     padding: 20px;
+    background: var(--color-container-background);
+    border-radius: 10px;
 }
 
 .create-board__form label {
@@ -61,14 +61,14 @@
 }
 
 .create-board__form input {
-    color: var(--color-input);
-    background-color: var(--color-input-background);
     width: 100%;
-    padding: 10px;
     margin: 5px auto;
+    padding: 10px;
+    background-color: var(--color-input-background);
     border: 1px solid var(--color-form-input-border);
     border-radius: 10px;
     font-size: 15px;
+    color: var(--color-input);
 
     &:hover {
         outline: 2px solid var(--color-form-input-border-hover);
@@ -80,23 +80,23 @@
 }
 
 .create-board__button {
+    width: 100%;
     margin: 10px 0 0 0;
     padding: 15px;
-    width: 100%;
-    cursor: pointer;
     background-color: var(--color-form-button-background);
-    color: var(--color-form-button);
-    font-size: 16px;
+    cursor: pointer;
     border: none;
     border-radius: 10px;
+    font-size: 16px;
+    color: var(--color-form-button);
 
     &:hover {
-        background-color: var(--color-form-button-hover-background);
         box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
+        background-color: var(--color-form-button-hover-background);
     }
 
     &:active {
-        background-color: var(--color-form-button-active-background);
         box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
+        background-color: var(--color-form-button-active-background);
     }
 }
