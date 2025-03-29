@@ -57,67 +57,29 @@
     user-select: none;
 }
 
-.sudoku__controls {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0 0 0;
-}
-
-.sudoku__control-item {
-    width: 100%;
-    max-width: 70px;
-    margin: 5px;
-}
-
-.sudoku__control {
-    border-radius: 50%;
-    cursor: pointer;
-    background-color: var(--game-controls-item-background);
-    user-select: none;
-    padding: 10px;
-    margin: 5px;
-
-    &:hover {
-        background-color: var(--game-controls-item-background-hover);
-    }
-
-    &:active {
-        background-color: var(--game-controls-item-background-active);
-    }
-
-    &.pencil-mode {
-        outline: 2px solid var(--game-controls-main);
-    }
-
-    &.auto-notes-mode {
-        outline: 2px dashed var(--game-controls-main);
-    }
-}
-
-.sudoku__control-icon {
-    fill: var(--game-controls-main);
-}
-
-.sudoku__control-label {
-    font-size: 13px;
-    color: var(--game-controls-main);
-    font-weight: 550;
-    cursor: default;
-    text-align: center;
-}
-
+.sudoku__controls,
 .sudoku__numpad {
     display: flex;
     justify-content: center;
     padding: 10px 0 0 0;
 }
 
+.sudoku__controls-item,
 .sudoku__numpad-item {
     width: 100%;
-    max-width: 60px;
+    max-width: 70px;
     margin: 5px;
 }
 
+.sudoku__controls-item {
+    max-width: 70px;
+}
+
+.sudoku__numpad-item {
+    max-width: 60px;
+}
+
+.sudoku__controls-button,
 .sudoku__numpad-button {
     border-radius: 50%;
     cursor: pointer;
@@ -133,6 +95,28 @@
     }
 }
 
+.sudoku__controls-button {
+    padding: 10px;
+    margin: 5px;
+
+    &.pencil-mode {
+        outline: 2px solid var(--game-controls-main);
+    }
+
+    &.auto-notes-mode {
+        outline: 2px dashed var(--game-controls-main);
+    }
+}
+
+.sudoku__controls-icon,
 .sudoku__numpad-icon {
     fill: var(--game-controls-main);
+}
+
+.sudoku__controls-label {
+    font-size: 13px;
+    color: var(--game-controls-main);
+    font-weight: 550;
+    cursor: default;
+    text-align: center;
 }
