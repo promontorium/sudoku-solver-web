@@ -4,7 +4,7 @@ services:
       sh -c "
         pip install --no-cache-dir debugpy &&
         python manage.py migrate --noinput &&
-        python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m gunicorn mysite.wsgi:application --bind 0.0.0.0:8000
+        python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m gunicorn mysite.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 0
       "
     ports:
       - "5678:5678"
