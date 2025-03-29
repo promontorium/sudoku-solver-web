@@ -1,45 +1,44 @@
 .sudoku__interface {
-    --game-controls-item-background: #eaeef4;
-    --game-controls-item-background-hover: #dce3ed;
-    --game-controls-item-background-active: #d2dae7;
-    --game-controls-main: #325aaf;
+    --color-sudoku-game-interface: #325aaf;
+    --color-sudoku-game-interface-background: #eaeef4;
+    --color-sudoku-game-interface-background-hover: #dce3ed;
+    --color-sudoku-game-interface-background-active: #d2dae7;
 }
 
 @media (prefers-color-scheme: dark) {
     .sudoku__interface {
-        --game-controls-item-background: #2e2e31;
-        --game-controls-item-background-hover: #333333;
-        --game-controls-item-background-active: #383838;
-        --game-controls-item-outline-alt: #038367;
+        --color-sudoku-game-interface-background: #2e2e31;
+        --color-sudoku-game-interface-background-hover: #333333;
+        --color-sudoku-game-interface-background-active: #383838;
     }
 }
 
 /* Sudoku board colors */
 .sudoku {
-    --game-grid-border: #344861;
-    --game-grid-cell-border: #bfc6d4;
-    --game-grid-given: #344861;
-    --game-grid-solved: #325aaf;
-    --game-grid-candidate: #6e7c8c;
-    --game-grid-selected: #bbdefb;
-    --game-grid-conflict: #f7cfd6;
-    --game-grid-same-value: #c3d7ea;
-    --game-grid-has-candidate: #d4ebda;
-    --game-grid-neighbor: #e2ebf3;
+    --color-sudoku-game-grid-border: #344861;
+    --color-sudoku-game-grid-cell-border: #bfc6d4;
+    --color-sudoku-game-grid-given: #344861;
+    --color-sudoku-game-grid-solved: #325aaf;
+    --color-sudoku-game-grid-candidate: #6e7c8c;
+    --color-sudoku-game-grid-selected: #bbdefb;
+    --color-sudoku-game-grid-conflict: #f7cfd6;
+    --color-sudoku-game-grid-same-value: #c3d7ea;
+    --color-sudoku-game-grid-has-candidate: #d4ebda;
+    --color-sudoku-game-grid-neighbor: #e2ebf3;
 }
 
 @media (prefers-color-scheme: dark) {
     .sudoku {
-        --game-grid-border: #e7e7e7;
-        --game-grid-cell-border: #cccccc;
-        --game-grid-given: #e0e0e0;
-        --game-grid-solved: #81c7ff;
-        --game-grid-candidate: #9fa6b1;
-        --game-grid-selected: #84bbe850;
-        --game-grid-conflict: #db656550;
-        --game-grid-same-value: #5a80b050;
-        --game-grid-has-candidate: #9bd1a950;
-        --game-grid-neighbor: #e2ebf350;
+        --color-sudoku-game-grid-border: #e7e7e7;
+        --color-sudoku-game-grid-cell-border: #cccccc;
+        --color-sudoku-game-grid-given: #e0e0e0;
+        --color-sudoku-game-grid-solved: #81c7ff;
+        --color-sudoku-game-grid-candidate: #9fa6b1;
+        --color-sudoku-game-grid-selected: #84bbe850;
+        --color-sudoku-game-grid-conflict: #db656550;
+        --color-sudoku-game-grid-same-value: #5a80b050;
+        --color-sudoku-game-grid-has-candidate: #9bd1a950;
+        --color-sudoku-game-grid-neighbor: #e2ebf350;
     }
 }
 
@@ -48,7 +47,7 @@
 }
 
 .sudoku__title {
-    color: var(--container-title);
+    color: var(--color-container-title);
     padding: 10px;
     margin: 0;
 }
@@ -83,15 +82,15 @@
 .sudoku__numpad-button {
     border-radius: 50%;
     cursor: pointer;
-    background-color: var(--game-controls-item-background);
+    background-color: var(--color-sudoku-game-interface-background);
     user-select: none;
 
     &:hover {
-        background-color: var(--game-controls-item-background-hover);
+        background-color: var(--color-sudoku-game-interface-background-hover);
     }
 
     &:active {
-        background-color: var(--game-controls-item-background-active);
+        background-color: var(--color-sudoku-game-interface-background-active);
     }
 }
 
@@ -100,22 +99,22 @@
     margin: 5px;
 
     &.pencil-mode {
-        outline: 2px solid var(--game-controls-main);
+        outline: 2px solid var(--color-sudoku-game-interface);
     }
 
     &.auto-notes-mode {
-        outline: 2px dashed var(--game-controls-main);
+        outline: 2px dashed var(--color-sudoku-game-interface);
     }
 }
 
 .sudoku__controls-icon,
 .sudoku__numpad-icon {
-    fill: var(--game-controls-main);
+    fill: var(--color-sudoku-game-interface);
 }
 
 .sudoku__controls-label {
     font-size: 13px;
-    color: var(--game-controls-main);
+    color: var(--color-sudoku-game-interface);
     font-weight: 550;
     cursor: default;
     text-align: center;

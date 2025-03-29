@@ -1,46 +1,49 @@
 :root {
-    --body: #333;
-    --body-background: #f0f0f0;
-    --text-shadow: #00000066;
-    --input: #808080;
-    --input-background: #fff;
-    --a: #3f67af;
-    --a-hover: #4b97e9;
-    --container-background: #fff;
-    --form-button: #fff;
-    --form-button-background: #007bff;
-    --form-button-hover-background: #006ce0;
-    --form-button-hover-box-shadow: #00000033;
-    --form-button-active-background: #0267d3;
-    --form-button-active-box-shadow: #0000004d;
-    --form-input-border: #ccc;
-    --form-input-border-hover: #47a0ff;
-    --form-input-border-focus: #0267d3;
-    --form-label: #6f6f6f;
-    --container-box-shadow: #0000004d;
-    --container-title: #808080;
-    --error: #ff6347;
+    --color-body: #333;
+    --color-body-background: #f0f0f0;
+    --color-text-shadow: #00000066;
+    --color-error: #ff6347;
+    --color-link: #3f67af;
+    --color-link-hover: #4b97e9;
+    --color-input: #808080;
+    --color-input-background: #fff;
+    --color-container-background: #fff;
+    --color-container-box-shadow: #0000004d;
+    --color-container-title: #808080;
+    --color-form-button: #fff;
+    --color-form-button-background: #007bff;
+    --color-form-button-hover-background: #006ce0;
+    --color-form-button-hover-box-shadow: #00000033;
+    --color-form-button-active-background: #0267d3;
+    --color-form-button-active-box-shadow: #0000004d;
+    --color-form-input-border: #ccc;
+    --color-form-input-border-hover: #47a0ff;
+    --color-form-input-border-focus: #0267d3;
+    --color-form-label: #6f6f6f;
 }
 
 @media (prefers-color-scheme: dark) {
-    html {
-        color-scheme: dark;
-    }
-
     :root {
-        --body: #dddddd;
-        --body-background: #212327;
-        --input: #cdcdcd;
-        --input-background: #5b5b5b;
-        --a: #c9c9c9;
-        --container-background: #3b3a3a;
-        --form-button-background: #305a6f;
-        --form-button-hover-background: #305669;
-        --form-button-active-background: #3e6d85;
-        --form-input-border: #757575;
-        --form-input-border-focus: #1e7add;
-        --form-label: #bdbdbd;
+        color-scheme: dark;
+
+        --color-body: #dddddd;
+        --color-body-background: #212327;
+        --color-input: #cdcdcd;
+        --color-input-background: #5b5b5b;
+        --color-link: #c9c9c9;
+        --color-container-background: #3b3a3a;
+        --color-form-button-background: #305a6f;
+        --color-form-button-hover-background: #305669;
+        --color-form-button-active-background: #3e6d85;
+        --color-form-input-border: #757575;
+        --color-form-input-border-focus: #1e7add;
+        --color-form-label: #bdbdbd;
     }
+}
+
+:root {
+    --layout-header-height: 60px;
+    --layout-footer-height: 60px;
 }
 
 * {
@@ -49,12 +52,12 @@
 
 body {
     font-family: sans-serif, Arial;
-    background-color: var(--body-background);
-    color: var(--body);
+    background-color: var(--color-body-background);
+    color: var(--color-body);
     margin: 0;
     padding: 0;
 }
 
 main {
-    padding-top: var(--header-height);
+    padding-top: var(--layout-header-height);
 }

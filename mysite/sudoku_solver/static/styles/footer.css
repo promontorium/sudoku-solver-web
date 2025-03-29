@@ -1,7 +1,3 @@
-:root {
-    --footer-height: 60px;
-}
-
 .footer-container {
-    height: var(--footer-height);
+    height: var(--layout-footer-height);
 }

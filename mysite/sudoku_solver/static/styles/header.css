@@ -1,36 +1,32 @@
-:root {
-    --header-height: 60px;
-}
-
 header {
-    --header: #f0f0f0;
-    --header-background: #59b1b8e6;
-    --header-dropdown-background: #f9f9f9;
-    --header-dropdown-item: #272727;
-    --header-dropdown-item-hover-background: #d3d3d3;
+    --color-header: #f0f0f0;
+    --color-header-background: #59b1b8e6;
+    --color-header-dropdown-background: #f9f9f9;
+    --color-header-dropdown-item: #272727;
+    --color-header-dropdown-item-hover-background: #d3d3d3;
 }
 
 @media (prefers-color-scheme: dark) {
     header {
-        --header: #e7e7e7;
-        --header-background: #417690;
-        --header-dropdown-background: #3b3a3a;
-        --header-dropdown-item: #e7e7e7;
-        --header-dropdown-item-hover-background: #454545;
+        --color-header: #e7e7e7;
+        --color-header-background: #417690;
+        --color-header-dropdown-background: #3b3a3a;
+        --color-header-dropdown-item: #e7e7e7;
+        --color-header-dropdown-item-hover-background: #454545;
     }
 }
 
 .header__container {
     position: fixed;
     transition: transform 0.3s ease;
-    height: var(--header-height);
+    height: var(--layout-header-height);
     width: 100%;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--header-background);
-    color: var(--header);
+    background-color: var(--color-header-background);
+    color: var(--color-header);
 
     .header--scrolled-down & {
         transform: translateY(-100%);
@@ -52,7 +48,7 @@ header {
     padding: 10px;
 
     &:hover {
-        text-shadow: 0 4px 20px var(--text-shadow);
+        text-shadow: 0 4px 20px var(--color-text-shadow);
     }
 
     &:not(:is(h1, h2, h3, h4, h5, h6) *) {
@@ -74,8 +70,8 @@ header {
     display: none;
     position: absolute;
     border-radius: 10px;
-    box-shadow: 0px 8px 16px 0px var(--container-box-shadow);
-    background-color: var(--header-dropdown-background);
+    box-shadow: 0px 8px 16px 0px var(--color-container-box-shadow);
+    background-color: var(--color-header-dropdown-background);
     width: 100%;
 
     .header__dropdown-container:hover & {
@@ -88,12 +84,12 @@ header {
     padding: 12px 16px;
     width: 100%;
     cursor: pointer;
-    color: var(--header-dropdown-item);
+    color: var(--color-header-dropdown-item);
     border-radius: 10px;
     display: block;
     text-align: center;
 
     &:hover {
-        background-color: var(--header-dropdown-item-hover-background);
+        background-color: var(--color-header-dropdown-item-hover-background);
     }
 }

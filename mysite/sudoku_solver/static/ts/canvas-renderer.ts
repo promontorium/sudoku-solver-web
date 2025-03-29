@@ -74,16 +74,16 @@ export class CanvasRenderer implements ICanvasRenderer {
     public loadColorScheme(): void {
         const styles = getComputedStyle(this.container);
         this.colors = {
-            GRID_BORDER: styles.getPropertyValue("--game-grid-border").trim(),
-            CELL_BORDER: styles.getPropertyValue("--game-grid-cell-border").trim(),
-            GIVEN_TEXT: styles.getPropertyValue("--game-grid-given").trim(),
-            SOLVED_TEXT: styles.getPropertyValue("--game-grid-solved").trim(),
-            CANDIDATE_TEXT: styles.getPropertyValue("--game-grid-candidate").trim(),
-            SELECTED: styles.getPropertyValue("--game-grid-selected").trim(),
-            CONFLICT: styles.getPropertyValue("--game-grid-conflict").trim(),
-            SAME_VALUE: styles.getPropertyValue("--game-grid-same-value").trim(),
-            HAS_CANDIDATE: styles.getPropertyValue("--game-grid-has-candidate").trim(),
-            NEIGHBOR: styles.getPropertyValue("--game-grid-neighbor").trim(),
+            GRID_BORDER: styles.getPropertyValue("--color-sudoku-game-grid-border").trim(),
+            CELL_BORDER: styles.getPropertyValue("--color-sudoku-game-grid-cell-border").trim(),
+            GIVEN_TEXT: styles.getPropertyValue("--color-sudoku-game-grid-given").trim(),
+            SOLVED_TEXT: styles.getPropertyValue("--color-sudoku-game-grid-solved").trim(),
+            CANDIDATE_TEXT: styles.getPropertyValue("--color-sudoku-game-grid-candidate").trim(),
+            SELECTED: styles.getPropertyValue("--color-sudoku-game-grid-selected").trim(),
+            CONFLICT: styles.getPropertyValue("--color-sudoku-game-grid-conflict").trim(),
+            SAME_VALUE: styles.getPropertyValue("--color-sudoku-game-grid-same-value").trim(),
+            HAS_CANDIDATE: styles.getPropertyValue("--color-sudoku-game-grid-has-candidate").trim(),
+            NEIGHBOR: styles.getPropertyValue("--color-sudoku-game-grid-neighbor").trim(),
         };
     }
 

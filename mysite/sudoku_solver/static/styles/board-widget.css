@@ -1,7 +1,7 @@
 .board-container {
-    --border-widget-input-given: #797979;
-    --border-widget-input-candiadte: #218e95;
-    --border-widget-input-hover: #7979792f;
+    --color-board-widget-input-hover: #7979792f;
+    --color-board-widget-input-given: #797979;
+    --color-board-widget-input-candidate: #218e95;
 }
 
 .board-container__description {
@@ -28,16 +28,16 @@
     font-size: 20px;
 
     &:hover {
-        background-color: var(--border-widget-input-hover);
+        background-color: var(--color-board-widget-input-hover);
     }
 }
 
 .board-container__input--given {
-    color: var(--border-widget-input-given) !important;
+    color: var(--color-board-widget-input-given) !important;
 }
 
 .board-container__input--candidates {
-    color: var(--border-widget-input-candiadte) !important;
+    color: var(--color-board-widget-input-candidate) !important;
     font-size: 12px !important;
     letter-spacing: -0.5px;
 }

@@ -5,23 +5,23 @@
 }
 
 .board-list__link {
-    color: var(--a);
+    color: var(--color-link);
     &:hover {
-        color: var(--a-hover);
+        color: var(--color-link-hover);
     }
 }
 
 .board-list__title,
 .create-board__title {
     text-align: center;
-    color: var(--container-title);
+    color: var(--color-container-title);
 }
 
 .board-list__items {
-    background: var(--container-background);
+    background: var(--color-container-background);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px var(--container-box-shadow);
+    box-shadow: 0 2px 5px var(--color-container-box-shadow);
     list-style-type: none;
     text-align: center;
 }
@@ -39,7 +39,7 @@
 }
 
 .board-list__current {
-    color: var(--container-title);
+    color: var(--color-container-title);
 }
 
 .create-board {
@@ -49,32 +49,32 @@
 }
 
 .create-board__form {
-    background: var(--container-background);
+    background: var(--color-container-background);
     border-radius: 10px;
-    box-shadow: 0 2px 5px var(--container-box-shadow);
+    box-shadow: 0 2px 5px var(--color-container-box-shadow);
     padding: 20px;
 }
 
 .create-board__form label {
-    color: var(--form-label);
+    color: var(--color-form-label);
 }
 
 .create-board__form input {
-    color: var(--input);
-    background-color: var(--input-background);
+    color: var(--color-input);
+    background-color: var(--color-input-background);
     width: 100%;
     padding: 10px;
     margin: 5px auto;
-    border: 1px solid var(--form-input-border);
+    border: 1px solid var(--color-form-input-border);
     border-radius: 10px;
     font-size: 15px;
 
     &:hover {
-        outline: 2px solid var(--form-input-border-hover);
+        outline: 2px solid var(--color-form-input-border-hover);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--form-input-border-focus);
+        outline: 2px solid var(--color-form-input-border-focus);
     }
 }
 
@@ -83,19 +83,19 @@
     padding: 15px;
     width: 100%;
     cursor: pointer;
-    background-color: var(--form-button-background);
-    color: var(--form-button);
+    background-color: var(--color-form-button-background);
+    color: var(--color-form-button);
     font-size: 16px;
     border: none;
     border-radius: 10px;
 
     &:hover {
-        background-color: var(--form-button-hover-background);
-        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        background-color: var(--color-form-button-hover-background);
+        box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
     }
 
     &:active {
-        background-color: var(--form-button-active-background);
-        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        background-color: var(--color-form-button-active-background);
+        box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
     }
 }

@@ -1,10 +1,10 @@
-.auth {
-    --login-form-password-widget-background: #f0f0f0;
+.password-widget {
+    --color-auth-form-password-widget-background: #f0f0f0;
 }
 
 @media (prefers-color-scheme: dark) {
-    .auth {
-        --login-form-password-widget-background: #4d4b4b;
+    .password-widget {
+        --color-auth-form-password-widget-background: #4d4b4b;
     }
 }
 
@@ -15,7 +15,7 @@
 
 .auth__title {
     text-align: center;
-    color: var(--container-title);
+    color: var(--color-container-title);
 }
 
 .auth__other-option {
@@ -23,22 +23,22 @@
 }
 
 .auth__link {
-    color: var(--a);
+    color: var(--color-link);
 
     &:hover {
-        color: var(--a-hover);
+        color: var(--color-link-hover);
     }
 }
 
 .auth__form {
-    background: var(--container-background);
+    background: var(--color-container-background);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 5px var(--container-box-shadow);
+    box-shadow: 0 2px 5px var(--color-container-box-shadow);
 }
 
 .auth__form label {
-    color: var(--form-label);
+    color: var(--color-form-label);
 }
 
 .auth__form p,
@@ -47,22 +47,22 @@
 }
 
 .auth__form input {
-    color: var(--input);
-    background-color: var(--input-background);
+    color: var(--color-input);
+    background-color: var(--color-input-background);
     width: 100%;
     padding: 10px;
     margin: 5px auto;
-    border: 1px solid var(--form-input-border);
+    border: 1px solid var(--color-form-input-border);
     border-radius: 10px;
     font-size: 15px;
 
     &:hover {
-        border-color: var(--form-input-border-hover);
+        border-color: var(--color-form-input-border-hover);
     }
 
     &:focus-visible {
         outline: none;
-        border-color: var(--form-input-border-focus);
+        border-color: var(--color-form-input-border-focus);
     }
 }
 
@@ -71,26 +71,26 @@
     padding: 15px;
     width: 100%;
     cursor: pointer;
-    background-color: var(--form-button-background);
-    color: var(--form-button);
+    background-color: var(--color-form-button-background);
+    color: var(--color-form-button);
     font-size: 15px;
     border: none;
     border-radius: 10px;
 
     &:hover {
-        background-color: var(--form-button-hover-background);
-        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        background-color: var(--color-form-button-hover-background);
+        box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
     }
 
     &:active {
-        background-color: var(--form-button-active-background);
-        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        background-color: var(--color-form-button-active-background);
+        box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
     }
 }
 
 .auth__form .errorlist {
     padding-left: 15px;
-    color: var(--error);
+    color: var(--color-error);
 }
 
 .password-widget {
@@ -107,18 +107,18 @@
     width: 35px;
     padding: 4px;
     margin: 5px auto;
-    background-color: var(--login-form-password-widget-background);
+    background-color: var(--color-auth-form-password-widget-background);
     border-radius: 0 10px 10px 0;
-    border: 1px solid var(--form-input-border);
+    border: 1px solid var(--color-form-input-border);
     border-left: 0;
     user-select: none;
 
     &:hover {
-        box-shadow: 0 4px 20px var(--form-button-hover-box-shadow);
+        box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
     }
 
     &:active {
-        box-shadow: 0 4px 20px var(--form-button-active-box-shadow);
+        box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
     }
 }
 
