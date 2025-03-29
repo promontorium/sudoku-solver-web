@@ -35,15 +35,17 @@
             <div class="sudoku__controls-label">Notes</div>
         </div>
 
-        <!-- Import -->
-        <div class="sudoku__controls-item" aria-label="Import">
-            <div id="game-controls-import" class="sudoku__controls-button">
-                <svg class="sudoku__controls-icon sudoku__controls-icon--import" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
-                    <path d="M0 0h27v3H0zm0 24h27v3H0zM0 0v27h3V0zm24 0v27h3V0zM9 0v27h3V0zm9 0v27h3V0zM0 9h27v3H0zm0 9h27v3H0z" />
-                </svg>
+        {% if not user.is_authenticated %}
+            <!-- Import -->
+            <div class="sudoku__controls-item" aria-label="Import">
+                <div id="game-controls-import" class="sudoku__controls-button">
+                    <svg class="sudoku__controls-icon sudoku__controls-icon--import" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
+                        <path d="M0 0h27v3H0zm0 24h27v3H0zM0 0v27h3V0zm24 0v27h3V0zM9 0v27h3V0zm9 0v27h3V0zM0 9h27v3H0zm0 9h27v3H0z" />
+                    </svg>
+                </div>
+                <div class="sudoku__controls-label">Import</div>
             </div>
-            <div class="sudoku__controls-label">Import</div>
-        </div>
+        {% endif %}
 
         <!-- Create Notes -->
         <div class="sudoku__controls-item" aria-label="Create Notes">

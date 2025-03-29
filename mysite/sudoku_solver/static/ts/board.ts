@@ -131,13 +131,14 @@ abstract class AbstractBoard implements IBoard {
                 item.addEventListener("click", () => this.handleOnKeyPressed(item.dataset["value"]!));
             }
         });
-        const actionsMap = [
-            { id: "#game-controls-create-notes", action: () => this.createNotes() },
-            { id: "#game-controls-import", action: () => this.import() },
-            { id: "#game-controls-reset", action: () => this.reset() },
-            { id: "#game-controls-undo", action: () => this.undo() },
-        ];
-        actionsMap.forEach(({ id, action }) => document.querySelector(id)?.addEventListener("click", action));
+        const actionsMap = new Map<string, () => any>([
+            ["#game-controls-create-notes", () => this.createNotes()],
+            ["#game-controls-reset", () => this.reset()],
+            ["#game-controls-undo", () => this.undo()],
+        ]);
+        actionsMap.forEach((action, id) => {
+            document.querySelector(id)?.addEventListener("click", action);
+        });
         this.canvasRenderer.canvas.addEventListener("click", (event) => this.handleOnClick(event));
         window.addEventListener(
             "resize",
@@ -182,28 +183,6 @@ abstract class AbstractBoard implements IBoard {
                 const usedValues = Array.from(this.getCellNeighbors(cell)).map((c) => c.value);
                 cell.candidates = Array.from({ length: 9 }, (_, i) => i + 1).filter((v) => !usedValues.includes(v));
             });
-        this.postprocessCellsChanges();
-    }
-
-    private import(): void {
-        console.debug("Running import");
-        const field = window.prompt("Enter a string of 81 numbers (you can express blanks as 0 or '.')");
-        if (field?.length !== 81) {
-            console.warn("Import board length missmatch");
-            return;
-        }
-        try {
-            this.cells = Array.from({ length: 9 }, (_, i) =>
-                Array.from({ length: 9 }, (_, j) => {
-                    const fieldValue = field[i * 9 + j];
-                    const value = fieldValue === "." ? 0 : parseInt(fieldValue);
-                    return new Cell(j, i, value, value !== 0);
-                })
-            );
-        } catch (error) {
-            console.warn("Import cell creation error: ", error);
-            return;
-        }
         this.postprocessCellsChanges();
     }
 
@@ -307,7 +286,9 @@ class GuestBoard extends AbstractBoard {
         return localStorage.getItem(this.prevBoardKey);
     }
 
-    protected override bindExtraEvents(): void {}
+    protected override bindExtraEvents(): void {
+        document.querySelector("#game-controls-import")?.addEventListener("click", () => this.import());
+    }
 
     protected override load(): ICell[][] | null {
         const board = localStorage.getItem(this.boardKey);
@@ -318,6 +299,28 @@ class GuestBoard extends AbstractBoard {
         const board = this.encode();
         localStorage.setItem(this.prevBoardKey, localStorage.getItem(this.boardKey) ?? "");
         localStorage.setItem(this.boardKey, board);
+    }
+
+    private import(): void {
+        console.debug("Running import");
+        const field = window.prompt("Enter a string of 81 numbers (you can express blanks as 0 or '.')");
+        if (field?.length !== 81) {
+            console.warn("Import board length missmatch");
+            return;
+        }
+        try {
+            this.cells = Array.from({ length: 9 }, (_, i) =>
+                Array.from({ length: 9 }, (_, j) => {
+                    const fieldValue = field[i * 9 + j];
+                    const value = fieldValue === "." ? 0 : parseInt(fieldValue);
+                    return new Cell(j, i, value, value !== 0);
+                })
+            );
+        } catch (error) {
+            console.warn("Import cell creation error: ", error);
+            return;
+        }
+        this.postprocessCellsChanges();
     }
 }
 
