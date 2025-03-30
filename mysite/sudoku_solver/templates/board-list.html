@@ -20,7 +20,7 @@
         <ul class="board-list__items">
             {% for board in board_list %}
                 <li class="board-list__item">
-                    <a class="board-list__link" href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">#{{ board.id }}: {{ board.description|default:'No description' }}. Created: {{ board.created }}. Changed: {{ board.changed }}</a>
+                    <a class="board-list__link" href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">#{{ board.id }}: {{ board.description|default:'*no description*' }}. Created: {{ board.created|date:'j-M-Y' }}. Changed: {{ board.changed|date:'j-M-Y' }}</a>
                 </li>
             {% empty %}
                 <li class="board-list__item">No boards available.</li>

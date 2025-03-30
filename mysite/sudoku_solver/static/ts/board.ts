@@ -338,9 +338,9 @@ class UserBoard extends AbstractBoard {
 
     protected override save(): void {
         console.debug("Running save");
-        const url = "";
+        const url = "update/";
         const payload = { board: this.encode() };
-        this.postData(url, payload)
+        this.send(url, "PUT", payload)
             .then((data) => this.processSaveResponse(data))
             .catch((error) => console.error(`Save request: ${error}`));
     }
@@ -361,7 +361,7 @@ class UserBoard extends AbstractBoard {
         console.debug("Running solve");
         const url = "solve/";
         const payload = { board: this.encode() };
-        this.postData(url, payload)
+        this.send(url, "POST", payload)
             .then((data) => this.processSolveResponse(data))
             .catch((error) => console.error(`Solve request: ${error}`));
     }
@@ -370,32 +370,33 @@ class UserBoard extends AbstractBoard {
         console.debug("Running solve step");
         const url = "solve-step/";
         const payload = { board: this.encode() };
-        this.postData(url, payload)
+        this.send(url, "POST", payload)
             .then((data) => this.processSolveResponse(data))
             .catch((error) => console.error(`Solve step request: ${error}`));
     }
 
-    private async postData(url: string, payload: any): Promise<any> {
+    private async send(url: string, method: "POST" | "PUT", payload: any): Promise<any> {
         const headers = {
             "Content-Type": "application/json",
             "X-CSRFToken": this.getCSRFToken() ?? "",
         };
         const init: RequestInit = {
-            method: "POST",
+            method: method,
             headers: headers,
             body: JSON.stringify(payload),
         };
         const response = await fetch(url, init);
         if (!response.ok) {
-            throw new Error(`Response: ${response}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+        const responseText = await response.text();
+        return responseText ? JSON.parse(responseText) : null;
     }
 
     private processSaveResponse(response: any): void {
         console.debug("Processing save response");
-        if (response.reason) {
-            console.debug(`Response is not ok: ${response.reason}`);
+        if (response && response.reason) {
+            console.debug(`Response reason: ${response.reason}`);
             return;
         }
         console.debug("Board saved");
@@ -403,6 +404,10 @@ class UserBoard extends AbstractBoard {
 
     private processSolveResponse(response: any): void {
         console.debug("Processing solve response");
+        if (!response) {
+            console.error("Empty response");
+            return;
+        }
         if (response.reason) {
             console.debug(`Response is not ok: ${response.reason}`);
             return;

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.contrib.auth.password_validation import password_validators_help_text_html
+from django.core.validators import RegexValidator
 
 from . import fields, models, widgets
 
@@ -45,18 +46,13 @@ class ChangePasswordForm(PasswordChangeForm):
 
 class CreateBoardForm(forms.ModelForm):
     description = forms.CharField(required=True)
+    board = forms.CharField(
+        required=True, validators=[RegexValidator(regex=r"^\d{81}$", message="Board must be exactly 81 digits (0-9).")]
+    )
 
     class Meta:
         model = models.Board
-        fields = ("description",)
-
-    def save(self, commit: bool = True, user: User | None = None) -> models.Board:
-        board = super().save(commit=False)
-        if user:
-            board.user = user
-        if commit:
-            board.save()
-        return board
+        fields = ("description", "board")
 
 
 class AdminBoardForm(forms.ModelForm):
