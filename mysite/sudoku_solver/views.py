@@ -67,7 +67,7 @@ class BoardList(LoginRequiredMixin, generic.ListView):
 class BoardCreate(LoginRequiredMixin, generic.CreateView):
     model = models.Board
     form_class = forms.CreateBoardForm
-    template_name = "board-list.html"  # TODO
+    template_name = "board-list.html"
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()

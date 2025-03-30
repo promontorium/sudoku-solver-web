@@ -15,37 +15,43 @@
 {% endblock %}
 
 {% block main %}
-    <div class="board-list">
-        <h1 class="board-list__title">Boards</h1>
-        <ul class="board-list__items">
-            {% for board in board_list %}
-                <li class="board-list__item">
-                    <a class="board-list__link" href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">#{{ board.id }}: {{ board.description|default:'*no description*' }}. Created: {{ board.created|date:'j-M-Y' }}. Changed: {{ board.changed|date:'j-M-Y' }}</a>
-                </li>
-            {% empty %}
-                <li class="board-list__item">No boards available.</li>
-            {% endfor %}
-        </ul>
-        <div class="board-list__pagination">
-            <span class="board-list__step-links">
-                {% if page_obj.has_previous %}
-                    <a class="board-list__link" href="?page=1">&laquo; first</a>
-                    <a class="board-list__link" href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="board-list__current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                {% if page_obj.has_next %}
-                    <a class="board-list__link" href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a class="board-list__link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
+    {% if board_list %}
+        <div class="board-list">
+            <h1 class="board-list__title">Boards</h1>
+            <ul class="board-list__items">
+                {% for board in board_list %}
+                    <li class="board-list__item">
+                        <a class="board-list__link" href="{% url 'sudoku-solver:board-detail' board_id=board.id %}">#{{ board.id }}: {{ board.description|default:'*no description*' }}. Created: {{ board.created|date:'j-M-Y' }}. Changed: {{ board.changed|date:'j-M-Y' }}</a>
+                    </li>
+                {% empty %}
+                    <li class="board-list__item">No boards available.</li>
+                {% endfor %}
+            </ul>
+            <div class="board-list__pagination">
+                <span class="board-list__step-links">
+                    {% if page_obj.has_previous %}
+                        <a class="board-list__link" href="?page=1">&laquo; first</a>
+                        <a class="board-list__link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="board-list__current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a class="board-list__link" href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a class="board-list__link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="create-board">
         <h2 class="create-board__title">Create a New Board</h2>
         <form method="post" class="create-board__form" action="{% url 'sudoku-solver:create-board' %}">
             {% csrf_token %}
-            {{ create_board_form.as_p }}
+            {% if create_board_form %}
+                {{ create_board_form.as_p }}
+            {% else %}
+                {{ form.as_p }}
+            {% endif %}
             <button type="submit" class="create-board__button" name="create-board-submit">Create Board</button>
         </form>
     </div>
