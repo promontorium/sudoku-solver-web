@@ -93,8 +93,7 @@ class BoardDetail(LoginRequiredMixin, generic.DetailView):
 
 @login_required()
 @require_http_methods(["PUT"])
-def update(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    board_id = kwargs.get("board_id")
+def update(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> HttpResponse:
     if request.user.is_superuser:
         board_data = get_object_or_404(models.Board, id=board_id)
     else:
