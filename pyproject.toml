@@ -74,6 +74,7 @@ disallow_any_generics = false
 [[tool.mypy.overrides]]
 module = "mysite.sudoku_solver.forms"
 disallow_any_generics = false
+disallow_any_explicit = false
 warn_return_any = false
 
 [[tool.mypy.overrides]]

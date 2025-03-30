@@ -1,3 +1,5 @@
+from typing import Any
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
@@ -50,9 +52,23 @@ class CreateBoardForm(forms.ModelForm):
         required=True, validators=[RegexValidator(regex=r"^\d{81}$", message="Board must be exactly 81 digits (0-9).")]
     )
 
+    def __init__(self, *args: Any, user: models.User | None = None, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self._user = user
+
     class Meta:
         model = models.Board
         fields = ("description", "board")
+
+    def clean_board(self) -> str:
+        return ",".join(f"-{c}" if c != "0" else c for c in self.cleaned_data["board"])
+
+    def save(self, commit: bool = True) -> models.User:
+        instance = super().save(commit=False)
+        instance.user = self._user
+        if commit:
+            instance.save()
+        return instance
 
 
 class AdminBoardForm(forms.ModelForm):

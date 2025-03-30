@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.db.models.query import QuerySet
-from django.forms import Form
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -70,10 +69,10 @@ class BoardCreate(LoginRequiredMixin, generic.CreateView):
     form_class = forms.CreateBoardForm
     template_name = "board-list.html"  # TODO
 
-    def form_valid(self, form: Form) -> HttpResponse:
-        form.instance.user = self.request.user
-        form.instance.board = ",".join(f"-{c}" if c != "0" else c for c in form.instance.board)
-        return super().form_valid(form)
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self) -> str:
         return reverse_lazy("sudoku-solver:board-detail", kwargs={"board_id": self.object.id})
