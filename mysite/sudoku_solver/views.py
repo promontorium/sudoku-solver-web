@@ -57,7 +57,7 @@ class BoardList(LoginRequiredMixin, generic.ListView):
     # context_object_name = "board_list"
 
     def get_queryset(self) -> QuerySet[models.Board]:
-        return self.model.objects.filter(user=self.request.user)
+        return super().get_queryset().filter(user=self.request.user)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -85,7 +85,7 @@ class BoardDetail(LoginRequiredMixin, generic.DetailView):
     context_object_name = "board_object"
 
     def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
-        board = get_object_or_404(self.model, id=self.kwargs.get("board_id"))
+        board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
         if not self.request.user.is_superuser and board.user != self.request.user:
             raise Http404("No board matches the given query.")
         return board
