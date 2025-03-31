@@ -1,16 +1,19 @@
 import { debounce, isAuthenticated } from "./utils.js";
 import { NotesMode, notesMode } from "./index.js";
 import { ICell, Cell } from "./cell.js";
-import { ICanvasRenderer } from "./canvas-renderer.js";
-import { IWinNotification } from "./win-notification.js";
+import { ICanvasRenderer, CanvasRenderer } from "./canvas-renderer.js";
+import { IWinNotification, WinPopupNotification } from "./win-notification.js";
 
 export interface IBoard {
     start(): void;
 }
 
 export class BoardFactory {
-    public static getBoard(): new (...args: ConstructorParameters<typeof AbstractBoard>) => IBoard {
-        return isAuthenticated() ? UserBoard : GuestBoard;
+    public static getBoard(): IBoard {
+        if (!isAuthenticated()) {
+            return new GuestBoard(new CanvasRenderer(), new WinPopupNotification());
+        }
+        return new UserBoard(new CanvasRenderer(), new WinPopupNotification());
     }
 }
 
@@ -332,7 +335,7 @@ const enum BoardState {
 
 class UserBoard extends AbstractBoard {
     private boardState: BoardState;
-    // TODO use mutex for more concrete board status
+    // TODO use mutex for more accurate board status ?
     private lastSaveRequestedTimestamp: number = 0;
     private readonly saveDebounceDelay = 1000;
     private debouncedSaveBoard: () => void;
@@ -376,6 +379,7 @@ class UserBoard extends AbstractBoard {
     private setBoardState(state: BoardState.PendingSave | BoardState.UpToDate, timestamp: number): void;
 
     private setBoardState(state: BoardState, timestamp?: number): void {
+        // TODO add UI indicator ?
         switch (state) {
             case BoardState.PendingSave: {
                 this.lastSaveRequestedTimestamp = timestamp!;
@@ -400,7 +404,6 @@ class UserBoard extends AbstractBoard {
             }
         }
         console.debug(`New board state: ${this.boardState}`);
-        // TODO add UI indicator
     }
 
     private saveBoard(): void {
