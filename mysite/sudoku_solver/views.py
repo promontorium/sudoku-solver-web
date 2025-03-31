@@ -91,6 +91,20 @@ class BoardDetail(LoginRequiredMixin, generic.DetailView):
         return board
 
 
+class BoardDelete(LoginRequiredMixin, generic.DeleteView):
+    model = models.Board
+    template_name = "board-delete-confirm.html"
+    context_object_name = "board_object"
+    success_url = reverse_lazy("sudoku-solver:board-list")
+
+    def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
+        if self.request.user.is_superuser:
+            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
+        else:
+            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
+        return board
+
+
 @login_required()
 @require_http_methods(["PATCH"])
 def update(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> HttpResponse:

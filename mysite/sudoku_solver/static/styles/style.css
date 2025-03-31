@@ -3,6 +3,7 @@
     --color-body-background: #f0f0f0;
     --color-text-shadow: #00000066;
     --color-error: #ff6347;
+    --color-critical: #ff4c2d;
     --color-link: #3f67af;
     --color-link-hover: #4b97e9;
     --color-input: #808080;
@@ -16,6 +17,9 @@
     --color-form-button-hover-box-shadow: #00000033;
     --color-form-button-active-background: #0267d3;
     --color-form-button-active-box-shadow: #0000004d;
+    --color-form-critical-button-background: #e74c3c;
+    --color-form-critical-button-hover-background: #c44335;
+    --color-form-critical-button-active-background: #af3c2f;
     --color-form-input-border: #ccc;
     --color-form-input-border-hover: #47a0ff;
     --color-form-input-border-focus: #0267d3;
@@ -34,7 +38,7 @@
         --color-container-background: #3b3a3a;
         --color-form-button-background: #305a6f;
         --color-form-button-hover-background: #305669;
-        --color-form-button-active-background: #3e6d85;
+        --color-form-button-active-background: #2a4c5d;
         --color-form-input-border: #757575;
         --color-form-input-border-focus: #1e7add;
         --color-form-label: #bdbdbd;

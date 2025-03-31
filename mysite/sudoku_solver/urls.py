@@ -13,6 +13,7 @@ urlpatterns = [
     path("boards/", views.BoardList.as_view(), name="board-list"),
     path("boards/create", views.BoardCreate.as_view(), name="create-board"),
     path("board/<int:board_id>/", views.BoardDetail.as_view(), name="board-detail"),
+    path("board/<int:board_id>/delete/", views.BoardDelete.as_view(), name="delete"),
     path("board/<int:board_id>/update/", views.update, name="update"),
     path("solve/", views.solve, name="solve"),
     path("board/<int:board_id>/solve/", views.solve, name="solve"),
