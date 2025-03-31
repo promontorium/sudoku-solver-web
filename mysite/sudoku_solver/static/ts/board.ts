@@ -325,6 +325,14 @@ class GuestBoard extends AbstractBoard {
 }
 
 class UserBoard extends AbstractBoard {
+    private readonly saveDebounceDelay = 1000;
+    private debouncedSaveBoard: () => void;
+
+    public constructor(canvasRenderer: ICanvasRenderer, winNotification: IWinNotification) {
+        super(canvasRenderer, winNotification);
+        this.debouncedSaveBoard = debounce(() => this.saveBoard(), this.saveDebounceDelay);
+    }
+
     protected override getPrevBoard(): string | null {
         // TODO
         console.debug("User getPrevBoard is not yet implemented");
@@ -337,12 +345,8 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override save(): void {
-        console.debug("Running save");
-        const url = "update/";
-        const payload = { board: this.encode() };
-        this.send(url, "PATCH", payload)
-            .then((data) => this.processSaveResponse(data))
-            .catch((error) => console.error(`Save request: ${error}`));
+        console.debug("Debouncing save");
+        this.debouncedSaveBoard();
     }
 
     protected override bindExtraEvents(): void {
@@ -355,6 +359,15 @@ class UserBoard extends AbstractBoard {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         return parts.pop()?.split(";").shift() ?? null;
+    }
+
+    private saveBoard(): void {
+        console.debug("Running save");
+        const url = "update/";
+        const payload = { board: this.encode() };
+        this.send(url, "PATCH", payload)
+            .then((data) => this.processSaveResponse(data))
+            .catch((error) => console.error(`Save request: ${error}`));
     }
 
     private solve(): void {
