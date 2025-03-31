@@ -1,0 +1,79 @@
+.update-board__title {
+    color: var(--color-container-title);
+    text-align: center;
+}
+
+.update-board {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 6%;
+}
+
+.update-board__form {
+    box-shadow: 0 2px 5px var(--color-container-box-shadow);
+    padding: 20px;
+    background: var(--color-container-background);
+    border-radius: 10px;
+}
+
+.update-board__form .errorlist {
+    padding-left: 15px;
+    color: var(--color-error);
+}
+
+.update-board__form label {
+    color: var(--color-form-label);
+}
+
+.update-board__form input {
+    width: 100%;
+    margin: 5px auto;
+    padding: 10px;
+    background-color: var(--color-input-background);
+    border: 1px solid var(--color-form-input-border);
+    border-radius: 10px;
+    font-size: 15px;
+    color: var(--color-input);
+
+    &:hover {
+        outline: 2px solid var(--color-form-input-border-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-form-input-border-focus);
+    }
+}
+
+.update-board__actions {
+    display: flex;
+}
+
+.update-board__button {
+    flex: 1;
+    margin: 0 5px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--color-form-button);
+    background-color: var(--color-form-button-background);
+
+    &:hover {
+        background-color: var(--color-form-button-hover-background);
+        box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
+    }
+
+    &:active {
+        background-color: var(--color-form-button-active-background);
+        box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
+    }
+}
+
+.update-board__button--confirm {
+    cursor: pointer;
+}
+
+.update-board__button--cancel {
+    text-decoration: none;
+    text-align: center;
+}

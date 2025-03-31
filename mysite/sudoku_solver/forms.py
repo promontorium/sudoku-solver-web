@@ -46,7 +46,7 @@ class ChangePasswordForm(PasswordChangeForm):
     )
 
 
-class CreateBoardForm(forms.ModelForm):
+class BoardForm(forms.ModelForm):
     description = forms.CharField(required=True)
     board = forms.CharField(
         required=True, validators=[RegexValidator(regex=r"^\d{81}$", message="Board must be exactly 81 digits (0-9).")]

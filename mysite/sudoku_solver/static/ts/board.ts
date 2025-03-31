@@ -366,7 +366,7 @@ class UserBoard extends AbstractBoard {
 
     private saveBoard(): void {
         console.debug("Running save");
-        const url = "update/";
+        const url = "update-partial/";
         const payload = { board: this.encode() };
         this.send(url, "PATCH", payload)
             .then((data) => this.processSaveResponse(data))

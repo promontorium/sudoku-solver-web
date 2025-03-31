@@ -60,13 +60,13 @@ class BoardList(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["create_board_form"] = forms.CreateBoardForm()
+        context["create_board_form"] = forms.BoardForm()
         return context
 
 
 class BoardCreate(LoginRequiredMixin, generic.CreateView):
     model = models.Board
-    form_class = forms.CreateBoardForm
+    form_class = forms.BoardForm
     template_name = "board-list.html"
 
     def get_form_kwargs(self) -> dict[str, Any]:
@@ -84,11 +84,28 @@ class BoardDetail(LoginRequiredMixin, generic.DetailView):
     context_object_name = "board_object"
 
     def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
-        if self.request.user.is_superuser:
-            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
-        else:
-            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
+        return get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
+
+
+class BoardUpdate(LoginRequiredMixin, generic.UpdateView):
+    model = models.Board
+    template_name = "board-update.html"
+    context_object_name = "board_object"
+    # fields = ["description", "board"]
+    form_class = forms.BoardForm
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
+        board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
+        board.board = "".join(c[1:] if c.startswith("-") else "0" for c in board.board.split(","))
         return board
+
+    def get_success_url(self) -> str:
+        return reverse_lazy("sudoku-solver:board-detail", kwargs={"board_id": self.object.id})
 
 
 class BoardDelete(LoginRequiredMixin, generic.DeleteView):
@@ -98,16 +115,12 @@ class BoardDelete(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("sudoku-solver:board-list")
 
     def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
-        if self.request.user.is_superuser:
-            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
-        else:
-            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
-        return board
+        return get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
 
 
 @login_required()
 @require_http_methods(["PATCH"])
-def update(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> HttpResponse:
+def update_board(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> HttpResponse:
     try:
         request_data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -120,10 +133,7 @@ def update(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> Ht
         return JsonResponse({"error": "expected description format: string"}, status=400)
     if not board and not description:
         return JsonResponse({"reason": "no changes"}, status=200)
-    if request.user.is_superuser:
-        board_data = get_object_or_404(models.Board, id=board_id)
-    else:
-        board_data = get_object_or_404(models.Board, id=board_id, user=request.user)
+    board_data = get_object_or_404(models.Board, id=board_id, user=request.user)
     changed = False
     if board and board != board_data.board:
         if not board_utils.is_valid_encoding(board):
