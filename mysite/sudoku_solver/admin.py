@@ -9,7 +9,7 @@ admin.site.register(models.User, UserAdmin)
 @admin.register(models.Board)
 class BoardAdmin(admin.ModelAdmin):
     form = forms.AdminBoardForm
-    list_display = ("user", "description", "created", "changed")
+    list_display = ("id", "user", "description", "created", "changed")
     list_filter = (("created", admin.DateFieldListFilter), ("changed", admin.DateFieldListFilter))
-    search_fields = ("description", "created", "changed")
+    search_fields = ("id", "description", "created", "changed")
     list_display_links = ("description",)
