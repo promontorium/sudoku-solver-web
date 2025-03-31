@@ -340,7 +340,7 @@ class UserBoard extends AbstractBoard {
         console.debug("Running save");
         const url = "update/";
         const payload = { board: this.encode() };
-        this.send(url, "PUT", payload)
+        this.send(url, "PATCH", payload)
             .then((data) => this.processSaveResponse(data))
             .catch((error) => console.error(`Save request: ${error}`));
     }
@@ -375,7 +375,7 @@ class UserBoard extends AbstractBoard {
             .catch((error) => console.error(`Solve step request: ${error}`));
     }
 
-    private async send(url: string, method: "POST" | "PUT", payload: any): Promise<any> {
+    private async send(url: string, method: "POST" | "PATCH", payload: any): Promise<any> {
         const headers = {
             "Content-Type": "application/json",
             "X-CSRFToken": this.getCSRFToken() ?? "",
@@ -395,8 +395,8 @@ class UserBoard extends AbstractBoard {
 
     private processSaveResponse(response: any): void {
         console.debug("Processing save response");
-        if (response && response.reason) {
-            console.debug(`Response reason: ${response.reason}`);
+        if (response?.reason) {
+            console.warn(`Response reason: ${response.reason}`);
             return;
         }
         console.debug("Board saved");
@@ -409,7 +409,7 @@ class UserBoard extends AbstractBoard {
             return;
         }
         if (response.reason) {
-            console.debug(`Response is not ok: ${response.reason}`);
+            console.warn(`Response reason: ${response.reason}`);
             return;
         }
         console.debug(`Response result: ${response.result}`);

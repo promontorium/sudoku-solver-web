@@ -1,3 +1,5 @@
+import re
+
 from .. import sudoku
 
 
@@ -11,6 +13,12 @@ def decode_board(data: str) -> sudoku.Grid:
             num = int(c)
             cell.candidates = frozenset(i + 1 for i in range(9) if (num >> i) & 1)
     return grid
+
+
+def is_valid_encoding(data: str) -> bool:
+    number = r"(?:-?[1-9]|0|\+?[1-9]|[1-9]\d|[1-4]\d{2}|5(?:0\d|1[0-1]))"
+    pattern = rf"^{number}(?:,{number}){{80}}$"
+    return bool(re.match(pattern, data))
 
 
 def encode_board(grid: sudoku.Grid) -> str:

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.db.models.query import QuerySet
-from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -84,31 +84,43 @@ class BoardDetail(LoginRequiredMixin, generic.DetailView):
     context_object_name = "board_object"
 
     def get_object(self, queryset: QuerySet[models.Board] | None = None) -> models.Board:
-        board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
-        if not self.request.user.is_superuser and board.user != self.request.user:
-            raise Http404("No board matches the given query.")
+        if self.request.user.is_superuser:
+            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"))
+        else:
+            board = get_object_or_404(queryset or self.model, id=self.kwargs.get("board_id"), user=self.request.user)
         return board
 
 
 @login_required()
-@require_http_methods(["PUT"])
+@require_http_methods(["PATCH"])
 def update(request: HttpRequest, board_id: int, *args: Any, **kwargs: Any) -> HttpResponse:
+    try:
+        request_data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    board = request_data.get("board")
+    description = request_data.get("description")
+    if board and not isinstance(board, str):
+        return JsonResponse({"error": "expected board format: string"}, status=400)
+    if description and not isinstance(description, str):
+        return JsonResponse({"error": "expected description format: string"}, status=400)
+    if not board and not description:
+        return JsonResponse({"reason": "no changes"}, status=200)
     if request.user.is_superuser:
         board_data = get_object_or_404(models.Board, id=board_id)
     else:
         board_data = get_object_or_404(models.Board, id=board_id, user=request.user)
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    request_board = data.get("board")
-    if request_board == board_data.board:
-        return JsonResponse({"detail": "no changes"}, status=200)
-    try:
-        board_utils.decode_board(request_board)
-    except SudokuException as e:
-        return JsonResponse({"error": str(e)}, status=400)
-    board_data.board = request_board
+    changed = False
+    if board and board != board_data.board:
+        if not board_utils.is_valid_encoding(board):
+            return JsonResponse({"error": "board is invalid"}, status=400)
+        board_data.board = board
+        changed = True
+    if description and description != board_data.description:
+        board_data.description = description
+        changed = True
+    if not changed:
+        return JsonResponse({"reason": "no changes"}, status=200)
     board_data.save()
     return HttpResponse(status=204)
 
@@ -127,11 +139,18 @@ def solve(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
 
 def _solve_helper(solver_class: type[Solver], request: HttpRequest) -> JsonResponse:
     try:
-        grid = board_utils.decode_board(json.loads(request.body).get("board"))
-        if solver_class(grid).solve():
-            return JsonResponse({"result": board_utils.encode_board(grid)})
+        request_data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
+    board = request_data.get("board")
+    if not board:
+        return JsonResponse({"error": "board is required"}, status=400)
+    if not isinstance(board, str):
+        return JsonResponse({"error": "board is invalid"}, status=400)
+    try:
+        grid = board_utils.decode_board(board)
+        if solver_class(grid).solve():
+            return JsonResponse({"result": board_utils.encode_board(grid)}, status=200)
     except (SudokuException, SolverException) as e:
         return JsonResponse({"error": str(e)}, status=400)
-    return JsonResponse({"reason": "No solution found"})
+    return JsonResponse({"reason": "No solution found"}, status=200)
