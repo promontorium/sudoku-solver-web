@@ -327,23 +327,13 @@ class GuestBoard extends AbstractBoard {
     }
 }
 
-const enum BoardState {
-    PendingSave,
-    Saving,
-    UpToDate,
-}
-
 class UserBoard extends AbstractBoard {
-    private boardState: BoardState;
-    // TODO use mutex for more accurate board status ?
-    private lastSaveRequestedTimestamp: number = 0;
     private readonly saveDebounceDelay = 1000;
     private debouncedSaveBoard: () => void;
 
     public constructor(canvasRenderer: ICanvasRenderer, winNotification: IWinNotification) {
         super(canvasRenderer, winNotification);
         this.debouncedSaveBoard = debounce(() => this.saveBoard(), this.saveDebounceDelay);
-        this.boardState = BoardState.UpToDate;
     }
 
     protected override getPrevBoard(): string | null {
@@ -358,7 +348,6 @@ class UserBoard extends AbstractBoard {
     }
 
     protected override save(): void {
-        this.setBoardState(BoardState.PendingSave, Date.now());
         console.debug("Debouncing save");
         this.debouncedSaveBoard();
     }
@@ -375,45 +364,12 @@ class UserBoard extends AbstractBoard {
         return parts.pop()?.split(";").shift() ?? null;
     }
 
-    private setBoardState(state: BoardState.Saving): void;
-    private setBoardState(state: BoardState.PendingSave | BoardState.UpToDate, timestamp: number): void;
-
-    private setBoardState(state: BoardState, timestamp?: number): void {
-        // TODO add UI indicator ?
-        switch (state) {
-            case BoardState.PendingSave: {
-                this.lastSaveRequestedTimestamp = timestamp!;
-                if (this.boardState !== BoardState.Saving) {
-                    this.boardState = state;
-                }
-                break;
-            }
-            case BoardState.Saving: {
-                this.boardState = state;
-                break;
-            }
-            case BoardState.UpToDate: {
-                this.boardState =
-                    this.lastSaveRequestedTimestamp < timestamp! - this.saveDebounceDelay
-                        ? BoardState.UpToDate
-                        : BoardState.PendingSave;
-                break;
-            }
-            default: {
-                throw new Error(`Unexpected board state: ${state}`);
-            }
-        }
-        console.debug(`New board state: ${this.boardState}`);
-    }
-
     private saveBoard(): void {
-        const timestamp = Date.now();
-        this.setBoardState(BoardState.Saving);
         console.debug("Running save");
         const url = "update/";
         const payload = { board: this.encode() };
         this.send(url, "PATCH", payload)
-            .then((data) => this.processSaveResponse(timestamp, data))
+            .then((data) => this.processSaveResponse(data))
             .catch((error) => console.error(`Save request: ${error}`));
     }
 
@@ -453,13 +409,12 @@ class UserBoard extends AbstractBoard {
         return responseText ? JSON.parse(responseText) : null;
     }
 
-    private processSaveResponse(timestamp: number, response: any): void {
+    private processSaveResponse(response: any): void {
         console.debug("Processing save response");
         if (response?.reason) {
             console.warn(`Response reason: ${response.reason}`);
             return;
         }
-        this.setBoardState(BoardState.UpToDate, timestamp);
         console.debug("Board saved");
     }
 
