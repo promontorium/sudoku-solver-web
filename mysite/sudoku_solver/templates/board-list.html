@@ -31,11 +31,11 @@
                 <span class="board-list__step-links">
                     {% if page_obj.has_previous %}
                         <a class="board-list__link" href="?page=1">&laquo; first</a>
-                        <a class="board-list__link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        <a class="board-list__link" href="?page={{ page_obj.previous_page_number }}">&lsaquo; previous</a>
                     {% endif %}
                     <span class="board-list__current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                     {% if page_obj.has_next %}
-                        <a class="board-list__link" href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a class="board-list__link" href="?page={{ page_obj.next_page_number }}">next &rsaquo;</a>
                         <a class="board-list__link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
                     {% endif %}
                 </span>
