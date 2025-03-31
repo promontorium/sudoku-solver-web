@@ -51,7 +51,7 @@ class SignUpView(mixins.RedirectAuthenticatedMixin, generic.FormView):
 
 class BoardList(LoginRequiredMixin, generic.ListView):
     model = models.Board
-    template_name = "board-list.html"
+    template_name = "board-list-create.html"
     paginate_by = 10
     # context_object_name = "board_list"
 
@@ -67,7 +67,7 @@ class BoardList(LoginRequiredMixin, generic.ListView):
 class BoardCreate(LoginRequiredMixin, generic.CreateView):
     model = models.Board
     form_class = forms.BoardForm
-    template_name = "board-list.html"
+    template_name = "board-list-create.html"
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()

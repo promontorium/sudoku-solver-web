@@ -21,8 +21,8 @@ class BoardWidget(widgets.Widget):
     template_name = "admin/board-widget.html"
 
     class Media:
-        css = {"all": ("styles/board-widget.css",)}
-        js = ("js/board-widget.js",)
+        css = {"all": ("styles/admin-board-widget.css",)}
+        js = ("js/admin-board-widget.js",)
 
     def render(self, name: str, value: str, attrs: dict[str, Any] | None = None, renderer: Any = None) -> SafeString:
         if value:
