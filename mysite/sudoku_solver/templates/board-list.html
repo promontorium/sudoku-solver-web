@@ -44,7 +44,7 @@
     {% endif %}
 
     <div class="create-board">
-        <h2 class="create-board__title">Create a New Board</h2>
+        <h1 class="create-board__title">Create a New Board</h1>
         <form method="post" class="create-board__form" action="{% url 'sudoku-solver:create-board' %}">
             {% csrf_token %}
             {% if create_board_form %}
