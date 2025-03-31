@@ -1,0 +1,43 @@
+.board-list {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 6%;
+}
+
+.board-list__link {
+    color: var(--color-link);
+
+    &:hover {
+        color: var(--color-link-hover);
+    }
+}
+
+.board-list__title {
+    color: var(--color-container-title);
+    text-align: center;
+}
+
+.board-list__items {
+    box-shadow: 0 2px 5px var(--color-container-box-shadow);
+    padding: 20px;
+    background: var(--color-container-background);
+    border-radius: 10px;
+    text-align: center;
+    list-style-type: none;
+}
+
+.board-list__item {
+    padding: 5px;
+
+    &:not(:last-child) {
+        margin-bottom: 8px;
+    }
+}
+
+.board-list__pagination {
+    text-align: center;
+}
+
+.board-list__current {
+    color: var(--color-container-title);
+}

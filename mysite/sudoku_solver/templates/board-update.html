@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-update.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-action.css' %}" />
 {% endblock %}
 
 {% block js %}
@@ -15,14 +15,14 @@
 {% endblock %}
 
 {% block main %}
-    <div class="update-board">
-        <h1 class="update-board__title">Update Board "{{ board_object.description }}"</h1>
-        <form method="post" class="update-board__form">
+    <div class="board-action">
+        <h1 class="board-action__title">Update Board "{{ board_object.description }}"</h1>
+        <form method="post" class="board-action__form">
             {% csrf_token %}
             {{ form.as_p }}
-            <div class="update-board__actions">
-                <button type="submit" class="update-board__button update-board__button--confirm" name="update-board-submit">Update Board</button>
-                <a href="{% url 'sudoku-solver:board-detail' board_object.id %}" class="update-board__button update-board__button--cancel">Cancel</a>
+            <div class="board-action__actions">
+                <button type="submit" class="board-action__button" name="update-board-submit">Update Board</button>
+                <a href="{% url 'sudoku-solver:board-detail' board_object.id %}" class="board-action__button">Cancel</a>
             </div>
         </form>
     </div>

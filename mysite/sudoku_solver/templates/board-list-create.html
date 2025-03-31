@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-list-create.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-list.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-action.css' %}" />
 {% endblock %}
 
 {% block js %}
@@ -43,16 +44,18 @@
         </div>
     {% endif %}
 
-    <div class="create-board">
-        <h1 class="create-board__title">Create a New Board</h1>
-        <form method="post" class="create-board__form" action="{% url 'sudoku-solver:create-board' %}">
+    <div class="board-action">
+        <h1 class="board-action__title">Create a New Board</h1>
+        <form method="post" class="board-action__form" action="{% url 'sudoku-solver:create-board' %}">
             {% csrf_token %}
             {% if create_board_form %}
                 {{ create_board_form.as_p }}
             {% else %}
                 {{ form.as_p }}
             {% endif %}
-            <button type="submit" class="create-board__button" name="create-board-submit">Create Board</button>
+            <div class="board-action__actions">
+                <button type="submit" class="board-action__button" name="create-board-submit">Create Board</button>
+            </div>
         </form>
     </div>
 {% endblock %}

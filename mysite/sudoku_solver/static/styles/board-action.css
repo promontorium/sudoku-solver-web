@@ -1,31 +1,46 @@
-.update-board__title {
+.board-action__title {
     color: var(--color-container-title);
     text-align: center;
 }
 
-.update-board {
+.board-action__subtitle {
+    color: var(--color-container-subtitle);
+    text-align: center;
+    margin-top: 0;
+}
+
+.board-action__subtitle--critical {
+    color: var(--color-critical);
+}
+
+.board-action {
     max-width: 1000px;
     margin: auto;
     margin-bottom: 6%;
 }
 
-.update-board__form {
+.board-action__form {
     box-shadow: 0 2px 5px var(--color-container-box-shadow);
     padding: 20px;
     background: var(--color-container-background);
     border-radius: 10px;
 }
 
-.update-board__form .errorlist {
+.board-action__confirmation-form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.board-action__form .errorlist {
     padding-left: 15px;
     color: var(--color-error);
 }
 
-.update-board__form label {
+.board-action__form label {
     color: var(--color-form-label);
 }
 
-.update-board__form input {
+.board-action__form input {
     width: 100%;
     margin: 5px auto;
     padding: 10px;
@@ -44,36 +59,42 @@
     }
 }
 
-.update-board__actions {
+.board-action__actions {
     display: flex;
 }
 
-.update-board__button {
+.board-action__button {
     flex: 1;
-    margin: 0 5px;
+    margin: 10px 5px 0;
     padding: 15px;
+    background-color: var(--color-form-button-background);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
     border: none;
     border-radius: 10px;
     font-size: 16px;
     color: var(--color-form-button);
-    background-color: var(--color-form-button-background);
 
     &:hover {
-        background-color: var(--color-form-button-hover-background);
         box-shadow: 0 4px 20px var(--color-form-button-hover-box-shadow);
+        background-color: var(--color-form-button-hover-background);
     }
 
     &:active {
-        background-color: var(--color-form-button-active-background);
         box-shadow: 0 4px 20px var(--color-form-button-active-box-shadow);
+        background-color: var(--color-form-button-active-background);
     }
 }
 
-.update-board__button--confirm {
-    cursor: pointer;
-}
+.board-action__button--critical {
+    background-color: var(--color-form-critical-button-background);
 
-.update-board__button--cancel {
-    text-decoration: none;
-    text-align: center;
+    &:hover {
+        background-color: var(--color-form-critical-button-hover-background);
+    }
+
+    &:active {
+        background-color: var(--color-form-critical-button-active-background);
+    }
 }

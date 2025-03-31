@@ -11,6 +11,7 @@
     --color-container-background: #fff;
     --color-container-box-shadow: #0000004d;
     --color-container-title: #808080;
+    --color-container-subtitle: #5f5d5d;
     --color-form-button: #fff;
     --color-form-button-background: #007bff;
     --color-form-button-hover-background: #006ce0;
@@ -36,6 +37,7 @@
         --color-input-background: #5b5b5b;
         --color-link: #c9c9c9;
         --color-container-background: #3b3a3a;
+        --color-container-subtitle: #cdcbcb;
         --color-form-button-background: #305a6f;
         --color-form-button-hover-background: #305669;
         --color-form-button-active-background: #2a4c5d;

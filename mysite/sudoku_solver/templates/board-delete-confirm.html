@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-delete-confirm.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/board-action.css' %}" />
 {% endblock %}
 
 {% block js %}
@@ -15,14 +15,14 @@
 {% endblock %}
 
 {% block main %}
-    <div class="delete-board">
-        <h1 class="delete-board__title">Are you sure you want to delete board "{{ board_object.description }}"?</h1>
-        <form method="post" class="delete-board__form">
+    <div class="board-action">
+        <h1 class="board-action__title">Are you sure you want to delete board "{{ board_object.description }}"?</h1>
+        <form method="post" class="board-action__form board-action__confirmation-form">
             {% csrf_token %}
-            <h2 class="delete-board__subtitle">This action can not be undone</h2>
-            <div class="delete-board__actions">
-                <button type="submit" class="delete-board__button delete-board__button--confirm" name="delete-board-submit">Yes, Delete</button>
-                <a href="{% url 'sudoku-solver:board-detail' board_object.id %}" class="delete-board__button delete-board__button--cancel">Cancel</a>
+            <h2 class="board-action__subtitle board-action__subtitle--critical">This action can not be undone</h2>
+            <div class="board-action__actions">
+                <button type="submit" class="board-action__button board-action__button--critical" name="delete-board-submit">Yes, Delete</button>
+                <a href="{% url 'sudoku-solver:board-detail' board_object.id %}" class="board-action__button">Cancel</a>
             </div>
         </form>
     </div>
