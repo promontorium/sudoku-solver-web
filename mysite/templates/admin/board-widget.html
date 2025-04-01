@@ -1,18 +1,31 @@
 <div class="board-container">
-    <p class="board-container__description">Click to edit. Enter [1-9]. Givens starts with '!' (e.g !5), candidates with '#' (e.g #123)</p>
+    <p class="board-container__description">
+        Click to edit. Enter [1-9]. Givens starts with '!' (e.g !5), candidates with '#' (e.g #123)
+    </p>
     <table class="board-container__table">
         {% for row in board %}
             <tr class="board-container__row">
                 {% for cell in row %}
                     <td class="board-container__cell">
                         {% if cell.candidates %}
-                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="#{{ cell.candidates|join:'' }}" class="board-container__input board-container__input--candidates" />
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                                   type="text"
+                                   value="#{{ cell.candidates|join:'' }}"
+                                   class="board-container__input board-container__input--candidates" />
                         {% elif cell.is_given %}
-                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="!{{ cell.value }}" class="board-container__input board-container__input--given" />
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                                   type="text"
+                                   value="!{{ cell.value }}"
+                                   class="board-container__input board-container__input--given" />
                         {% elif cell.value %}
-                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" value="{{ cell.value }}" class="board-container__input" />
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                                   type="text"
+                                   value="{{ cell.value }}"
+                                   class="board-container__input" />
                         {% else %}
-                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" type="text" class="board-container__input" />
+                            <input name="{{ name }}_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                                   type="text"
+                                   class="board-container__input" />
                         {% endif %}
                     </td>
                 {% endfor %}

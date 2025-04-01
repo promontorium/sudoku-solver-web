@@ -1,18 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% load static %}
 
 {% block title %}
     Update Board
-{% endblock %}
+{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/board-action.css' %}" />
-{% endblock %}
+{% endblock css %}
 
 {% block js %}
-
-{% endblock %}
+{% endblock js %}
 
 {% block main %}
     <div class="board-action">
@@ -26,4 +25,4 @@
             </div>
         </form>
     </div>
-{% endblock %}
+{% endblock main %}

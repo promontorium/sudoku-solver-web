@@ -1,33 +1,41 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
     <head>
         <meta charset="UTF-8" />
+        <meta name="description" content="Sudoku solver page">
+        <meta name="keywords" content="sudoku, solver">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}" />
         <title>500 Internal Server Error</title>
+
         <style>
             body {
                 text-align: center;
                 padding: 50px;
             }
+
             h1 {
                 font-size: 50px;
                 color: var(--color-error);
             }
+
             p {
                 font-size: 20px;
             }
+
             a {
                 color: var(--color-link);
             }
+
             a:hover {
                 color: var(--color-link-hover);
             }
         </style>
     </head>
+
     <body>
         <h1>500 - Internal Server Error</h1>
         <p>Oh no! Something went wrong on our end.</p>

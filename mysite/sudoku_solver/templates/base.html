@@ -1,42 +1,39 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
     <head>
         <meta charset="UTF-8" />
+        <meta name="description" content="Sudoku solver page">
+        <meta name="keywords" content="sudoku, solver">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>
             {% block title %}
-
-            {% endblock %}
+                Sudoku Solver
+            {% endblock title %}
         </title>
-        {% if user.is_authenticated %}
-            <meta name="is_authenticated" />
-        {% endif %}
+        {% if user.is_authenticated %}<meta name="is_authenticated" />{% endif %}
         <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/header.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'styles/footer.css' %}" />
         {% block css %}
-
-        {% endblock %}
+        {% endblock css %}
         <script type="module" src="{% static 'js/header.js' %}"></script>
         {% block js %}
-
-        {% endblock %}
+        {% endblock js %}
     </head>
 
     <body>
         <header>
-            {% include 'header.html' %}
+            {% include "header.html" %}
         </header>
         <main>
             {% block main %}
-
-            {% endblock %}
+            {% endblock main %}
         </main>
         <footer>
-            {% include 'footer.html' %}
+            {% include "footer.html" %}
         </footer>
     </body>
 </html>

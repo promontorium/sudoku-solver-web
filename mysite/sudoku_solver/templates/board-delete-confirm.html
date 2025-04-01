@@ -1,18 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% load static %}
 
 {% block title %}
     Confirm board deletion
-{% endblock %}
+{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/board-action.css' %}" />
-{% endblock %}
+{% endblock css %}
 
 {% block js %}
-
-{% endblock %}
+{% endblock js %}
 
 {% block main %}
     <div class="board-action">
@@ -21,9 +20,11 @@
             {% csrf_token %}
             <h2 class="board-action__subtitle board-action__subtitle--critical">This action can not be undone</h2>
             <div class="board-action__actions">
-                <button type="submit" class="board-action__button board-action__button--critical" name="delete-board-submit">Yes, Delete</button>
+                <button type="submit"
+                        class="board-action__button board-action__button--critical"
+                        name="delete-board-submit">Yes, Delete</button>
                 <a href="{% url 'sudoku-solver:board-detail' board_object.id %}" class="board-action__button">Cancel</a>
             </div>
         </form>
     </div>
-{% endblock %}
+{% endblock main %}

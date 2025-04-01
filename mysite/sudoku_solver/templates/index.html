@@ -1,21 +1,21 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% load static %}
 
 {% block title %}
     Sudoku Solver
-{% endblock %}
+{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/win-popup.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'styles/game.css' %}" />
-{% endblock %}
+{% endblock css %}
 
 {% block js %}
     <script type="module" src="{% static 'js/index.js' %}"></script>
-{% endblock %}
+{% endblock js %}
 
 {% block main %}
-    {% include 'win-popup.html' %}
-    {% include 'game.html' %}
-{% endblock %}
+    {% include "win-popup.html" %}
+    {% include "game.html" %}
+{% endblock main %}

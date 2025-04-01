@@ -1,18 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% load static %}
 
 {% block title %}
     Registration
-{% endblock %}
+{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}" />
-{% endblock %}
+{% endblock css %}
 
 {% block js %}
-
-{% endblock %}
+{% endblock js %}
 
 {% block main %}
     <div class="auth">
@@ -22,9 +21,11 @@
             {{ form.media }}
             {{ form.as_p }}
             <p class="auth__other-option">
-                Already have an account? Click <a href="{% url 'sudoku-solver:login' %}" class="auth__link" aria-label="Login">here</a> to login
+                Already have an account? Click
+                <a href="{% url 'sudoku-solver:login' %}" class="auth__link" aria-label="Login">here</a>
+                to login
             </p>
             <button type="submit" name="signup" class="auth__form-button" aria-label="Sign Up">Sign Up</button>
         </form>
     </div>
-{% endblock %}
+{% endblock main %}

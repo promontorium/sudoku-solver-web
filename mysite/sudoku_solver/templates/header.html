@@ -1,8 +1,12 @@
 <div class="header__container">
-    <h2 class="header__title"><a href="{% url 'sudoku-solver:index' %}" class="header__item header__link">My Website</a></h2>
+    <h2 class="header__title">
+        <a href="{% url 'sudoku-solver:index' %}" class="header__item header__link">My Website</a>
+    </h2>
     {% if user.is_authenticated %}
         <div class="header__dropdown-container">
-            <button class="header__item header__dropdown-title header__button">{{ user.username }}<b>&triangledown;</b></button>
+            <button class="header__item header__dropdown-title header__button">
+                {{ user.username }}<b>▾</b>
+            </button>
             <div class="header__dropdown-content">
                 <a class="header__dropdown-item header__link" href="{% url 'sudoku-solver:board-list' %}">Board List</a>
                 <a class="header__dropdown-item header__link" href="{% url 'sudoku-solver:change-password' %}">Change Password</a>
