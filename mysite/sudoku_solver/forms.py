@@ -2,13 +2,10 @@ from typing import Any
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
-from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.contrib.auth.password_validation import password_validators_help_text_html
 from django.core.validators import RegexValidator
 
 from . import fields, models, widgets
-
-type User = AbstractBaseUser | AnonymousUser
 
 
 class SignInForm(AuthenticationForm):
