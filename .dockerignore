@@ -11,6 +11,7 @@ readme.md
 .vscode
 .prettierrc.toml
 .mypy_cache
+.ruff_cache
 **/staticfiles
 **/__pycache__
 **/*.log
