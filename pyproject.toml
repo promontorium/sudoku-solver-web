@@ -19,6 +19,7 @@ debug = [
 dev = [
     "django-stubs>=5.1.3",
     "djlint>=1.36.4",
+    "events-stubs",
     "mypy>=1.15.0",
     "ruff>=0.11.2",
 ]
@@ -70,6 +71,9 @@ plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
 django_settings_module = "mysite.mysite"
+
+[tool.uv.sources]
+events-stubs = { git = "https://github.com/promontorium/events-stubs" }
 
 # Voodoo
 [[tool.mypy.overrides]]

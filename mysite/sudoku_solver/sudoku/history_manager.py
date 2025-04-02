@@ -3,7 +3,7 @@ from functools import wraps
 from logging import getLogger
 from typing import Callable, Concatenate, Iterable, Mapping, ParamSpec, Protocol, TypeVar
 
-from events import Events  # type: ignore[import-untyped]
+from events import Events
 
 from .cell import Cell
 from .exceptions import HistoryManagerException

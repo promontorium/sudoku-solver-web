@@ -1,7 +1,7 @@
 from logging import getLogger
 from typing import Callable, Iterable
 
-from events import Events  # type: ignore[import-untyped]
+from events import Events
 
 from .exceptions import SudokuException
 
