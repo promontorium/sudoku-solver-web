@@ -189,7 +189,7 @@ wheels = [
 [[package]]
 name = "events-stubs"
 version = "0.1.0"
-source = { git = "https://github.com/promontorium/events-stubs#9eade3e8e1f9acc06ebcacc9c8093a7f3aac17b4" }
+source = { git = "https://github.com/promontorium/events-stubs#147cf7e0d37909f73c3e88585d58945085951d92" }
 dependencies = [
     { name = "events" },
 ]
